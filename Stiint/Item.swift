@@ -6,7 +6,7 @@
 //
 
 import Foundation
-impyort SwiftData
+import SwiftData
 
 @Model
 final class Item {
