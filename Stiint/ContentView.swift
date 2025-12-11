@@ -30,6 +30,7 @@ struct ContentView: View {
                   }
             Tab(role: .search) {
                 Text("Search")
+                InstructionView()
             }
         }.tabViewBottomAccessory {
             TimerStatusView()
