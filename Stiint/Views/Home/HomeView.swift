@@ -14,13 +14,7 @@ struct HomeView: View {
     @Query(sort: \ActivityLog.startTime) var logs: [ActivityLog]
     var body: some View {
         NavigationView {
-            VStack{
-                
-                
-                List(logs) { log in
-                    Text("\(log.activity?.name ?? "Unknown Activity") at \(log.endTime?.timeIntervalSince(log.startTime!) ?? 0)")
-                }
-            }.navigationTitle("My Day")
+            TimeLineView(selectedDate: Date.now).navigationTitle("My Day")
             
        
         }
