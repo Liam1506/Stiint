@@ -9,6 +9,10 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    
+    
+    @State private var showAccessory = false
+
     @Environment(\.modelContext) private var modelContext
     var body: some View {
         TabView {
@@ -16,7 +20,7 @@ struct ContentView: View {
                       HomeView()
                   }
 
-                  Tab("Stints", systemImage: "timer") {
+                  Tab("Timers", systemImage: "timer") {
                       TimerView()
                   }
 
@@ -28,17 +32,11 @@ struct ContentView: View {
                 Text("Search")
             }
         }.tabViewBottomAccessory {
-           // Text("test")
-            if(RunningManager.shared.activityDTO != nil){
-                 
-                HStack{
-                    Image(systemName: "car.fill")
-                    Text(RunningManager.shared.activityDTO!.startTime, style: .timer).font(Font.headline)
-                    Spacer()
-                    Text(RunningManager.shared.activityDTO!.name)
-                }.padding()
-            }
+            TimerStatusView()
         }
+
+        
+   
 
     }
 

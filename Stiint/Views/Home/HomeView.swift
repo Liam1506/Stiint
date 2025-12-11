@@ -6,11 +6,23 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
+    
+    
+    @Query(sort: \ActivityLog.startTime) var logs: [ActivityLog]
     var body: some View {
         NavigationView {
-            Text("My Day").navigationTitle("My Day")
+            VStack{
+                
+                
+                List(logs) { log in
+                    Text("\(log.activity?.name ?? "Unknown Activity") at \(log.endTime?.timeIntervalSince(log.startTime!) ?? 0)")
+                }
+            }.navigationTitle("My Day")
+            
+       
         }
     }
 }

@@ -18,11 +18,11 @@ struct SelectActivity: View {
             Text(activity.name!).onTapGesture {
                 RunningManager.shared.startActivity(activityId: activity.id!)
             }
-        }.navigationTitle("Start Stint")
+        }.navigationTitle("Start Activity")
             .sheet(isPresented: $isShowingSheet) {
                 CreateActivity()
             }
-            .navigationTitle("Start Stint")
+            .navigationTitle("Start Activity")
             .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
