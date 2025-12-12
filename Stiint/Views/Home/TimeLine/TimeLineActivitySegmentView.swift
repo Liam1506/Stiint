@@ -26,7 +26,9 @@ struct TimeLineActivitySegmentView: View {
             }
             
         }
-        
+        .onTapGesture {
+            print("Tap on Activity \(log.activity?.name)")
+        }
         .padding(.leading, 40)
             .offset(y: start)
     }

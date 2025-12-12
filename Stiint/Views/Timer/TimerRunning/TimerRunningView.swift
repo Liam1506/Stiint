@@ -13,13 +13,13 @@ struct TimerRunningView: View {
      Singe button to end task -> Should change state other page should be shown
         */
     init(){
-        //print(RunningManager.shared.currentActivityId!)
+        //print(RunningManager.shared.currentActivityLogId!)
     }
     
     @State private var activityLog: ActivityLog?
     
     var body: some View {
-        if(RunningManager.shared.currentActivityId == nil || RunningManager.shared.activityDTO == nil){
+        if(RunningManager.shared.currentActivityLogId == nil || RunningManager.shared.activityDTO == nil){
             Text("Loading")
         }else{
             VStack{

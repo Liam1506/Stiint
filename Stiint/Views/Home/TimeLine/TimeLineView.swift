@@ -24,8 +24,11 @@ struct TimeLineView: View {
     let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     
     @State private var currentZoom = 0.0
-    
-    @State private var totalZoom = 1500.0
+       @State private var totalZoom = 1000.0
+       
+       // Add minimum and maximum zoom constraints
+       private let minZoom: Double = 800.0
+       private let maxZoom: Double = 5000.0
 
     
     
@@ -108,25 +111,6 @@ struct TimeLineView: View {
                 }
                 .frame(height: currentZoom + totalZoom)
                 .padding(.horizontal, 20)
-                .gesture(
-                    MagnifyGesture()
-                        .onChanged { value in
-                            print("Zoomin")
-                            currentZoom = value.magnification - 1
-                            print(currentZoom)
-                        }
-                        .onEnded { value in
-                            totalZoom += currentZoom
-                            //currentZoom = 0
-                        }
-                ).accessibilityZoomAction { action in
-                    print("Zoom")
-                    if action.direction == .zoomIn {
-                        totalZoom += 1
-                    } else {
-                        totalZoom -= 1
-                    }
-                }
             } .onAppear {
                 updateTime()
                 // Scroll to the current hour

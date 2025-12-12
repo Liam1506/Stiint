@@ -32,9 +32,12 @@ struct ContentView: View {
                 Text("Search")
                 InstructionView()
             }
-        }.tabViewBottomAccessory {
-            TimerStatusView()
         }
+            .tabViewBottomAccessory() {
+                TimerStatusView()
+            }
+        
+       
 
         
    

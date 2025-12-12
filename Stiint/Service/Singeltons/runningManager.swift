@@ -16,32 +16,33 @@ import Observation
 public final class RunningManager: Sendable {
     
     
-    private(set) var currentActivityId: UUID?
+    private(set) var currentActivityLogId: UUID?
     
     private(set) var running: Bool
     private(set) var activityDTO: ActivityDTO?
-    
     private(set) var previousActivityDTO: ActivityDTO?
     
     
     init(){
         print("INIT")
         running = false
-        currentActivityId = nil
+        currentActivityLogId = nil
         
         activityDTO = nil
+        
         setup();
     }
     
     private func setup() {
-        currentActivityId = ActivityLogPreferences.getActivityLogId()
-        if let id = currentActivityId{
+        currentActivityLogId = ActivityLogPreferences.getActivityLogId()
+        if let id = currentActivityLogId{
             
             Task{
                 activityDTO = await PersistenceManager.shared.activityLogActor.getStartTimeOfActivityLog(activityLogId: id)
+                
+                running = true
             }
             
-            running = true
         }
     }
     
@@ -50,7 +51,7 @@ public final class RunningManager: Sendable {
         Task{
             let prevId = previousActivityDTO?.id
             await stopActivity()
-            if(prevId != nil){
+            if(prevId != nil && prevId != activityDTO?.id){
                 startActivity(activityId: prevId!)
             }
         }
@@ -59,7 +60,7 @@ public final class RunningManager: Sendable {
     
     public func startActivity(activityId: UUID){
         print("START \(activityId)")
-        if(currentActivityId == activityId){
+        if(currentActivityLogId == activityId){
             return
         }
         if(activityDTO != nil){
@@ -67,22 +68,22 @@ public final class RunningManager: Sendable {
         }
         
         Task{
-            if(currentActivityId != nil ){
-             await PersistenceManager.shared.activityLogActor.stopActivity(activityLogId: currentActivityId!)
+            if(currentActivityLogId != nil ){
+             await PersistenceManager.shared.activityLogActor.stopActivity(activityLogId: currentActivityLogId!)
             }
-            currentActivityId = await PersistenceManager.shared.activityLogActor.startActivity(activityId: activityId)
+            currentActivityLogId = await PersistenceManager.shared.activityLogActor.startActivity(activityId: activityId)
             
-            ActivityLogPreferences.saveActivityLogId(id: currentActivityId!)
+            ActivityLogPreferences.saveActivityLogId(id: currentActivityLogId!)
             
-            activityDTO = await PersistenceManager.shared.activityLogActor.getStartTimeOfActivityLog(activityLogId: currentActivityId!)
+            activityDTO = await PersistenceManager.shared.activityLogActor.getStartTimeOfActivityLog(activityLogId: currentActivityLogId!)
             
+            running = true
         }
-        running = true
         
     }
     public func stopSpecificActivity(activityId: UUID){
 
-        if(currentActivityId == activityId){
+        if(currentActivityLogId == activityId){
             Task{
               await stopActivity()
             }
@@ -92,13 +93,13 @@ public final class RunningManager: Sendable {
    
     
     public func stopActivity() async {
-        if(currentActivityId != nil ){
-            await PersistenceManager.shared.activityLogActor.stopActivity(activityLogId: currentActivityId!)
+        if(currentActivityLogId != nil ){
+            await PersistenceManager.shared.activityLogActor.stopActivity(activityLogId: currentActivityLogId!)
             previousActivityDTO = activityDTO
         }
         ActivityLogPreferences.removeActivityLogId()
         
-        currentActivityId = nil
+        currentActivityLogId = nil
         activityDTO = nil
         running = false
         
