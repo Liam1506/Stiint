@@ -1,0 +1,15 @@
+{
+  "originHash" : "9543f0f70b816e96502cc5337ff7156d7bd78574c0e5d1f05660e998019beddf",
+  "pins" : [
+    {
+      "identity" : "sankey",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/maxhumber/Sankey.git",
+      "state" : {
+        "revision" : "a25843ed87bbe3f9be4d27a014b47792dcaeb3fc",
+        "version" : "2.0.0"
+      }
+    }
+  ],
+  "version" : 3
+}

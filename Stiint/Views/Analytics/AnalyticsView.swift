@@ -9,7 +9,15 @@ import SwiftUI
 
 struct AnalyticsView: View {
     var body: some View {
-        Text("Analyitcs")
+        NavigationView{
+            ScrollView{
+                
+                SankyDiagramView().padding()
+            }
+            .navigationTitle("Insights")
+           
+        }
+        
     }
 }
 
