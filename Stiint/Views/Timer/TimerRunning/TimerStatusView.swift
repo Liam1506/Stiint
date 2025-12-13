@@ -9,15 +9,22 @@ import SwiftUI
 
 struct TimerStatusView: View {
     var body: some View {
-        if(RunningManager.shared.activityDTO != nil){
+        if let activity = RunningManager.shared.activityDTO {
             HStack {
-                Image(systemName: "car.fill")
-                Text(RunningManager.shared.activityDTO!.startTime, style: .timer)
-                    .font(.headline)
+                Image(systemName: activity.icon)
+                
+                Text(activity.name)
+                
                 Spacer()
-                Text(RunningManager.shared.activityDTO!.name)
+                
+                Text(activity.startTime, style: .timer)
+                    .font(.headline.monospaced())
+                    
             }
             .padding()
+        }else{
+            
+            Text("Freetime")
         }
     }
 }

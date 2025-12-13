@@ -97,12 +97,12 @@ struct TimeLineView: View {
                         VStack(spacing: 0) {
                             ForEach(hours, id: \.self) { hour in
                                 TimeLineSegmentView(hour: hour, height: geometry.size.height / 24)
-                                    .padding(.horizontal, 20)
+                                    .padding(.leading, 20)
                                     .id(hour)
                             }
                         }
                         ForEach(logs) { log in
-                            TimeLineActivitySegmentView(start: getGeometry(date: log.startTime, geometry: geometry), end: getGeometry(date: log.endTime, geometry: geometry), log: log).padding(.horizontal, 20)
+                            TimeLineActivitySegmentView(start: getGeometry(date: log.startTime, geometry: geometry), end: getGeometry(date: log.endTime, geometry: geometry), log: log).padding(.horizontal, 20).offset(x:12)
                         }
                         
                         // Moving red line

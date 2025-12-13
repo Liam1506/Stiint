@@ -8,15 +8,16 @@
 
 import Foundation
 import SwiftData
+import SwiftUI
 
 
 @ModelActor
 public actor ActivityActor {
-    public func addActivity(name: String) {
+    public func addActivity(name: String, color: Color = .blue, icon: String? = nil) {
         if(getActivityByName(from: name) != nil) {
             return
         }
-        let activity = Activity(name: name)
+        let activity = Activity(name: name, color: color, sfSymbolName: icon)
         modelContext.insert(activity)
         try? modelContext.save()
     }

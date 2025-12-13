@@ -24,7 +24,7 @@ struct TimerRunningView: View {
         }else{
             VStack{
                 
-                Text(RunningManager.shared.activityDTO!.startTime, style: .timer)
+                Text(RunningManager.shared.activityDTO!.startTime, style: .timer)    .font(.headline.monospaced())
                     
                     Button("Stop"){
                         Task{

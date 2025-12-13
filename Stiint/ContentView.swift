@@ -28,8 +28,9 @@ struct ContentView: View {
                   Tab("Insights", systemImage: "chart.bar") {
                       AnalyticsView()
                   }
-            Tab(role: .search) {
-                Text("Search")
+         
+            
+            Tab("Settings", systemImage: "gear") {
                 InstructionView()
             }
         }

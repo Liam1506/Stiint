@@ -17,8 +17,7 @@ struct TimeLineSegmentView: View {
             Rectangle()
                 .frame(height: 1)
                 .foregroundColor(.secondary)
-                .offset(y: -1)
-            
+                .offset(y: -1)            
         }
         .frame(height: height)
         

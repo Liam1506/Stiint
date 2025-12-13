@@ -10,23 +10,25 @@ import SwiftData
 import SwiftUI
 
 @Model
-public final class Activity{
+public final class Activity {
     public var id: UUID?
     public var createdDate: Date?
     public var name: String?
     public var colorHex: String?   // Optional for iCloud compatibility
-
+    public var sfSymbolName: String? // New property for SF Symbol
 
     public init(
         id: UUID? = nil,
         createdDate: Date? = nil,
         name: String? = nil,
-        color: Color? = nil
+        color: Color? = nil,
+        sfSymbolName: String? = nil
     ) {
         self.id = id ?? UUID()
         self.createdDate = createdDate ?? Date.now
         self.name = name
         self.colorHex = color?.toHex()
+        self.sfSymbolName = sfSymbolName
     }
 
     public var color: Color {
@@ -34,6 +36,7 @@ public final class Activity{
         set { colorHex = newValue.toHex() }
     }
 }
+
 
 
 extension Color {

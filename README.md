@@ -1,57 +1,53 @@
-# Stint
+# Stiint
 
-### Idea
+## Concept
 
-The idea of the app is to provide a largely hands-off time-tracking experience on iOS. Its purpose is to help you understand where your time goes, improve your daily routine, and reduce unnecessary overhead. For example, you might want to track how long it takes you to get ready in the morning.
+Stiint is a hands-off time-tracking iOS app designed to give users detailed insights into how they spend their time. It combines location-based tracking with activity tracking, allowing both automated and user-triggered entries.
 
-### Tech Stack
+The app is structured around **two main concepts**:
 
-The app is written in SwiftUI, since it relies heavily on native functionality. Most timers should start automatically through Shortcuts. In the morning example, a timer could start when the alarm goes off and stop once you leave the house. Afterwards, a travel activity could begin, followed by a work activity, and so on. The goal is to model your day using Shortcut triggers to create an automated time-tracking workflow. Manual activities, such as studying, can still be added.
+### 1. Locations
 
-Current triggers could include:
+- Users define a **standard set of locations** (up to 20), such as Home, Work, or Gym.
+- Geofencing is used for these locations to provide **precise, automated timeline entries**.
+- All other locations are tracked **dynamically**: if the user stops traveling and no standard location is active for more than 10 minutes, the app retrieves the current location and its type using the Apple Maps API.
+- Locations can serve as triggers for activities, but this is optional.
 
-- Trigger to start a specific activity for a certain duration
+### 2. Activities
 
-  - For example: start activity break for one hour when Apple Pay is used at a certain time
+- Activities mostly trigger via **iOS Shortcuts**, allowing users to start an activity based on app usage, time of day, or other events.
+- Example: Opening Instagram can trigger the activity “Wasted Time.”
+- Activities can be **bound to a location**, but this is optional.
+- Users can also manually start activities if needed.
 
-- Trigger to stop the current activity for a certain duration and the continue
+### Home Screen Timeline
 
-- Trigger to start a specific activity
+- The home screen shows a **calendar-style timeline** composed of **blocks representing locations**.
+- **Activities are nested inside each location block**, showing what the user did while at that location.
+- If a location is visited but no activity is triggered, the block simply shows the location.
+- This design allows a **clear visual mapping** of both location and activity throughout the day.
 
-  - For example: start the “way to work” activity when leaving the house
+## Key Features
 
-- Trigger to stop a specific running activity
-  - For example: stop “sleeping” when the alarm goes off
-- Trigger to stop any activity
-  - For example: when arriving back home
-- Trigger to stop an activity and resume the previous one
-  - Useful for short interruptions such as Instagram: start a “social media” activity when the app opens, and stop it when the app closes
+- Geofenced and dynamic location tracking.
+- Shortcut-driven activity tracking for minimal user intervention.
+- Activities optionally linked to locations.
+- Calendar-style timeline with location blocks and nested activities.
+- Predefined locations limited to 20 for battery efficiency.
+- Automatic location type inference for non-standard locations via Apple Maps API.
 
-If no activity is running, the app assumes free time.
+## Privacy
 
-Users should be able to exclude specific days from tracking, such as holidays or weekends.
+- All tracking is **on-device** and fully private.
+- No data is shared externally unless the user chooses to export it.
 
-### Analytics
+## Tech Stack
 
-The app should include detailed analytics. Multiple graphs should illustrate how time is spent. Users should be able to identify trends—for instance, spending less time on a hobby or working too much. Foundation models can help detect patterns. For example: commute times on Fridays are 10% longer than the rest of the week, or it usually takes around 30 minutes to reach a certain location.
-
-### Privacy
-
-All data stays completely local. Nothing leaves the device or iCloud. No account or login is required.
-
-## Challenges
-
-The biggest challenge is onboarding. The introduction must be very clear, and users must be willing to model their day once, which may take a few minutes. However, apps such as OneSec have succeeded with more demanding setups.
-
-- A checklist could help during onboarding with basic tasks like adding sleep or work so users don’t feel they must model their entire day at once.
-
-Another issue is the strong dependence on the Shortcuts app, which cannot be fully avoided.
-
-- A buffer system could help make tracking more resilient, or a pattern-recognition model could prompt the user if an expected event didn’t trigger.
-
-## Inspiration
-
-Time should be treated like a form of currency. Visualizations should show how available time flows and is distributed, similar to tools in finance apps like Finanzguru.
+- **SwiftUI** for the interface.
+- **CoreLocation** for geofencing and dynamic location updates.
+- **MapKit / Apple Maps API** for location type inference.
+- **Shortcuts & Intents** for activity triggers.
+- **Core Data / SwiftData** for storing timelines and activities.
 
 ### Flow diagrams (Sankey diagrams)
 

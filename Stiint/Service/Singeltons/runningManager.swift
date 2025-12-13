@@ -50,8 +50,10 @@ public final class RunningManager: Sendable {
       
         Task{
             let prevId = previousActivityDTO?.id
+            let currentId = activityDTO?.id
+            
             await stopActivity()
-            if(prevId != nil && prevId != activityDTO?.id){
+            if(prevId != nil && prevId != currentId){
                 startActivity(activityId: prevId!)
             }
         }
@@ -95,7 +97,7 @@ public final class RunningManager: Sendable {
     public func stopActivity() async {
         if(currentActivityLogId != nil ){
             await PersistenceManager.shared.activityLogActor.stopActivity(activityLogId: currentActivityLogId!)
-            previousActivityDTO = activityDTO
+            print("Setting previous dto")
         }
         ActivityLogPreferences.removeActivityLogId()
         

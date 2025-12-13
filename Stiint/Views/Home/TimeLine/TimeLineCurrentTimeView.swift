@@ -18,9 +18,9 @@ struct TimeLineCurrentTimeView: View {
     
     var body: some View {
         
-        HStack{
+        HStack(spacing: 0){
             Text(Date.now, format: .dateTime.hour().minute())
-                .padding(4)
+                .padding(EdgeInsets(top: 2, leading: 5, bottom: 2, trailing: 5))
                 .background(.red)
                 .foregroundStyle(.white)
                 .font(.footnote)
@@ -36,7 +36,7 @@ struct TimeLineCurrentTimeView: View {
             
             
         }.frame(height: frameHieght)
-            .padding(.leading, 20)
+            .padding(.leading, 15)
         .offset(y: CGFloat(currentTimeValue) * (geometry.size.height/24) + (geometry.size.height/24)/2 - CGFloat(frameHieght/2))
         
     }

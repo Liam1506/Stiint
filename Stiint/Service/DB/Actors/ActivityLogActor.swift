@@ -40,7 +40,7 @@ public actor ActivityLogActor {
             return nil
         }
         
-        return ActivityDTO(id: activityId, name: activityName, startTime: startTime)
+        return ActivityDTO(id: activityId, name: activityName, startTime: startTime, icon: activity.sfSymbolName ?? "questionmark.circle.fill")
     }
     
     

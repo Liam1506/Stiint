@@ -15,12 +15,20 @@ struct SelectActivity: View {
     var body: some View {
         
         List(activities) { activity in
-            Text(activity.name!).onTapGesture {
+            
+            HStack{
+                Circle()
+                    .frame(width: 25, height: 25)
+                    .foregroundStyle(activity.color)
+                Text(activity.name!)
+                    
+            }
+                .onTapGesture {
                 RunningManager.shared.startActivity(activityId: activity.id!)
             }
         }.navigationTitle("Start Activity")
             .sheet(isPresented: $isShowingSheet) {
-                CreateActivity()
+                CreateActivityView()
             }
             .navigationTitle("Start Activity")
             .toolbar {

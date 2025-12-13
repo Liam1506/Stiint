@@ -10,5 +10,6 @@ public struct ActivityDTO: Sendable {
     let id: UUID
     let name: String
     let startTime: Date
+    let icon: String
     var endTime: Date?
 }
