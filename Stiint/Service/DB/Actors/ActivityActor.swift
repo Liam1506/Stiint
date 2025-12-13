@@ -61,8 +61,13 @@ public actor ActivityActor {
         return activity?.first
     }
 
-    public func delete(_ activity: Activity) {
-        modelContext.delete(activity)
+    public func delete(from activityId: UUID) {
+        let fetchDescriptor = FetchDescriptor<Activity>(
+               predicate: #Predicate { $0.id == activityId }
+           )
+        let activity = try? modelContext.fetch(fetchDescriptor).first
+        activity!.deleted = true
+        
         try? modelContext.save()
     }
 }

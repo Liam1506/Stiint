@@ -16,19 +16,23 @@ public final class Activity {
     public var name: String?
     public var colorHex: String?   // Optional for iCloud compatibility
     public var sfSymbolName: String? // New property for SF Symbol
-
+    public var deleted: Bool?
     public init(
         id: UUID? = nil,
         createdDate: Date? = nil,
         name: String? = nil,
         color: Color? = nil,
-        sfSymbolName: String? = nil
+        sfSymbolName: String? = nil,
+        deleted: Bool? = nil
+
+        
     ) {
         self.id = id ?? UUID()
         self.createdDate = createdDate ?? Date.now
         self.name = name
         self.colorHex = color?.toHex()
         self.sfSymbolName = sfSymbolName
+        self.deleted = deleted
     }
 
     public var color: Color {

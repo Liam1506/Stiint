@@ -11,18 +11,33 @@ import SwiftData
 struct SelectActivity: View {
     @State private var isShowingCreateSheet = false
     @State private var activityToEdit: Activity?
-    @Query private var activities: [Activity]
-    
+    @State private var activityToDelete: Activity?
+    @State private var showDeleteConfirmation = false
+
+    @Query(filter: #Predicate<Activity> { activity in
+        activity.deleted == nil || activity.deleted == false
+    })
+    private var activities: [Activity]
+
     var body: some View {
-        
         NavigationView {
             List(activities) { activity in
-                HStack {
-                    Circle()
-                        .frame(width: 25, height: 25)
-                        .foregroundStyle(activity.color)
-                    Text(activity.name!)
+                HStack(spacing: 20) {
+                    ZStack{
+                        
+                        Circle()
+                            .frame(width: 35, height: 35)
+                            .foregroundStyle(activity.color)
+                        
+                            Image(systemName: activity.sfSymbolName ?? "xmark.circle")
+                                .font(.system(size: 16, weight: .bold))
+                  
+                                
+                    }
+                    Text(activity.name!).fontWeight(.bold)
+                    Spacer()
                 }
+                .contentShape(Rectangle())
                 .onTapGesture {
                     RunningManager.shared.startActivity(activityId: activity.id!)
                 }
@@ -32,9 +47,10 @@ struct SelectActivity: View {
                     } label: {
                         Label("Edit", systemImage: "pencil")
                     }
-                    
+
                     Button(role: .destructive) {
-                        // Delete action
+                        activityToDelete = activity
+                        showDeleteConfirmation = true
                     } label: {
                         Label("Remove", systemImage: "xmark.circle")
                     }
@@ -43,24 +59,42 @@ struct SelectActivity: View {
             .navigationTitle("Start Activity")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
+                    Button {
                         isShowingCreateSheet.toggle()
-                    }) {
+                    } label: {
                         Image(systemName: "plus")
                     }
                 }
             }
-            // Sheet for creating new activity
             .sheet(isPresented: $isShowingCreateSheet) {
                 CreateActivityView(activityToEdit: nil)
             }
-            // Sheet for editing existing activity
             .sheet(item: $activityToEdit) { activity in
                 CreateActivityView(activityToEdit: activity)
+            }.alert("Delete Activity", isPresented: $showDeleteConfirmation) {
+                Button("Delete", role: .destructive) {
+                    if let activity = activityToDelete {
+                        Task {
+                            await PersistenceManager.shared
+                                .activityActor
+                                .delete(from: activity.id!)
+                        }
+                        activityToDelete = nil
+                    }
+                }
+
+                Button("Cancel", role: .cancel) {
+                    activityToDelete = nil
+                }
+            } message: {
+                Text("This action cannot be undone.")
             }
+
+         
         }
     }
 }
+
 
 #Preview {
     SelectActivity()
