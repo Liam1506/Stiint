@@ -106,7 +106,11 @@ struct TimeLineView: View {
                         }
                         
                         // Moving red line
-                        TimeLineCurrentTimeView(currentTimeValue: currentTimeValue, geometry: geometry)
+                        
+                        if(Calendar.current.isDateInToday(selectedDate)){
+                            
+                            TimeLineCurrentTimeView(currentTimeValue: currentTimeValue, geometry: geometry)
+                        }
                     }
                 }
                 .frame(height: currentZoom + totalZoom)
@@ -122,7 +126,17 @@ struct TimeLineView: View {
                 print("Update")
                 updateTime()
          
-            }
+            }.gesture(
+                MagnificationGesture()
+                    .onChanged { value in
+                        currentZoom = (value - 1) * 1000
+                    }
+                    .onEnded { value in
+                        totalZoom += currentZoom
+                        totalZoom = min(max(totalZoom, minZoom), maxZoom)
+                        currentZoom = 0
+                    }
+            )
         }
        
     }

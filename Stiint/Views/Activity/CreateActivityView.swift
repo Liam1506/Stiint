@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
 
 struct CreateActivityView: View {
     // MARK: - State Variables
@@ -15,6 +14,14 @@ struct CreateActivityView: View {
     @State private var activityName: String = ""
     @State private var selectedColor: Color = .blue
     @State private var selectedIcon: String = "book.fill"
+    
+    
+    let activityToEdit: Activity?
+
+    init(activityToEdit: Activity? = nil) {
+        self.activityToEdit = activityToEdit
+
+    }
     
     // Data Sources
     let colors: [Color] = [
@@ -69,6 +76,15 @@ struct CreateActivityView: View {
         GridItem(.adaptive(minimum: 45), spacing: 15)
     ]
 
+    func saveEditedActivity() {
+        Task{
+            
+        
+            await PersistenceManager.shared.activityActor.editActivityById(activityId: activityToEdit!.id!, newName: activityName, newColor: selectedColor, newIcon: selectedIcon)
+            dismiss()
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -120,7 +136,7 @@ struct CreateActivityView: View {
                                             .fill(color)
                                             .frame(width: 42, height: 42)
                                         
-                                        if selectedColor == color {
+                                        if selectedColor.toHex() == color.toHex() {
                                             Circle()
                                                 .stroke(Color(uiColor: .label).opacity(0.6), lineWidth: 3)
                                         }
@@ -178,7 +194,7 @@ struct CreateActivityView: View {
                     .padding(.top)
                 }
             }
-            .navigationTitle("New Activity")
+            .navigationTitle(activityToEdit == nil ? "New Activity" : "Edit Activity")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -187,15 +203,29 @@ struct CreateActivityView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {
                         
-                        Task{
-                            await PersistenceManager.shared.activityActor.addActivity(name: activityName, color: selectedColor, icon: selectedIcon)
-                            
-                            dismiss()
-                      }
+                        if activityToEdit?.id != nil {
+                            saveEditedActivity()
+                    
+                        }else{
+                            Task{
+                                await PersistenceManager.shared.activityActor.addActivity(name: activityName, color: selectedColor, icon: selectedIcon)
+                                
+                                dismiss()
+                          }
+                        }
+                  
                         
                     }
                         .fontWeight(.bold)
                         .disabled(activityName.isEmpty) // Disable if no name
+                }
+            }.onAppear {
+                if let activity = activityToEdit {
+                    print("Updating")
+                    activityName = activity.name ?? ""
+                    selectedColor = activity.color
+                    print(activity.color)
+                    selectedIcon = activity.sfSymbolName ?? ""
                 }
             }
         }
@@ -203,5 +233,5 @@ struct CreateActivityView: View {
 }
 
 #Preview {
-    CreateActivityView()
+    CreateActivityView(activityToEdit: nil)
 }

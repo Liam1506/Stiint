@@ -29,7 +29,7 @@ struct ContentView: View {
                       AnalyticsView()
                   }
          
-            
+        
             Tab("Settings", systemImage: "gear") {
                 InstructionView()
             }

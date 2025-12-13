@@ -14,14 +14,12 @@ struct TimerView: View {
          Two States:
          - Either to select an activty and start
          - The Timer itself, where you can stop the task
-         */
-        NavigationView {
-            if(RunningManager.shared.running){
+         */            if(RunningManager.shared.running){
                      TimerRunningView()
                  }else{
                      SelectActivity()
                  }
-               }
+               
     }
 }
 

@@ -22,17 +22,33 @@ struct TimerRunningView: View {
         if(RunningManager.shared.currentActivityLogId == nil || RunningManager.shared.activityDTO == nil){
             Text("Loading")
         }else{
-            VStack{
-                
-                Text(RunningManager.shared.activityDTO!.startTime, style: .timer)    .font(.headline.monospaced())
+            
+            NavigationView {
+                VStack(spacing: 40){
                     
-                    Button("Stop"){
-                        Task{
-                            
+                    Text(RunningManager.shared.activityDTO!.startTime, style: .timer)
+                        .font(.system(size: 80, weight: .light, design: .monospaced))
+                        .frame(maxWidth: .infinity)
+                        .multilineTextAlignment(.center)
+                    
+                    Button(action: {
+                        Task {
                             await RunningManager.shared.stopActivity()
                         }
+                    }) {
+                        Text("Stop")
+                            .font(.title2.bold())
+                            .frame(maxWidth: 130, minHeight: 60)
+                            .foregroundColor(.white)
+                            .cornerRadius(40)
+                            .padding(.horizontal)
+                            .glassEffect()
                     }
-                
+                    
+                    .navigationTitle(RunningManager.shared.activityDTO!.name)
+                    
+                    
+                }
             }
        
             

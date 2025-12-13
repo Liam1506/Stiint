@@ -40,7 +40,7 @@ public actor ActivityLogActor {
             return nil
         }
         
-        return ActivityDTO(id: activityId, name: activityName, startTime: startTime, icon: activity.sfSymbolName ?? "questionmark.circle.fill")
+        return ActivityDTO(id: activityId, name: activityName, startTime: startTime, icon: activity.sfSymbolName ?? "questionmark.circle.fill", color: activity.color)
     }
     
     
@@ -61,7 +61,7 @@ public actor ActivityLogActor {
     }
 
     
-    public func editActivityById(activityId: UUID, newActivity: Activity) {
+    public func editActivityLogById(activityId: UUID, newActivity: Activity) {
         let fetchDescriptor = FetchDescriptor<Activity>(
                predicate: #Predicate { $0.id == activityId }
            )

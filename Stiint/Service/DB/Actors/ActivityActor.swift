@@ -22,13 +22,17 @@ public actor ActivityActor {
         try? modelContext.save()
     }
     
-    public func editActivityById(activityId: UUID, newActivity: Activity) {
+    public func editActivityById(activityId: UUID, newName: String? = nil, newColor: Color? = nil, newIcon: String? = nil) {
         let fetchDescriptor = FetchDescriptor<Activity>(
                predicate: #Predicate { $0.id == activityId }
            )
         let activity = try? modelContext.fetch(fetchDescriptor).first
         
-        activity?.name = newActivity.name
+        activity?.name = newName
+        activity?.color = newColor ?? activity!.color
+        activity?.sfSymbolName = newIcon
+
+        
         
         try? modelContext.save()
     }
