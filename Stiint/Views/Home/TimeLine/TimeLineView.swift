@@ -23,7 +23,7 @@ struct TimeLineView: View {
 
     let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     
-    @State private var currentZoom = 0.0
+        @State private var currentZoom = 0.0
        @State private var totalZoom = 1000.0
        
        // Add minimum and maximum zoom constraints
@@ -38,9 +38,15 @@ struct TimeLineView: View {
     var logs: [ActivityLog] {
         let startOfDay = calendar.startOfDay(for: selectedDate)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        
+        
         return allLogs.filter { log in
             guard let startTime = log.startTime else { return false }
-            return startTime >= startOfDay && startTime < endOfDay
+            
+            if let endTime = log.endTime{
+                return  startTime >= startOfDay && startTime < endOfDay || log.endTime == nil  || endTime >= startOfDay && endTime < endOfDay
+            }
+            return startTime >= startOfDay && startTime < endOfDay || log.endTime == nil
         }
     }
     
@@ -61,7 +67,6 @@ struct TimeLineView: View {
     func getGeometry(date: Date?, geometry: GeometryProxy)-> CGFloat{
         if date == nil { let timeVal = TimeHandler().getTimeValueForDate(date: Date.now, selectedDate: selectedDate);
             return calculateGeometryOfHouer(hour: timeVal, geometry: geometry)}
-        
         
             let startOfDay = calendar.startOfDay(for: selectedDate)
         
@@ -89,28 +94,23 @@ struct TimeLineView: View {
             ScrollView{
                 GeometryReader { geometry in
                     ZStack(alignment: .top) {
-                        // Background timeline
                         VStack(spacing: 0) {
                             ForEach(hours, id: \.self) { hour in
-                                TimeLineSegmentView(hour: hour, height: geometry.size.height / 24).id(hour)
+                                TimeLineSegmentView(hour: hour, height: geometry.size.height / 24)
+                                    .padding(.horizontal, 20)
+                                    .id(hour)
                             }
                         }
                         ForEach(logs) { log in
-                            TimeLineActivitySegmentView(start: getGeometry(date: log.startTime, geometry: geometry), end: getGeometry(date: log.endTime, geometry: geometry), log: log)
+                            TimeLineActivitySegmentView(start: getGeometry(date: log.startTime, geometry: geometry), end: getGeometry(date: log.endTime, geometry: geometry), log: log).padding(.horizontal, 20)
                         }
                         
                         // Moving red line
-                        Rectangle()
-                            .padding([.leading], 0)
-                            .frame(height: lineHeight)
-                            .foregroundColor(.accentColor)
-                            .opacity(0.4)
-                            .frame(maxWidth: .infinity)
-                            .offset(y: CGFloat(currentTimeValue) * (geometry.size.height/24) + (geometry.size.height/24)/2 - CGFloat(lineHeight/2))
+                        TimeLineCurrentTimeView(currentTimeValue: currentTimeValue, geometry: geometry)
                     }
                 }
                 .frame(height: currentZoom + totalZoom)
-                .padding(.horizontal, 20)
+        
             } .onAppear {
                 updateTime()
                 // Scroll to the current hour

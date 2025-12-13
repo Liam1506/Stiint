@@ -12,6 +12,8 @@ class TimeHandler{
     
     let calendar = Calendar.current
     
+    
+    
     func nativeHourString(hour: Int) -> String {
         var comps = DateComponents()
         comps.hour = hour
