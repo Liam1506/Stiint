@@ -1,4 +1,4 @@
-# Stint
+# Stiint
 
 ### Idea
 
