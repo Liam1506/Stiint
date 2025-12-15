@@ -26,7 +26,22 @@ public actor ActivityLogActor {
         
     }
     
-    public func getStartTimeOfActivityLog(activityLogId: UUID) -> ActivityDTO? {
+    public func resumeActivity(activityLogId: UUID)-> UUID? {
+        print("Try to resume activity")
+        let fetchDescriptor = FetchDescriptor<ActivityLog>(
+            predicate: #Predicate { $0.id == activityLogId }
+        )
+        let activityLog = try? modelContext.fetch(fetchDescriptor).first
+        
+        if activityLog == nil { return nil }
+        
+        activityLog!.endTime = nil
+        try? modelContext.save()
+        return activityLog!.id
+        
+    }
+    
+    public func getActivtyLogDTO(activityLogId: UUID) -> ActivityDTO? {
         let fetchDescriptor = FetchDescriptor<ActivityLog>(
             predicate: #Predicate { $0.id == activityLogId }
         )
@@ -40,9 +55,16 @@ public actor ActivityLogActor {
             return nil
         }
         
-        return ActivityDTO(id: activityId, name: activityName, startTime: startTime, icon: activity.sfSymbolName ?? "questionmark.circle.fill", color: activity.color)
+        return ActivityDTO(id: activityId, name: activityName, startTime: startTime, icon: activity.sfSymbolName ?? "questionmark.circle.fill", color: activity.color, endTime: activityLog.endTime)
     }
     
+    
+private func isActivtyLongerThen(date: Date, min: Double) -> Bool{
+        
+        let seconds = min * 60
+        let now = Date.now
+        return now.timeIntervalSince(date) <= seconds
+    }
     
     public func stopActivity(activityLogId: UUID) {
         let activityLog = getActivityLogById(from: activityLogId)

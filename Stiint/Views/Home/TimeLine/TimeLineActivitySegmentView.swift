@@ -18,7 +18,7 @@ struct TimeLineActivitySegmentView: View {
     
     var body: some View {
         
-        if(end-start > 10){
+        if(end-start > 0){
             
             
             ZStack(alignment: .topLeading){

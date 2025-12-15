@@ -69,6 +69,18 @@ struct CreateActivityView: View {
             "envelope.fill",             // Roller / E-Scooter
             "figure.walk",              // Spaziergang / Gehen
             "figure.roll",              // Rollstuhl / Mobilitätshilfe
+            
+            "app.badge.clock",
+            "nosign.app",
+            "app.dashed",
+            "powersleep",
+            "sleep",
+            
+            "wifi",
+            "house.badge.wifi",
+            "mappin.and.ellipse",
+            "fuelpump.fill",
+            "point.bottomleft.forward.to.arrow.triangle.scurvepath.fill"
         ]
     
     // Grid Layout

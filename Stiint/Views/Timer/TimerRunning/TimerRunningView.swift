@@ -19,8 +19,13 @@ struct TimerRunningView: View {
     @State private var activityLog: ActivityLog?
     
     var body: some View {
-        if(RunningManager.shared.currentActivityLogId == nil || RunningManager.shared.activityDTO == nil){
-            Text("Loading")
+        
+        if(RunningManager.shared.activityDTO == nil){
+            Text("Awaiting activityDTO")
+        }
+        
+        else if(RunningManager.shared.currentActivityLogId == nil){
+            Text("Awaiting currentActivityLogId")
         }else{
             
             NavigationView {
