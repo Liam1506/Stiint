@@ -31,7 +31,7 @@ struct ContentView: View {
          
         
             Tab("Settings", systemImage: "gear") {
-                InstructionView()
+                SettingsView()
             }
         }
             .tabViewBottomAccessory() {
