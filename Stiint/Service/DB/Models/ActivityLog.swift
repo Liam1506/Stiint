@@ -19,16 +19,21 @@ public final class ActivityLog{
     public var startTime: Date?
     public var endTime: Date?
     public var activity: Activity?
+    public var previousActivityLogId: UUID?
     
 
     public init(
         startTime: Date? = nil,
-        activity: Activity? = nil
+        activity: Activity? = nil,
+        previousActivityLogId: UUID? = nil,
+        
+        
     ) {
         self.id = id ?? UUID()
         self.startTime = startTime ?? Date.now
         self.endTime = nil
         self.activity = activity
+        self.previousActivityLogId = previousActivityLogId
     }
 
 }

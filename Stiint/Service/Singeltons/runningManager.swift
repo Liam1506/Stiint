@@ -15,29 +15,23 @@ import Observation
 @Observable
 public final class RunningManager {
     private(set) var currentActivityLogId: UUID?
-    private(set) var previousActivityLogId: UUID?
     
     private(set) var running: Bool
     private(set) var activityDTO: ActivityDTO?
-    private(set) var previousActivityDTO: ActivityDTO?
     
     
     init(){
         running = false
-        currentActivityLogId = nil
-        activityDTO = nil
-        
         setup();
     }
     
     private func setup() {
         currentActivityLogId = ActivityLogPreferences.getActivityLogId()
+        
         if let id = currentActivityLogId{
-            
             Task{
                 activityDTO = await PersistenceManager.shared.activityLogActor.getActivtyLogDTO(activityLogId: id)
-                print("Activity found \(activityDTO.debugDescription)")
-                
+
                 guard activityDTO != nil else {
                     currentActivityLogId = nil
                     ActivityLogPreferences.removeActivityLogId()
@@ -46,28 +40,20 @@ public final class RunningManager {
                 
                 running = true
             }
-            
         }else{
-            print("ERROR: No ActivityLogId found")
+            print("No running activity found")
         }
     }
     
     public func stopAndStartPreviousActivity(){
-        
-            let prevId = previousActivityDTO?.id
-            let currentId = activityDTO?.id
-            
-        print("Prev id \(prevId)")
-        
-    print("currentId id \(currentId)")
-      
+        guard currentActivityLogId != nil else { return }
         Task{
-            if(prevId == nil){
-            await    stopActivity()
-            }
-            //await stopActivity()
-            if(prevId != nil && prevId != currentId){
-                startActivity(activityId: prevId!)
+            if let previLogId = await PersistenceManager.shared.activityLogActor.getPreviousActivtyLogID(activityLogId: currentActivityLogId!){
+                if let previId = await PersistenceManager.shared.activityLogActor.getActivtyLogDTO(activityLogId: previLogId){
+                    startActivity(activityId: previId.id)
+                }
+            }else{
+                await stopActivity()
             }
         }
     }
@@ -75,11 +61,10 @@ public final class RunningManager {
     
     
     //If activiyt is smaller the 5 minutes away, it should be returend
-    private func checkResume(activityId: UUID) async-> Bool{
+    // Currently not working, only by soft reset
+    /*private func checkResume(activityId: UUID) async-> Bool{
         
-        guard previousActivityLogId != nil else { return false }
         guard activityDTO == nil else { return false }
-        guard previousActivityDTO?.id == activityId else { return false}
          
         
         let oldActvityEndTime = await PersistenceManager.shared.activityLogActor.getActivtyLogDTO(activityLogId: previousActivityLogId!)?.endTime
@@ -92,6 +77,7 @@ public final class RunningManager {
         return now.timeIntervalSince(oldActvityEndTime!) <= fiveMinutes
             && now.timeIntervalSince(oldActvityEndTime!) >= 0
     }
+    */
     
     public func startActivity(activityId: UUID){
         print("START \(activityId)")
@@ -102,31 +88,20 @@ public final class RunningManager {
         
         
         Task{
+            var prevId: UUID? = nil
             
-            let resumeActivity = await checkResume(activityId: activityId)
-
-            await softStopActivity()
-            
-        
-            
-            print("Should resume \(resumeActivity)" )
-            
-            if (resumeActivity && previousActivityLogId != nil){
-                currentActivityLogId = await PersistenceManager.shared.activityLogActor.resumeActivity(activityLogId: previousActivityLogId!)
-                
-            }else{
-                
-                print("STARTING NEW ACTIVITY \(activityId)")
-                currentActivityLogId = await PersistenceManager.shared.activityLogActor.startActivity(activityId: activityId)
+            if(running){
+                prevId = currentActivityLogId
+                await stopActivity()
             }
             
-            
+            currentActivityLogId = await PersistenceManager.shared.activityLogActor.startActivity(activityId: activityId, previousAcvitiyLogId: prevId)
             guard currentActivityLogId != nil else { return }
+            
+            activityDTO = await PersistenceManager.shared.activityLogActor.getActivtyLogDTO(activityLogId: currentActivityLogId!)
             
             ActivityLogPreferences.saveActivityLogId(id: currentActivityLogId!)
 
-            activityDTO = await PersistenceManager.shared.activityLogActor.getActivtyLogDTO(activityLogId: currentActivityLogId!)
-            
             running = true
         }
         
@@ -142,35 +117,6 @@ public final class RunningManager {
     }
    
     
-    public func softStopActivity() async {
-        
-        if currentActivityLogId == nil { return }
-        
-        await PersistenceManager.shared.activityLogActor.stopActivity(activityLogId: currentActivityLogId!)
-        
-        ActivityLogPreferences.removeActivityLogId()
-        
-        previousActivityLogId = currentActivityLogId
-        
-        print("Setting prev id to \(String(describing: previousActivityLogId))")
-        
-        print("Stopping activity and saving previous dto \(activityDTO.debugDescription)")
-        if(activityDTO != nil){
-            print("Overwriting old DTO")
-            previousActivityDTO = activityDTO
-        }
-        if(activityDTO != nil){
-            print("Overwriting old DTO")
-            previousActivityDTO = activityDTO
-        }
-        
-        
-        
-        currentActivityLogId = nil
-        activityDTO = nil
-        running = false
-        
-    }
     
     public func stopActivity() async {
         
@@ -179,15 +125,6 @@ public final class RunningManager {
         await PersistenceManager.shared.activityLogActor.stopActivity(activityLogId: currentActivityLogId!)
         
         ActivityLogPreferences.removeActivityLogId()
-        
-        previousActivityLogId = currentActivityLogId
-        
-        print("Setting prev id to \(String(describing: previousActivityLogId))")
-        
-        print("Stopping activity and saving previous dto \(activityDTO.debugDescription)")
-        
-        previousActivityDTO = nil
-        
         
         currentActivityLogId = nil
         activityDTO = nil

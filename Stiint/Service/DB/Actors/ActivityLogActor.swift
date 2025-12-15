@@ -12,14 +12,19 @@ import SwiftData
 
 @ModelActor
 public actor ActivityLogActor {
-    public func startActivity(activityId: UUID)-> UUID? {
+    public func startActivity(activityId: UUID, previousAcvitiyLogId: UUID? = nil)-> UUID? {
         
         let fetchDescriptor = FetchDescriptor<Activity>(
                     predicate: #Predicate { $0.id == activityId }
                 )
              let activity = try? modelContext.fetch(fetchDescriptor).first
+        
+        print("Found Activity \(activity?.name)")
              
-        let activityLog = ActivityLog(activity: activity)
+        let activityLog = ActivityLog(activity: activity, previousActivityLogId: previousAcvitiyLogId)
+        
+        
+        print("activityLog \(activityLog)")
         modelContext.insert(activityLog)
         try? modelContext.save()
         return activityLog.id
@@ -39,6 +44,15 @@ public actor ActivityLogActor {
         try? modelContext.save()
         return activityLog!.id
         
+    }
+    
+    public func getPreviousActivtyLogID(activityLogId: UUID) -> UUID? {
+        let fetchDescriptor = FetchDescriptor<ActivityLog>(
+            predicate: #Predicate { $0.id == activityLogId }
+        )
+        let activityLog = try? modelContext.fetch(fetchDescriptor).first
+        
+        return activityLog?.previousActivityLogId
     }
     
     public func getActivtyLogDTO(activityLogId: UUID) -> ActivityDTO? {
