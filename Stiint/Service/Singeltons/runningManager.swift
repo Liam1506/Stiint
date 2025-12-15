@@ -13,7 +13,7 @@ import SwiftUI
 import Observation
 
 @Observable
-public final class RunningManager: Sendable {
+public final class RunningManager {
     private(set) var currentActivityLogId: UUID?
     private(set) var previousActivityLogId: UUID?
     
@@ -62,7 +62,10 @@ public final class RunningManager: Sendable {
     print("currentId id \(currentId)")
       
         Task{
-            await stopActivity()
+            if(prevId == nil){
+            await    stopActivity()
+            }
+            //await stopActivity()
             if(prevId != nil && prevId != currentId){
                 startActivity(activityId: prevId!)
             }
@@ -101,10 +104,10 @@ public final class RunningManager: Sendable {
         Task{
             
             let resumeActivity = await checkResume(activityId: activityId)
+
+            await softStopActivity()
             
-            if(currentActivityLogId != nil){
-               await stopActivity()
-            }
+        
             
             print("Should resume \(resumeActivity)" )
             
@@ -139,7 +142,7 @@ public final class RunningManager: Sendable {
     }
    
     
-    public func stopActivity(newId: UUID? = nil) async {
+    public func softStopActivity() async {
         
         if currentActivityLogId == nil { return }
         
@@ -152,19 +155,45 @@ public final class RunningManager: Sendable {
         print("Setting prev id to \(String(describing: previousActivityLogId))")
         
         print("Stopping activity and saving previous dto \(activityDTO.debugDescription)")
-        if(activityDTO != nil && activityDTO?.id != newId){
+        if(activityDTO != nil){
             print("Overwriting old DTO")
             previousActivityDTO = activityDTO
         }
+        if(activityDTO != nil){
+            print("Overwriting old DTO")
+            previousActivityDTO = activityDTO
+        }
+        
+        
         
         currentActivityLogId = nil
         activityDTO = nil
         running = false
         
     }
-        
-
     
+    public func stopActivity() async {
+        
+        if currentActivityLogId == nil { return }
+        
+        await PersistenceManager.shared.activityLogActor.stopActivity(activityLogId: currentActivityLogId!)
+        
+        ActivityLogPreferences.removeActivityLogId()
+        
+        previousActivityLogId = currentActivityLogId
+        
+        print("Setting prev id to \(String(describing: previousActivityLogId))")
+        
+        print("Stopping activity and saving previous dto \(activityDTO.debugDescription)")
+        
+        previousActivityDTO = nil
+        
+        
+        currentActivityLogId = nil
+        activityDTO = nil
+        running = false
+        
+    }
     
 }
 
