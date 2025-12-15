@@ -9,35 +9,89 @@ import Sankey
 import SwiftUI
 
 struct SankyDiagramView: View {
+    let filterData: FilterData
     
-    let data = SankeyData(
-            nodes: [
-                SankeyNode("Avaible Time (24h)", color: .blue),
-                SankeyNode("Sleep (8h)", color: .red),
-                SankeyNode("Instagram (4h)", color: .yellow),
-                SankeyNode("Driving (3h)", color: .green),
+    private func updateSancy(){
+        let calendar = Calendar.current
+        let now = Date()
+
+        // 1. Get the start of Today (00:00:00 this morning)
+        let startOfToday = calendar.startOfDay(for: now)
+
+        // 2. End Date: Subtract 1 second to get 23:59:59 of Yesterday
+        let endOfYesterday = startOfToday.addingTimeInterval(-1)
+        //let endOfToday = now
+        // 3. Start Date: Go back 7 days from TODAY's start
+        // This gives you the previous 7 full days (excluding today)
+        let startOfSevenDaysAgo = calendar.date(byAdding: .day, value: -7, to: startOfToday)!
+
+        // 4. Call your function
+        Task{
+            let data = await AnalyticsDataProvider().loadDataForTimeFrame(
+                start: filterData.startDate,
+                end: filterData.endDate
+            )
+            sankeyData = calcSampleData(timeFrameData: data)
+        }
+    }
+    
+    
+    private func calcSampleData(timeFrameData: TimeFrameData) -> SankeyData {
+        
+        var links: [SankeyLink] = []
+        let keyFrom = "Avaible Time (24h)"
+        let freeTimeKey = "Free Time"
+        var nodes: [SankeyNode] = [SankeyNode(keyFrom, color: .blue),]
+        
+        for point in timeFrameData.dataPoints {
+            
+            var time: Double = 0
+            if(point.timeSpend > 0){
+                 time = point.timeSpend
                 
-                SankeyNode("Work (9h)", color: .green),
+                
+            }else{
+                
+                time = point.timeSpend * -1
+            }
+            let name = "\(point.activity.name!) (\(TimeHandler().secondsToLocalizedDuration(time)))"
+            nodes.append(SankeyNode(name, color: point.activity.color))
+            links.append(SankeyLink(time, from: keyFrom, to: name))
+        }
+        
+        if(filterData.showFreeTime){
+            
+            nodes.append(SankeyNode(freeTimeKey, color: .accentColor))
+            print("Free time: \(timeFrameData.timeOverall - timeFrameData.timeSpendOnActivities)")
+            links.append(SankeyLink((timeFrameData.timeOverall - timeFrameData.timeSpendOnActivities), from: keyFrom, to: freeTimeKey))
+        }
+        
+        return SankeyData(nodes: nodes, links: links)
+    }
+
+    @State var sankeyData = SankeyData(
+            nodes: [
             ],
             links: [
-                SankeyLink(8, from: "Avaible Time (24h)", to: "Sleep (8h)"),
-                SankeyLink(4, from: "Avaible Time (24h)", to: "Instagram (4h)"),
-                SankeyLink(3, from: "Avaible Time (24h)", to: "Driving (3h)"),
-                SankeyLink(9, from: "Avaible Time (24h)", to: "Work (9h)"),
+               
             ]
         )
     
     var body: some View {
-        SankeyDiagram(data)
+        
+
+        SankeyDiagram(sankeyData)
                 .nodeOpacity(1)
                 .linkColorMode(.target)
-                .padding(30)
-                .frame(height: 300)
+                .padding(15)
+                .frame(height: 400)
                 .background(.regularMaterial)
-                .cornerRadius(40)
+                .cornerRadius(30)
+                .onAppear(){
+                    updateSancy()
+                }.onChange(of: filterData) { _, _ in
+                    updateSancy()
+                }
     }
 }
 
-#Preview {
-    SankyDiagramView()
-}

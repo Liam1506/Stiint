@@ -117,6 +117,7 @@ struct LogDetailView: View {
            
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {
+                        try? modelContext.save()
                         dismiss()
                     }
                 }

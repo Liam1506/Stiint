@@ -12,6 +12,14 @@ class TimeHandler{
     
     let calendar = Calendar.current
     
+    func secondsToLocalizedDuration(_ seconds: Double) -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute]
+        formatter.unitsStyle = .abbreviated
+        return formatter.string(from: TimeInterval(seconds)) ?? ""
+    }
+
+    
     
     
     func nativeHourString(hour: Int) -> String {

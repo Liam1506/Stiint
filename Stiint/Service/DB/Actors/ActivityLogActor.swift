@@ -31,6 +31,26 @@ public actor ActivityLogActor {
         
     }
     
+    public func getActivitisForTimeFrame(start: Date, end: Date) -> [ActivityLog] {
+        // 1. Define a fallback date outside the predicate (SwiftData captures this)
+        let defaultDate = Date.distantPast
+        
+        let fetchDescriptor = FetchDescriptor<ActivityLog>(
+            // 2. Use ?? to say: "If startTime is nil, use defaultDate"
+            predicate: #Predicate {
+                ($0.startTime ?? defaultDate) >= start &&
+                ($0.startTime ?? defaultDate) <= end
+            }
+        )
+        
+        // 3. Avoid 'try!' which crashes your app on database errors. Use a do-catch or try?
+        do {
+            return try modelContext.fetch(fetchDescriptor)
+        } catch {
+            print("Database fetch failed: \(error)")
+            return []
+        }
+    }
     public func resumeActivity(activityLogId: UUID)-> UUID? {
         print("Try to resume activity")
         let fetchDescriptor = FetchDescriptor<ActivityLog>(
