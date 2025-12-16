@@ -18,7 +18,7 @@ enum DateRangeFilter: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
-struct FilterData: Equatable {
+public struct FilterData: Equatable {
     var startDate: Date
     var endDate: Date
     var showFreeTime: Bool

@@ -19,8 +19,7 @@ public actor ActivityLogActor {
                 )
              let activity = try? modelContext.fetch(fetchDescriptor).first
         
-        print("Found Activity \(activity?.name)")
-             
+
         let activityLog = ActivityLog(activity: activity, previousActivityLogId: previousAcvitiyLogId)
         
         
@@ -31,26 +30,44 @@ public actor ActivityLogActor {
         
     }
     
-    public func getActivitisForTimeFrame(start: Date, end: Date) -> [ActivityLog] {
-        // 1. Define a fallback date outside the predicate (SwiftData captures this)
+    
+    
+    public func getActivitiesForTimeFrame(filterData: FilterData) -> [ActivityLog] {
+        // Define fallback date and capture filter values
         let defaultDate = Date.distantPast
+        let startDate = filterData.startDate
+        let endDate = filterData.endDate
+        let selectedIds: [UUID] = filterData.selectedActivityIds
         
+        // Break into sub-predicates
+        let afterStartDate = #Predicate<ActivityLog> { log in
+            (log.startTime ?? defaultDate) >= startDate
+        }
+        
+        let beforeEndDate = #Predicate<ActivityLog> { log in
+            (log.startTime ?? defaultDate) <= endDate
+        }
+        
+        // Combine predicates
         let fetchDescriptor = FetchDescriptor<ActivityLog>(
-            // 2. Use ?? to say: "If startTime is nil, use defaultDate"
-            predicate: #Predicate {
-                ($0.startTime ?? defaultDate) >= start &&
-                ($0.startTime ?? defaultDate) <= end
+            predicate: #Predicate { log in
+                afterStartDate.evaluate(log) &&
+                beforeEndDate.evaluate(log)
             }
         )
         
-        // 3. Avoid 'try!' which crashes your app on database errors. Use a do-catch or try?
+        // Fetch with proper error handling
         do {
-            return try modelContext.fetch(fetchDescriptor)
+            let data = try modelContext.fetch(fetchDescriptor)
+            return data.filter { log in
+                selectedIds.contains(log.activity!.id!)
+            }
         } catch {
             print("Database fetch failed: \(error)")
             return []
         }
     }
+    
     public func resumeActivity(activityLogId: UUID)-> UUID? {
         print("Try to resume activity")
         let fetchDescriptor = FetchDescriptor<ActivityLog>(
@@ -89,7 +106,7 @@ public actor ActivityLogActor {
             return nil
         }
         
-        return ActivityDTO(id: activityId, name: activityName, startTime: startTime, icon: activity.sfSymbolName ?? "questionmark.circle.fill", color: activity.color, endTime: activityLog.endTime)
+        return ActivityDTO(id: activityId, name: activityName, startTime: startTime, icon: activity.sfSymbolName ?? "questionmark.circle.fill", color: activity.color, weekdays: activity.weekdays, endTime: activityLog.endTime)
     }
     
     

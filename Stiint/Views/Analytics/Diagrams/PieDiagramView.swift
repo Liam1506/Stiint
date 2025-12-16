@@ -31,15 +31,14 @@ struct PieDiagramView: View {
         // 4. Call your function
         Task{
             let data = await AnalyticsDataProvider().loadDataForTimeFrame(
-                start: filterData.startDate,
-                end: filterData.endDate
+                filterData: filterData
             )
             
             let freeTimeActivity = Activity(id: UUID(), name: "Free Time", color: .accentColor)
             pieChartData = data.dataPoints
             if(filterData.showFreeTime){
                 
-                pieChartData.append(DataPoint(Activity: freeTimeActivity, timeSpend: data.timeOverall - data.timeSpendOnActivities))
+                pieChartData.append(DataPoint(activity: freeTimeActivity, timeSpend: data.timeOverall - data.timeSpendOnActivities, startDate: filterData.startDate, endDate: filterData.endDate))
             }
         }
     }
@@ -63,7 +62,7 @@ struct PieDiagramView: View {
                 .padding(15)
                 .frame(height: 400)
                 .background(.regularMaterial)
-                .cornerRadius(30)
+                .cornerRadius(12)
                 .onAppear {
                     updateSancy()
                 }.onChange(of: filterData) { _, _ in

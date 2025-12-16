@@ -13,5 +13,6 @@ public struct ActivityDTO: Sendable {
     let startTime: Date
     let icon: String
     let color: Color
+    let weekdays: Set<Weekday>
     var endTime: Date?
 }

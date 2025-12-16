@@ -16,7 +16,7 @@ struct DayPickerView: View {
                VStack{
                    
               
-                   Text("When an activity is started on each subsequent day, it will neither be saved nor included in the insights.")
+                   Text("This activity can only be triggered on selected days. On other days, it won’t start automatically when triggered, but you can still start or stop it manually.")
                        .font(.subheadline)
                        .padding()
                        .foregroundStyle(.secondary)
@@ -26,7 +26,7 @@ struct DayPickerView: View {
                        
                    
                            HStack {
-                               Text("Every "+day.title)
+                               Text(day.title)
                                Spacer()
                                if selectedDays.contains(day) {
                                    Image(systemName: "checkmark")
@@ -40,7 +40,7 @@ struct DayPickerView: View {
                        }
                    
                }
-               .navigationTitle("Untracked days")
+               .navigationTitle("Triggable days")
                .toolbar {
                    ToolbarItem(placement: .confirmationAction) {
                        Button("Done") {
@@ -61,31 +61,3 @@ struct DayPickerView: View {
        }
    }
 
-enum Weekday: Int, CaseIterable, Identifiable, Hashable {
-    case monday, tuesday, wednesday, thursday, friday, saturday, sunday
-
-    var id: Int { rawValue }
-
-    var title: String {
-        switch self {
-        case .monday: return "Monday"
-        case .tuesday: return "Tuesday"
-        case .wednesday: return "Wednesday"
-        case .thursday: return "Thursday"
-        case .friday: return "Friday"
-        case .saturday: return "Saturday"
-        case .sunday: return "Sunday"
-        }
-    }
-    var shortTitle: String {
-           switch self {
-           case .monday: return "Mon"
-           case .tuesday: return "Tue"
-           case .wednesday: return "Wed"
-           case .thursday: return "Thu"
-           case .friday: return "Fri"
-           case .saturday: return "Sat"
-           case .sunday: return "Sun"
-           }
-       }
-}

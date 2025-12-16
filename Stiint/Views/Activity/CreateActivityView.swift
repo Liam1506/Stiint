@@ -14,6 +14,8 @@ struct CreateActivityView: View {
     @State private var activityName: String = ""
     @State private var selectedColor: Color = .blue
     @State private var selectedIcon: String = "book.fill"
+    @State private var showDayPicker = false
+    @State private var showAlert = false
     
     
     let activityToEdit: Activity?
@@ -22,6 +24,19 @@ struct CreateActivityView: View {
         self.activityToEdit = activityToEdit
 
     }
+    
+    private var trackedDaysText: String {
+        if selectedDays.isEmpty {
+            return "None"
+        }
+
+        return selectedDays
+            .sorted { $0.rawValue < $1.rawValue }
+            .map { $0.shortTitle }
+            .joined(separator: ", ")
+    }
+    
+    @State private var selectedDays: Set<Weekday> = [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]
     
     // Data Sources
     let colors: [Color] = [
@@ -92,7 +107,8 @@ struct CreateActivityView: View {
         Task{
             
         
-            await PersistenceManager.shared.activityActor.editActivityById(activityId: activityToEdit!.id!, newName: activityName, newColor: selectedColor, newIcon: selectedIcon)
+            await PersistenceManager.shared.activityActor.editActivityById(activityId: activityToEdit!.id!, newName: activityName, newColor: selectedColor, newIcon: selectedIcon,weekdays: selectedDays)
+
             dismiss()
         }
     }
@@ -134,11 +150,32 @@ struct CreateActivityView: View {
                         }
                         .padding(.bottom, 20)
                         .background(Color(uiColor: .secondarySystemGroupedBackground))
-                        .cornerRadius(16)
+                        .cornerRadius(12)
                         .padding(.horizontal)
                         
-                        // 3. List Type Row
-                 
+                        Button {
+                            showDayPicker.toggle()
+                        } label: {
+                            HStack{
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Triggable days:")
+                                    Text(trackedDaysText)
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+                                Spacer()
+                                Image(systemName: "pencil")
+                            }
+                            .contentShape(.rect)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .buttonStyle(.plain)
+                        .padding()
+                        .background(.regularMaterial)
+                        .cornerRadius(12)
+                        .padding(.horizontal)
+
+                        
                         // 4. Color Picker Grid
                         VStack {
                             LazyVGrid(columns: columns, spacing: 15) {
@@ -220,9 +257,10 @@ struct CreateActivityView: View {
                     
                         }else{
                             Task{
-                                await PersistenceManager.shared.activityActor.addActivity(name: activityName, color: selectedColor, icon: selectedIcon)
+                                await PersistenceManager.shared.activityActor.addActivity(name: activityName, color: selectedColor, icon: selectedIcon, weekdays: selectedDays )
+                                showAlert.toggle()
                                 
-                                dismiss()
+                             
                           }
                         }
                   
@@ -238,6 +276,20 @@ struct CreateActivityView: View {
                     selectedColor = activity.color
                     print(activity.color)
                     selectedIcon = activity.sfSymbolName ?? ""
+                    selectedDays = activity.weekdays
+                }
+            }.sheet(isPresented: $showDayPicker) {
+                DayPickerView(
+                    selectedDays: $selectedDays
+                )
+            }.alert("What would you like to do?", isPresented: $showAlert) {
+                Button("Create Automation Now", role: .confirm) {
+                    // Handle creating the automation
+                    openAutomationPage()
+                    dismiss()
+                }
+                Button("Do It Later", role: .cancel) {
+                    dismiss()
                 }
             }
         }

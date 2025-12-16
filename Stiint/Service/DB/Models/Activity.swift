@@ -17,13 +17,16 @@ public final class Activity {
     public var colorHex: String?   // Optional for iCloud compatibility
     public var sfSymbolName: String? // New property for SF Symbol
     public var deleted: Bool?
+    public var weekdays: Set<Weekday>
+    
     public init(
         id: UUID? = nil,
         createdDate: Date? = nil,
         name: String? = nil,
         color: Color? = nil,
         sfSymbolName: String? = nil,
-        deleted: Bool? = nil
+        deleted: Bool? = nil,
+        weekdays: Set<Weekday> = []
 
         
     ) {
@@ -33,6 +36,7 @@ public final class Activity {
         self.colorHex = color?.toHex()
         self.sfSymbolName = sfSymbolName
         self.deleted = deleted
+        self.weekdays = weekdays
     }
 
     public var color: Color {

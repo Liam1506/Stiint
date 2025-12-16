@@ -13,16 +13,16 @@ import SwiftUI
 
 @ModelActor
 public actor ActivityActor {
-    public func addActivity(name: String, color: Color = .blue, icon: String? = nil) {
+    public func addActivity(name: String, color: Color = .blue, icon: String? = nil, weekdays: Set<Weekday> = []) {
         if(getActivityByName(from: name) != nil) {
             return
         }
-        let activity = Activity(name: name, color: color, sfSymbolName: icon)
+        let activity = Activity(name: name, color: color, sfSymbolName: icon, weekdays: weekdays)
         modelContext.insert(activity)
         try? modelContext.save()
     }
     
-    public func editActivityById(activityId: UUID, newName: String? = nil, newColor: Color? = nil, newIcon: String? = nil) {
+    public func editActivityById(activityId: UUID, newName: String? = nil, newColor: Color? = nil, newIcon: String? = nil, weekdays: Set<Weekday> = []) {
         let fetchDescriptor = FetchDescriptor<Activity>(
                predicate: #Predicate { $0.id == activityId }
            )
@@ -31,7 +31,7 @@ public actor ActivityActor {
         activity?.name = newName
         activity?.color = newColor ?? activity!.color
         activity?.sfSymbolName = newIcon
-
+        activity?.weekdays = weekdays
         
         
         try? modelContext.save()
@@ -59,6 +59,26 @@ public actor ActivityActor {
         let activity = try? modelContext.fetch(fetchDescriptor)
         
         return activity?.first
+    }
+    
+    public func addWeekday(from activityId: UUID, weekday: Weekday) {
+        let fetchDescriptor = FetchDescriptor<Activity>(
+               predicate: #Predicate { $0.id == activityId }
+           )
+        let activity = try? modelContext.fetch(fetchDescriptor).first
+        activity?.weekdays.insert(weekday)
+        
+        try? modelContext.save()
+    }
+    
+    public func removeWeekday(from activityId: UUID, weekday: Weekday) {
+        let fetchDescriptor = FetchDescriptor<Activity>(
+               predicate: #Predicate { $0.id == activityId }
+           )
+        let activity = try? modelContext.fetch(fetchDescriptor).first
+        activity?.weekdays.remove(weekday)
+        
+        try? modelContext.save()
     }
 
     public func delete(from activityId: UUID) {

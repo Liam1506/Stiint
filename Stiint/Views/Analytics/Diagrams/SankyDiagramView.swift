@@ -10,6 +10,7 @@ import SwiftUI
 
 struct SankyDiagramView: View {
     let filterData: FilterData
+    @State var data: TimeFrameData?
     
     private func updateSancy(){
         let calendar = Calendar.current
@@ -18,20 +19,12 @@ struct SankyDiagramView: View {
         // 1. Get the start of Today (00:00:00 this morning)
         let startOfToday = calendar.startOfDay(for: now)
 
-        // 2. End Date: Subtract 1 second to get 23:59:59 of Yesterday
-        let endOfYesterday = startOfToday.addingTimeInterval(-1)
-        //let endOfToday = now
-        // 3. Start Date: Go back 7 days from TODAY's start
-        // This gives you the previous 7 full days (excluding today)
-        let startOfSevenDaysAgo = calendar.date(byAdding: .day, value: -7, to: startOfToday)!
-
         // 4. Call your function
         Task{
-            let data = await AnalyticsDataProvider().loadDataForTimeFrame(
-                start: filterData.startDate,
-                end: filterData.endDate
+             data = await AnalyticsDataProvider().loadDataForTimeFrame(
+               filterData: filterData
             )
-            sankeyData = calcSampleData(timeFrameData: data)
+            sankeyData = calcSampleData(timeFrameData: data!)
         }
     }
     
@@ -39,31 +32,33 @@ struct SankyDiagramView: View {
     private func calcSampleData(timeFrameData: TimeFrameData) -> SankeyData {
         
         var links: [SankeyLink] = []
-        let keyFrom = "Avaible Time (24h)"
-        let freeTimeKey = "Free Time"
+        let day: Double = 24 * 60 * 60
+        let keyFrom = "Avaible Time (\(TimeHandler().secondsToLocalizedDuration(day)))"
+        
         var nodes: [SankeyNode] = [SankeyNode(keyFrom, color: .blue),]
         
         for point in timeFrameData.dataPoints {
             
             var time: Double = 0
             if(point.timeSpend > 0){
-                 time = point.timeSpend
+                 time = point.timeAvg
                 
                 
             }else{
                 
-                time = point.timeSpend * -1
+                time = point.timeAvg * -1
             }
             let name = "\(point.activity.name!) (\(TimeHandler().secondsToLocalizedDuration(time)))"
             nodes.append(SankeyNode(name, color: point.activity.color))
             links.append(SankeyLink(time, from: keyFrom, to: name))
         }
-        
+        let freeTimeKey = "Free Time (\(TimeHandler().secondsToLocalizedDuration(day - timeFrameData.timeSpendOnActivitiesAvg)))"
         if(filterData.showFreeTime){
             
             nodes.append(SankeyNode(freeTimeKey, color: .accentColor))
-            print("Free time: \(timeFrameData.timeOverall - timeFrameData.timeSpendOnActivities)")
-            links.append(SankeyLink((timeFrameData.timeOverall - timeFrameData.timeSpendOnActivities), from: keyFrom, to: freeTimeKey))
+            print("Free time: \(timeFrameData.timeOverall - timeFrameData.timeSpendOnActivitiesAvg)")
+         
+            links.append(SankeyLink(day - timeFrameData.timeSpendOnActivitiesAvg, from: keyFrom, to: freeTimeKey))
         }
         
         return SankeyData(nodes: nodes, links: links)
@@ -79,14 +74,29 @@ struct SankyDiagramView: View {
     
     var body: some View {
         
-
-        SankeyDiagram(sankeyData)
+        VStack(alignment: .leading){
+            Text("Avg. Time per Day")
+                .font(.headline)
+            Text("The diagram illustrates the average amount of time you spend each day over a given period.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            SankeyDiagram(sankeyData)
                 .nodeOpacity(1)
                 .linkColorMode(.target)
-                .padding(15)
                 .frame(height: 400)
+            NavigationLink("Learn more"){
+                if(data != nil){
+                    DetailsDiagramView(data:  data!.dataPoints)
+                }else{
+                    Text("Data error")
+                }
+            
+            }
+        }
+           
+                .padding(15)
                 .background(.regularMaterial)
-                .cornerRadius(30)
+                .cornerRadius(12)
                 .onAppear(){
                     updateSancy()
                 }.onChange(of: filterData) { _, _ in
