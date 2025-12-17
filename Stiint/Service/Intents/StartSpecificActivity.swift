@@ -7,7 +7,7 @@
 import Foundation
 import AppIntents
 
-struct StartSpecificActivity: AppIntent {
+struct StartSpecificActivity: LiveActivityIntent {
     static var title: LocalizedStringResource = "Start an Activity"
     
     @Parameter(title: "Activity")
@@ -21,10 +21,15 @@ struct StartSpecificActivity: AppIntent {
         // Use the selected activity
         // QuickActionHandler.shared.performAction(selected: activity.id)
         
-        Task{
-         await
-            RunningManager.shared.startActivity(activityId: activity.id)
-        }
+        
+        //await LiveActivityManager.shared.startLiveActivity(dto: RunningManager.shared.activityDTO!)
+        
+        await RunningManager.shared.startActivity(activityId: activity.id)
+            
+        
+        
+        
+        
         
         return .result()
     }

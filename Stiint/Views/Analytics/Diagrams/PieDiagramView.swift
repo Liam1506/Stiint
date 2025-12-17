@@ -34,7 +34,7 @@ struct PieDiagramView: View {
                 filterData: filterData
             )
             
-            let freeTimeActivity = Activity(id: UUID(), name: "Free Time", color: .accentColor)
+            let freeTimeActivity = ActivityItem(id: UUID(), name: "Free Time", color: .accentColor)
             pieChartData = data.dataPoints
             if(filterData.showFreeTime){
                 

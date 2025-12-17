@@ -14,7 +14,7 @@ import SwiftData
 public actor ActivityLogActor {
     public func startActivity(activityId: UUID, previousAcvitiyLogId: UUID? = nil)-> UUID? {
         
-        let fetchDescriptor = FetchDescriptor<Activity>(
+        let fetchDescriptor = FetchDescriptor<ActivityItem>(
                     predicate: #Predicate { $0.id == activityId }
                 )
              let activity = try? modelContext.fetch(fetchDescriptor).first
@@ -135,8 +135,8 @@ private func isActivtyLongerThen(date: Date, min: Double) -> Bool{
     }
 
     
-    public func editActivityLogById(activityId: UUID, newActivity: Activity) {
-        let fetchDescriptor = FetchDescriptor<Activity>(
+    public func editActivityLogById(activityId: UUID, newActivity: ActivityItem) {
+        let fetchDescriptor = FetchDescriptor<ActivityItem>(
                predicate: #Predicate { $0.id == activityId }
            )
         let activity = try? modelContext.fetch(fetchDescriptor).first

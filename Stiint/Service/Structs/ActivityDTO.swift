@@ -6,6 +6,7 @@
 //
 import Foundation
 import SwiftUI
+import ActivityKit
 
 public struct ActivityDTO: Sendable {
     let id: UUID

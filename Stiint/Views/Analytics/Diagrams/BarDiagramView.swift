@@ -25,7 +25,7 @@ struct BarDiagramView: View {
             let data = await AnalyticsDataProvider().loadDataForTimeFrame(
                 filterData: filterData            )
             
-            let freeTimeActivity = Activity(id: UUID(), name: "Free Time", color: .accentColor)
+            let freeTimeActivity = ActivityItem(id: UUID(), name: "Free Time", color: .accentColor)
             barChartData = data.dataPoints
             if(filterData.showFreeTime){
                 

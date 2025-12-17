@@ -12,15 +12,15 @@ import SwiftData
 public final class PersistenceManager: Sendable {
     
     public let modelContainer: ModelContainer
-  
     public let activityActor: ActivityActor
     public let activityLogActor: ActivityLogActor
 
     init() {
-        modelContainer = {
         
+        
+        modelContainer = {
             let schema = Schema([
-                Activity.self,
+                ActivityItem.self,
                 ActivityLog.self
             ])
             let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)

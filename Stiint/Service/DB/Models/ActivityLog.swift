@@ -18,13 +18,13 @@ public final class ActivityLog{
     public var id: UUID?
     public var startTime: Date?
     public var endTime: Date?
-    public var activity: Activity?
+    public var activity: ActivityItem?
     public var previousActivityLogId: UUID?
     
 
     public init(
         startTime: Date? = nil,
-        activity: Activity? = nil,
+        activity: ActivityItem? = nil,
         previousActivityLogId: UUID? = nil,
         
         

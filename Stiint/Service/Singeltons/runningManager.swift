@@ -11,9 +11,11 @@ import Foundation
 import SwiftData
 import SwiftUI
 import Observation
+import ActivityKit
 
 @Observable
 public final class RunningManager {
+    
     private(set) var currentActivityLogId: UUID?
     
     private(set) var running: Bool
@@ -39,22 +41,25 @@ public final class RunningManager {
                 }
                 
                 running = true
+                
+                await LiveActivityManager.shared.startLiveActivity(dto: activityDTO!)
+                
             }
         }else{
             print("No running activity found")
         }
     }
     
-    public func stopAndStartPreviousActivity(){
+    public func stopAndStartPreviousActivity() async{
         guard currentActivityLogId != nil else { return }
-        Task{
+        
             if let previLogId = await PersistenceManager.shared.activityLogActor.getPreviousActivtyLogID(activityLogId: currentActivityLogId!){
                 if let previId = await PersistenceManager.shared.activityLogActor.getActivtyLogDTO(activityLogId: previLogId){
                     startActivity(activityId: previId.id)
                 }
             }else{
                 await stopActivity()
-            }
+            
         }
     }
     
@@ -103,6 +108,12 @@ public final class RunningManager {
             ActivityLogPreferences.saveActivityLogId(id: currentActivityLogId!)
 
             running = true
+            
+            
+            
+            await LiveActivityManager.shared.startLiveActivity(dto: activityDTO!)
+            
+            
         }
         
     }
@@ -130,7 +141,10 @@ public final class RunningManager {
         activityDTO = nil
         running = false
         
+        LiveActivityManager.shared.stopLiveActivity()
+        
     }
+    
     
 }
 

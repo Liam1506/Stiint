@@ -18,9 +18,9 @@ struct CreateActivityView: View {
     @State private var showAlert = false
     
     
-    let activityToEdit: Activity?
+    let activityToEdit: ActivityItem?
 
-    init(activityToEdit: Activity? = nil) {
+    init(activityToEdit: ActivityItem? = nil) {
         self.activityToEdit = activityToEdit
 
     }
@@ -95,7 +95,13 @@ struct CreateActivityView: View {
             "house.badge.wifi",
             "mappin.and.ellipse",
             "fuelpump.fill",
-            "point.bottomleft.forward.to.arrow.triangle.scurvepath.fill"
+            "point.bottomleft.forward.to.arrow.triangle.scurvepath.fill",
+            
+            "heart.fill",
+            "heart.text.clipboard.fill",
+            "building.2.fill",
+            "building.columns.fill",
+            "figure.walk.suitcase.rolling"
         ]
     
     // Grid Layout

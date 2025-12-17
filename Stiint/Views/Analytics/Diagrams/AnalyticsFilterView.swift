@@ -26,9 +26,9 @@ public struct FilterData: Equatable {
 }
 
 struct AnalyticsFilterView: View {
-    @Query(filter: #Predicate<Activity> { activity in
+    @Query(filter: #Predicate<ActivityItem> { activity in
         activity.deleted == false || activity.deleted == nil
-    }, sort: \Activity.createdDate) private var activities: [Activity]
+    }, sort: \ActivityItem.createdDate) private var activities: [ActivityItem]
     
     @State private var selectedDateRange: DateRangeFilter = .last7Days
     @State private var showFreeTime: Bool = true
@@ -151,7 +151,7 @@ struct FilterSheet: View {
     @Binding var customStartDate: Date
     @Binding var customEndDate: Date
     @Binding var selectedActivities: Set<UUID>
-    let activities: [Activity]
+    let activities: [ActivityItem]
     let onApply: () -> Void
     
     var body: some View {
@@ -255,7 +255,7 @@ struct FilterSheet: View {
 
 // MARK: - Activity Filter Chip
 struct ActivityFilterChip: View {
-    let activity: Activity
+    let activity: ActivityItem
     let isSelected: Bool
     let onTap: () -> Void
     
@@ -297,6 +297,6 @@ struct ActivityFilterChip: View {
         print("- Show Free Time: \(filterData.showFreeTime)")
         print("- Activities: \(filterData.selectedActivityIds)")
     }
-    .modelContainer(for: Activity.self, inMemory: true)
+    .modelContainer(for: ActivityItem.self, inMemory: true)
     .padding()
 }

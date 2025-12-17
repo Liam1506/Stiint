@@ -10,14 +10,14 @@ import SwiftData
 
 struct SelectActivity: View {
     @State private var isShowingCreateSheet = false
-    @State private var activityToEdit: Activity?
-    @State private var activityToDelete: Activity?
+    @State private var activityToEdit: ActivityItem?
+    @State private var activityToDelete: ActivityItem?
     @State private var showDeleteConfirmation = false
 
-    @Query(filter: #Predicate<Activity> { activity in
+    @Query(filter: #Predicate<ActivityItem> { activity in
         activity.deleted == nil || activity.deleted == false
     })
-    private var activities: [Activity]
+    private var activities: [ActivityItem]
 
     var body: some View {
         NavigationView {

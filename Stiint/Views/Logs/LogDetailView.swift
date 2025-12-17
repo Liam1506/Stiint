@@ -14,7 +14,7 @@ struct LogDetailView: View {
     
     @Bindable var log: ActivityLog
     
-    @Query private var activities: [Activity]
+    @Query private var activities: [ActivityItem]
     
     @State private var showDeleteConfirmation = false
  
@@ -41,9 +41,9 @@ struct LogDetailView: View {
             Form {
                 Section("Activity") {
                     Picker("Activity", selection: $log.activity) {
-                        Text("None").tag(nil as Activity?)
+                        Text("None").tag(nil as ActivityItem?)
                         ForEach(activities) { activity in
-                            Text(activity.name ?? "Unnamed").tag(activity as Activity?)
+                            Text(activity.name ?? "Unnamed").tag(activity as ActivityItem?)
                         }
                     }
                 }

@@ -50,5 +50,5 @@ struct TimeLineActivitySegmentView: View {
 }
 
 #Preview {
-    TimeLineActivitySegmentView(start: 0, end: 51, log: ActivityLog(startTime:  Date.now, activity: Activity(id: UUID(), createdDate: Date.now, name: "test", color: .pink)))
+    TimeLineActivitySegmentView(start: 0, end: 51, log: ActivityLog(startTime:  Date.now, activity: ActivityItem(id: UUID(), createdDate: Date.now, name: "test", color: .pink)))
 }

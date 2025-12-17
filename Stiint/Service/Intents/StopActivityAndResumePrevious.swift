@@ -8,14 +8,13 @@
 import Foundation
 import AppIntents
 
-struct StopActivityAndResumePrevious: AppIntent {
+struct StopActivityAndResumePrevious: LiveActivityIntent {
     static var title: LocalizedStringResource = "Stop the and current activity and resume the previous activity"
 
     func perform() async throws -> some IntentResult {
         
-        Task{
                 await RunningManager.shared.stopAndStartPreviousActivity()
-            }
+        
         
         return .result()
     }

@@ -8,9 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		9AB0B1DB2EEDFABB00AE9F5C /* Sankey in Frameworks */ = {isa = PBXBuildFile; productRef = 9AB0B1DA2EEDFABB00AE9F5C /* Sankey */; };
+		9AD8525B2EF2B348003CC0AE /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AD8525A2EF2B348003CC0AE /* WidgetKit.framework */; };
+		9AD8525D2EF2B348003CC0AE /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AD8525C2EF2B348003CC0AE /* SwiftUI.framework */; };
+		9AD852682EF2B349003CC0AE /* stiintWidgetExtensionExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9AD852582EF2B348003CC0AE /* stiintWidgetExtensionExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		9AD852662EF2B349003CC0AE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E920D8522EE9ECE600491463 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9AD852572EF2B348003CC0AE;
+			remoteInfo = stiintWidgetExtensionExtension;
+		};
 		E920D86C2EE9ECE700491463 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E920D8522EE9ECE600491463 /* Project object */;
@@ -27,13 +37,45 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		9AD852692EF2B349003CC0AE /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				9AD852682EF2B349003CC0AE /* stiintWidgetExtensionExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		9AD852582EF2B348003CC0AE /* stiintWidgetExtensionExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = stiintWidgetExtensionExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		9AD8525A2EF2B348003CC0AE /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = /System/Library/Frameworks/WidgetKit.framework; sourceTree = "<absolute>"; };
+		9AD8525C2EF2B348003CC0AE /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = /System/Library/Frameworks/SwiftUI.framework; sourceTree = "<absolute>"; };
 		E920D85A2EE9ECE600491463 /* Stiint.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stiint.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E920D86B2EE9ECE700491463 /* StiintTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StiintTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E920D8752EE9ECE700491463 /* StiintUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StiintUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		9AD8526D2EF2B349003CC0AE /* Exceptions for "stiintWidgetExtension" folder in "stiintWidgetExtensionExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 9AD852572EF2B348003CC0AE /* stiintWidgetExtensionExtension */;
+		};
+		9AD852762EF2B5FB003CC0AE /* Exceptions for "Stiint" folder in "stiintWidgetExtensionExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Service/Shared/ColorExtension.swift,
+				Service/Shared/LiveActivityDTO.swift,
+			);
+			target = 9AD852572EF2B348003CC0AE /* stiintWidgetExtensionExtension */;
+		};
 		E920D87D2EE9ECE700491463 /* Exceptions for "Stiint" folder in "Stiint" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -44,10 +86,19 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		9AD8525E2EF2B348003CC0AE /* stiintWidgetExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9AD8526D2EF2B349003CC0AE /* Exceptions for "stiintWidgetExtension" folder in "stiintWidgetExtensionExtension" target */,
+			);
+			path = stiintWidgetExtension;
+			sourceTree = "<group>";
+		};
 		E920D85C2EE9ECE600491463 /* Stiint */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				E920D87D2EE9ECE700491463 /* Exceptions for "Stiint" folder in "Stiint" target */,
+				9AD852762EF2B5FB003CC0AE /* Exceptions for "Stiint" folder in "stiintWidgetExtensionExtension" target */,
 			);
 			path = Stiint;
 			sourceTree = "<group>";
@@ -65,6 +116,15 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		9AD852552EF2B348003CC0AE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9AD8525D2EF2B348003CC0AE /* SwiftUI.framework in Frameworks */,
+				9AD8525B2EF2B348003CC0AE /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E920D8572EE9ECE600491463 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -90,12 +150,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9AD852592EF2B348003CC0AE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9AD8525A2EF2B348003CC0AE /* WidgetKit.framework */,
+				9AD8525C2EF2B348003CC0AE /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E920D8512EE9ECE600491463 = {
 			isa = PBXGroup;
 			children = (
 				E920D85C2EE9ECE600491463 /* Stiint */,
 				E920D86E2EE9ECE700491463 /* StiintTests */,
 				E920D8782EE9ECE700491463 /* StiintUITests */,
+				9AD8525E2EF2B348003CC0AE /* stiintWidgetExtension */,
+				9AD852592EF2B348003CC0AE /* Frameworks */,
 				E920D85B2EE9ECE600491463 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -106,6 +177,7 @@
 				E920D85A2EE9ECE600491463 /* Stiint.app */,
 				E920D86B2EE9ECE700491463 /* StiintTests.xctest */,
 				E920D8752EE9ECE700491463 /* StiintUITests.xctest */,
+				9AD852582EF2B348003CC0AE /* stiintWidgetExtensionExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -113,6 +185,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		9AD852572EF2B348003CC0AE /* stiintWidgetExtensionExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9AD8526C2EF2B349003CC0AE /* Build configuration list for PBXNativeTarget "stiintWidgetExtensionExtension" */;
+			buildPhases = (
+				9AD852542EF2B348003CC0AE /* Sources */,
+				9AD852552EF2B348003CC0AE /* Frameworks */,
+				9AD852562EF2B348003CC0AE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				9AD8525E2EF2B348003CC0AE /* stiintWidgetExtension */,
+			);
+			name = stiintWidgetExtensionExtension;
+			packageProductDependencies = (
+			);
+			productName = stiintWidgetExtensionExtension;
+			productReference = 9AD852582EF2B348003CC0AE /* stiintWidgetExtensionExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		E920D8592EE9ECE600491463 /* Stiint */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E920D87E2EE9ECE700491463 /* Build configuration list for PBXNativeTarget "Stiint" */;
@@ -120,10 +214,12 @@
 				E920D8562EE9ECE600491463 /* Sources */,
 				E920D8572EE9ECE600491463 /* Frameworks */,
 				E920D8582EE9ECE600491463 /* Resources */,
+				9AD852692EF2B349003CC0AE /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				9AD852672EF2B349003CC0AE /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				E920D85C2EE9ECE600491463 /* Stiint */,
@@ -192,6 +288,9 @@
 				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
+					9AD852572EF2B348003CC0AE = {
+						CreatedOnToolsVersion = 26.0;
+					};
 					E920D8592EE9ECE600491463 = {
 						CreatedOnToolsVersion = 26.0.1;
 					};
@@ -225,11 +324,19 @@
 				E920D8592EE9ECE600491463 /* Stiint */,
 				E920D86A2EE9ECE700491463 /* StiintTests */,
 				E920D8742EE9ECE700491463 /* StiintUITests */,
+				9AD852572EF2B348003CC0AE /* stiintWidgetExtensionExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		9AD852562EF2B348003CC0AE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E920D8582EE9ECE600491463 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -254,6 +361,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		9AD852542EF2B348003CC0AE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E920D8562EE9ECE600491463 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -278,6 +392,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		9AD852672EF2B349003CC0AE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9AD852572EF2B348003CC0AE /* stiintWidgetExtensionExtension */;
+			targetProxy = 9AD852662EF2B349003CC0AE /* PBXContainerItemProxy */;
+		};
 		E920D86D2EE9ECE700491463 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E920D8592EE9ECE600491463 /* Stiint */;
@@ -291,6 +410,90 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		9AD8526A2EF2B349003CC0AE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = G6Y3RZVKK7;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = stiintWidgetExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = stiintWidgetExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = liwi.Stiint.stiintWidgetExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		9AD8526B2EF2B349003CC0AE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = G6Y3RZVKK7;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = stiintWidgetExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = stiintWidgetExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = liwi.Stiint.stiintWidgetExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
 		E920D87F2EE9ECE700491463 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -304,6 +507,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Stiint/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -340,6 +544,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Stiint/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -571,6 +776,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		9AD8526C2EF2B349003CC0AE /* Build configuration list for PBXNativeTarget "stiintWidgetExtensionExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9AD8526A2EF2B349003CC0AE /* Debug */,
+				9AD8526B2EF2B349003CC0AE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		E920D8552EE9ECE600491463 /* Build configuration list for PBXProject "Stiint" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -25,7 +25,7 @@ class AnalyticsDataProvider{
 
 class DataPoint: Identifiable {
     let id: UUID;
-    let activity: Activity
+    let activity: ActivityItem
     var timeSpend: Double
     let filterData: FilterData
     
@@ -38,7 +38,7 @@ class DataPoint: Identifiable {
     }
     
     
-    init(activity: Activity, timeSpend: Double, filterData: FilterData) {
+    init(activity: ActivityItem, timeSpend: Double, filterData: FilterData) {
         self.id = UUID()
         self.activity = activity
         self.timeSpend = timeSpend
