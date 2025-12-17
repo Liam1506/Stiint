@@ -117,12 +117,12 @@ public final class RunningManager {
         }
         
     }
-    public func stopSpecificActivity(activityId: UUID){
+    public func stopSpecificActivity(activityId: UUID) async{
 
         if(currentActivityLogId == activityId){
-            Task{
+           
               await stopActivity()
-            }
+            
         }
         
     }

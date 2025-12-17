@@ -8,7 +8,7 @@
 import Foundation
 import AppIntents
 
-struct StopActivity: AppIntent {
+struct StopActivity: LiveActivityIntent {
     static var title: LocalizedStringResource = "Stop the current activity"
     
     

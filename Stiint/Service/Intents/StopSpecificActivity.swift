@@ -7,7 +7,7 @@
 import Foundation
 import AppIntents
 
-struct StopSpecificActivity: AppIntent {
+struct StopSpecificActivity: LiveActivityIntent {
     static var title: LocalizedStringResource = "Stop a specific Activity"
     
     @Parameter(title: "Activity")
@@ -21,10 +21,10 @@ struct StopSpecificActivity: AppIntent {
         // Use the selected activity
         // QuickActionHandler.shared.performAction(selected: activity.id)
         
-        Task{
+     
          await
-            RunningManager.shared.startActivity(activityId: activity.id)
-        }
+            RunningManager.shared.stopSpecificActivity(activityId: activity.id)
+        
         
         return .result()
     }
