@@ -21,12 +21,12 @@ struct DetailsDiagramView: View {
                       TableColumn("Daily Avg", value: \.timeAvg) { dataPoint in
                           Text(String(format: "%.2f hrs", dataPoint.timeAvg))
                       }
-                      TableColumn("Start Date", value: \.startDate) { dataPoint in
+                     /* TableColumn("Start Date", value: \.startDate) { dataPoint in
                           Text(dataPoint.startDate, format: .dateTime.month().day())
                       }
                       TableColumn("End Date", value: \.endDate) { dataPoint in
                           Text(dataPoint.endDate, format: .dateTime.month().day())
-                      }
+                      }*/
                   }
         }
     }

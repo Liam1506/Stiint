@@ -13,13 +13,6 @@ struct SankyDiagramView: View {
     @State var data: TimeFrameData?
     
     private func updateSancy(){
-        let calendar = Calendar.current
-        let now = Date()
-
-        // 1. Get the start of Today (00:00:00 this morning)
-        let startOfToday = calendar.startOfDay(for: now)
-
-        // 4. Call your function
         Task{
              data = await AnalyticsDataProvider().loadDataForTimeFrame(
                filterData: filterData
@@ -33,7 +26,7 @@ struct SankyDiagramView: View {
         
         var links: [SankeyLink] = []
         let day: Double = 24 * 60 * 60
-        let keyFrom = "Avaible Time (\(TimeHandler().secondsToLocalizedDuration(day)))"
+        let keyFrom = "Avaible Time (\(TimeHandler().secondsToLocalizedDuration(timeFrameData.timeOverallAvg)))"
         
         var nodes: [SankeyNode] = [SankeyNode(keyFrom, color: .blue),]
         

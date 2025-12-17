@@ -33,19 +33,20 @@ public actor ActivityLogActor {
     
     
     public func getActivitiesForTimeFrame(filterData: FilterData) -> [ActivityLog] {
-        // Define fallback date and capture filter values
         let defaultDate = Date.distantPast
         let startDate = filterData.startDate
         let endDate = filterData.endDate
         let selectedIds: [UUID] = filterData.selectedActivityIds
         
-        // Break into sub-predicates
+        // Glaub hier muss endzeit genommen werden
         let afterStartDate = #Predicate<ActivityLog> { log in
-            (log.startTime ?? defaultDate) >= startDate
+            (log.endTime ?? defaultDate) > startDate
         }
         
+        
+        // Hier passt es
         let beforeEndDate = #Predicate<ActivityLog> { log in
-            (log.startTime ?? defaultDate) <= endDate
+            (log.startTime ?? defaultDate) < endDate
         }
         
         // Combine predicates

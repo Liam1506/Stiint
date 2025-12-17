@@ -8,60 +8,41 @@
 import Foundation
 
 class AnalyticsDataProvider{
-    
-    init(){
-        
-    }
+
     public func loadDataForTimeFrame(filterData: FilterData) async -> TimeFrameData {
         let logs = await PersistenceManager.shared.activityLogActor.getActivitiesForTimeFrame(filterData: filterData)
-        var dataPoints: [DataPoint] = []
         
+        let dataFrame = TimeFrameData(filterData: filterData)
         
         for log in logs {
-            print(log)
-            if let point =  dataPoints.first(where: { DataPoint in
-                DataPoint.activity == log.activity
-            }){
-                point.addTimeSpend(log.endTime?.timeIntervalSince(log.startTime!) ?? Date.now.timeIntervalSince(log.startTime!))
-            }else{
-                dataPoints.append(DataPoint(activity: log.activity!, timeSpend: log.endTime?.timeIntervalSince(log.startTime!) ?? 0, startDate: filterData.startDate, endDate: filterData.endDate))
-            }
-            
+            dataFrame.insertLog(log: log)
         }
         
-        
-        
-        return TimeFrameData(dataPoints: dataPoints, start: filterData.startDate, end: filterData.endDate)
-        
+        return dataFrame
     }
     
 }
-
-
-
 
 class DataPoint: Identifiable {
     let id: UUID;
     let activity: Activity
     var timeSpend: Double
-    var startDate: Date
-    var endDate: Date
+    let filterData: FilterData
     
 
     var timeAvg: Double {
         let calendar = Calendar.current
-        let days = calendar.dateComponents([.day], from: startDate, to: endDate).day ?? 1
-        let numberOfDays = max(days + 1, 1)
+        let days = calendar.dateComponents([.day], from: filterData.startDate, to: filterData.endDate).day ?? 1
+        let numberOfDays = max(days, 1)
         return timeSpend / Double(numberOfDays)
     }
     
     
-    init(activity: Activity, timeSpend: Double, startDate: Date, endDate: Date) {
+    init(activity: Activity, timeSpend: Double, filterData: FilterData) {
         self.id = UUID()
         self.activity = activity
         self.timeSpend = timeSpend
-        self.startDate = startDate
-        self.endDate = endDate
+        self.filterData = filterData
  
 
     }
@@ -72,27 +53,65 @@ class DataPoint: Identifiable {
 }
 
 class TimeFrameData{
-    let dataPoints: [DataPoint]
-    let start: Date
-    let end: Date
-    let timeOverall: Double
-    let timeSpendOnActivities: Double
+    var dataPoints: [DataPoint]
+    let filterData: FilterData
+    
+    
+    var timeSpendOnActivities: Double {
+        var timeSpend: Double = 0
+        dataPoints.forEach { (dp) in
+            timeSpend = timeSpend + dp.timeSpend
+        }
+        return timeSpend
+    }
+    
+    var timeOverall: Double {
+        return filterData.endDate.timeIntervalSince(filterData.startDate)
+    }
     
     var timeSpendOnActivitiesAvg: Double {
         let calendar = Calendar.current
-        let days = calendar.dateComponents([.day], from: start, to: end).day ?? 1
-        let numberOfDays = max(days + 1, 1)
+        let days = calendar.dateComponents([.day], from: filterData.startDate, to: filterData.endDate).day ?? 1
+        let numberOfDays = max(days, 1)
         return timeSpendOnActivities / Double(numberOfDays)
     }
-    init(dataPoints: [DataPoint], start: Date, end: Date) {
+    var timeOverallAvg: Double {
+        let calendar = Calendar.current
+        let days = calendar.dateComponents([.day], from: filterData.startDate, to: filterData.endDate).day ?? 1
+        let numberOfDays = max(days, 1)
+        return timeOverall / Double(numberOfDays)
+    }
+    
+    init(dataPoints: [DataPoint] = [], filterData: FilterData) {
         self.dataPoints = dataPoints
-        self.start = start
-        self.end = end
-        timeOverall = end.timeIntervalSince(start)
-        var ts: Double = 0
-        for point in dataPoints {
-            ts = ts + point.timeSpend
+        self.filterData = filterData
+    }
+    
+    public func insertLog(log: ActivityLog){
+        
+        var startTime = log.startTime ?? filterData.startDate
+        var endTime = log.endTime ?? filterData.endDate
+        
+        
+        guard let activity = log.activity else { return }
+        
+        // Clamp to filter range
+        if startTime < filterData.startDate {
+            startTime = filterData.startDate
         }
-        timeSpendOnActivities = ts
+        if endTime > filterData.endDate {
+            endTime = filterData.endDate
+        }
+        
+        guard endTime > startTime else { return }
+        
+        if let point =  dataPoints.first(where: { DataPoint in
+            DataPoint.activity == activity
+        }){
+            point.addTimeSpend(endTime.timeIntervalSince(startTime))
+            
+        } else {
+            self.dataPoints.append(DataPoint(activity: activity, timeSpend: endTime.timeIntervalSince(startTime), filterData: filterData))
+        }
     }
 }

@@ -38,7 +38,7 @@ struct PieDiagramView: View {
             pieChartData = data.dataPoints
             if(filterData.showFreeTime){
                 
-                pieChartData.append(DataPoint(activity: freeTimeActivity, timeSpend: data.timeOverall - data.timeSpendOnActivities, startDate: filterData.startDate, endDate: filterData.endDate))
+                pieChartData.append(DataPoint(activity: freeTimeActivity, timeSpend: data.timeOverall - data.timeSpendOnActivities, filterData: filterData))
             }
         }
     }

@@ -110,19 +110,27 @@ struct AnalyticsFilterView: View {
         
         switch selectedDateRange {
         case .yesterday:
-            let start = calendar.date(byAdding: .day, value: -1, to: now)!
-            return (start, now)
+            let yesterday = calendar.date(byAdding: .day, value: -1, to: now)!
+            let start = calendar.startOfDay(for: yesterday)
+            let end = calendar.startOfDay(for: now)
+            return (start, end)
+            
         case .last7Days:
-            let start = calendar.date(byAdding: .day, value: -7, to: now)!
-            return (start, now)
+            let sevenDaysAgo = calendar.date(byAdding: .day, value: -7, to: now)!
+            let start = calendar.startOfDay(for: sevenDaysAgo)
+            let end = calendar.startOfDay(for: now)
+            return (start, end)
        
         case .lastMonth:
             let startOfThisMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: now))!
             let startOfLastMonth = calendar.date(byAdding: .month, value: -1, to: startOfThisMonth)!
-            let endOfLastMonth = calendar.date(byAdding: .day, value: -1, to: startOfThisMonth)!
-            return (startOfLastMonth, endOfLastMonth)
+            return (startOfLastMonth, startOfThisMonth)
+            
         case .custom:
-            return (customStartDate, customEndDate)
+            let start = calendar.startOfDay(for: customStartDate)
+            // For end date, you might want the END of the day instead of start
+            let end = calendar.startOfDay(for: customEndDate)
+            return (start, end)
         }
     }
     

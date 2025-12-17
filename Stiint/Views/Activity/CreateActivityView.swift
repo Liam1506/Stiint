@@ -12,7 +12,7 @@ struct CreateActivityView: View {
     // MARK: - State Variables
     @Environment(\.dismiss) var dismiss
     @State private var activityName: String = ""
-    @State private var selectedColor: Color = .blue
+    @State private var selectedColor: Color = .cyan
     @State private var selectedIcon: String = "book.fill"
     @State private var showDayPicker = false
     @State private var showAlert = false
@@ -40,7 +40,7 @@ struct CreateActivityView: View {
     
     // Data Sources
     let colors: [Color] = [
-        .red, .orange, .yellow, .green, .blue, .purple, .brown, .gray, .pink, .indigo
+        .cyan, .red, .orange, .yellow, .green,  .purple, .brown, .gray, .pink, .indigo
     ]
     
     // Datenquelle für Aktivitäten-Icons

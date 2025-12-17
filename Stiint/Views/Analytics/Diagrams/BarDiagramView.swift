@@ -29,7 +29,7 @@ struct BarDiagramView: View {
             barChartData = data.dataPoints
             if(filterData.showFreeTime){
                 
-                barChartData.append(DataPoint(activity: freeTimeActivity, timeSpend: data.timeOverall - data.timeSpendOnActivities,startDate: filterData.startDate, endDate: filterData.endDate))
+                barChartData.append(DataPoint(activity: freeTimeActivity, timeSpend: data.timeOverall - data.timeSpendOnActivities,filterData: filterData))
             }
         }
     }
