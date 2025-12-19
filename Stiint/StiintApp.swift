@@ -10,9 +10,14 @@ import SwiftData
 
 @main
 struct StiintApp: App{
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if(SetupManager.shared.isSetupComplete){
+                ContentView()
+            }else{
+                SetupManagerView()
+            }
         }
         .modelContainer(PersistenceManager.shared.modelContainer)
     }

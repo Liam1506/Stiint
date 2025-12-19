@@ -28,7 +28,7 @@ struct SankyDiagramView: View {
         let day: Double = 24 * 60 * 60
         let keyFrom = "Avaible Time (\(TimeHandler().secondsToLocalizedDuration(timeFrameData.timeOverallAvg)))"
         
-        var nodes: [SankeyNode] = [SankeyNode(keyFrom, color: .blue),]
+        var nodes: [SankeyNode] = [SankeyNode(keyFrom, color:  .accentColor),]
         
         for point in timeFrameData.dataPoints {
             

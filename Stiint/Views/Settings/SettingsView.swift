@@ -51,6 +51,10 @@ struct SettingsView: View {
                          
                         
                     }
+                    
+                    Button("Reset Setup"){
+                        SetupManager.shared.resetSetup()
+                    }
                 }
             
             .navigationTitle("Settings")
