@@ -10,6 +10,9 @@ import AppIntents
 struct StopSpecificActivity: LiveActivityIntent {
     static var title: LocalizedStringResource = "Stop a specific Activity"
     
+    static var description: LocalizedStringResource = "Stops the selected activity. Any other running activity will remain unaffected."
+
+    
     @Parameter(title: "Activity")
     var activity: ActivityEntity
     

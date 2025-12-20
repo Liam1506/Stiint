@@ -23,7 +23,7 @@ struct OnboardingView2: View {
             // Description
             Text(
                 "Stiint doesn’t track your sleep automatically.\n\n" +
-                "You’ll create a simple Apple Shortcut Automation that tells Stiint when you go to sleep and wake up." +
+                "You’ll create a simple Apple Shortcut Automation that tells Stiint when you go to sleep and wake up.\n\n" +
                 "We’ll guide you step by step. It only takes a minute."
             )
             .font(.body)
@@ -33,7 +33,7 @@ struct OnboardingView2: View {
             
             Spacer()
             
-            VStack(spacing: 12) {
+            VStack(spacing: 16) {
                 Button(action: {
                     index += 1
                     Task{
@@ -53,6 +53,7 @@ struct OnboardingView2: View {
                 Text("No health permissions required. Data tracked using this App will never leave your device or iCloud.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+                    .frame(height: 50)
             }
             .padding(.horizontal)
         }

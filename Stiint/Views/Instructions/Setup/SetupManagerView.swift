@@ -32,11 +32,14 @@ struct SetupManagerView: View {
             .tabViewStyle(.page(indexDisplayMode: .never))
             
             // Skip button at top right
-            Button(action: {
-                SetupManager.shared.completeSetup()
-            }) {
-                Text("Skip")
-                    .padding()
+            
+            if(index > 0){
+                Button(action: {
+                    SetupManager.shared.completeSetup()
+                }) {
+                    Text("Skip")
+                        .padding()
+                }
             }
         }
     }

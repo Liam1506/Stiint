@@ -50,8 +50,10 @@ public final class RunningManager {
         }
     }
     
-    public func stopAndStartPreviousActivity() async{
+    public func stopSpecificAndStartPreviousActivity(activityId: UUID) async{
         guard currentActivityLogId != nil else { return }
+        
+        guard activityDTO?.id == activityId else { return }
         
             if let previLogId = await PersistenceManager.shared.activityLogActor.getPreviousActivtyLogID(activityLogId: currentActivityLogId!){
                 if let previId = await PersistenceManager.shared.activityLogActor.getActivtyLogDTO(activityLogId: previLogId){

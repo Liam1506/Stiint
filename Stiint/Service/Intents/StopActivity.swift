@@ -10,8 +10,11 @@ import AppIntents
 
 struct StopActivity: LiveActivityIntent {
     static var title: LocalizedStringResource = "Stop the current activity"
-    
-    
+
+    // Optional description of the intent
+    static var description: LocalizedStringResource = "Stops the currently running activity."
+
+
     
         
     func perform() async throws -> some IntentResult {
