@@ -15,11 +15,13 @@ struct OnboardingView1: View {
             Spacer()
 
             // Illustration or symbol
-            Image(systemName: "clock.fill")
+            Image(.appIcon)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 150, height: 150)
+                .frame(width: 120, height: 120)
                 .foregroundStyle(.blue.gradient)
+            
+            
 
             // Title
             Text("Start Tracking Your Time")
