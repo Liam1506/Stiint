@@ -8,7 +8,7 @@ import Foundation
 import AppIntents
 
 struct StartSpecificActivity: LiveActivityIntent {
-    static var title: LocalizedStringResource = "Start an Activity"
+    static var title: LocalizedStringResource = "Start an activity"
     
     static var description: LocalizedStringResource = "Starts a specific activity, if the current date is selected."
 

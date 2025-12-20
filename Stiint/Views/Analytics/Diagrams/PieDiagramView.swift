@@ -47,27 +47,30 @@ struct PieDiagramView: View {
     @State var pieChartData: [DataPoint] = []
     
     var body: some View {
-        
-        Chart(pieChartData, id: \.activity.id) { element in
-            SectorMark(
-                angle: .value("Count", element.timeSpend),
-                innerRadius: .ratio(0.6)
+        VStack(alignment: .leading){
+            Text("Avg. Time per Day")
+                .font(.headline)
+            Chart(pieChartData, id: \.activity.id) { element in
+                SectorMark(
+                    angle: .value("Count", element.timeSpend),
+                    innerRadius: .ratio(0.6)
+                )
+                .foregroundStyle(by: .value("Name", element.activity.name ?? "error"))
+            }
+            .chartForegroundStyleScale(
+                range: pieChartData.map { $0.activity.color }
             )
-            .foregroundStyle(by: .value("Name", element.activity.name ?? "error"))
-        }
-        .chartForegroundStyleScale(
-            range: pieChartData.map { $0.activity.color }
-        )
-        .chartXAxis(.hidden)
-                .padding(15)
-                .frame(height: 400)
-                .background(.regularMaterial)
-                .cornerRadius(12)
-                .onAppear {
-                    updateSancy()
-                }.onChange(of: filterData) { _, _ in
-                    updateSancy()
-                }
+            .chartXAxis(.hidden)
+         
+            .onAppear {
+                updateSancy()
+            }.onChange(of: filterData) { _, _ in
+                updateSancy()
+            }
+        }     .padding(15)
+            .frame(height: 500)
+            .background(.regularMaterial)
+            .cornerRadius(12)
     }
 }
 

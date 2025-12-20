@@ -14,10 +14,10 @@ public final class ActivityItem {
     public var id: UUID?
     public var createdDate: Date?
     public var name: String?
-    public var colorHex: String?   // Optional for iCloud compatibility
-    public var sfSymbolName: String? // New property for SF Symbol
+    public var colorHex: String?
+    public var sfSymbolName: String?
     public var deleted: Bool?
-    public var weekdays: Set<Weekday>
+    public var weekdays: Set<Weekday>?
     
     public init(
         id: UUID? = nil,

@@ -66,7 +66,7 @@ public actor ActivityActor {
                predicate: #Predicate { $0.id == activityId }
            )
         let activity = try? modelContext.fetch(fetchDescriptor).first
-        activity?.weekdays.insert(weekday)
+        activity?.weekdays?.insert(weekday)
         
         try? modelContext.save()
     }
@@ -76,7 +76,7 @@ public actor ActivityActor {
                predicate: #Predicate { $0.id == activityId }
            )
         let activity = try? modelContext.fetch(fetchDescriptor).first
-        activity?.weekdays.remove(weekday)
+        activity?.weekdays?.remove(weekday)
         
         try? modelContext.save()
     }

@@ -107,7 +107,7 @@ public actor ActivityLogActor {
             return nil
         }
         
-        return ActivityDTO(id: activityId, name: activityName, startTime: startTime, icon: activity.sfSymbolName ?? "questionmark.circle.fill", color: activity.color, weekdays: activity.weekdays, endTime: activityLog.endTime)
+        return ActivityDTO(id: activityId, name: activityName, startTime: startTime, icon: activity.sfSymbolName ?? "questionmark.circle.fill", color: activity.color, weekdays: activity.weekdays ?? [], endTime: activityLog.endTime)
     }
     
     

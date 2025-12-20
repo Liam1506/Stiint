@@ -26,24 +26,16 @@ struct SankyDiagramView: View {
         
         var links: [SankeyLink] = []
         let day: Double = 24 * 60 * 60
-        let keyFrom = "Avaible Time (\(TimeHandler().secondsToLocalizedDuration(timeFrameData.timeOverallAvg)))"
+        let keyFrom = ""
         
         var nodes: [SankeyNode] = [SankeyNode(keyFrom, color:  .accentColor),]
         
         for point in timeFrameData.dataPoints {
             
-            var time: Double = 0
-            if(point.timeSpend > 0){
-                 time = point.timeAvg
-                
-                
-            }else{
-                
-                time = point.timeAvg * -1
-            }
-            let name = "\(point.activity.name!) (\(TimeHandler().secondsToLocalizedDuration(time)))"
+        
+            let name = "\(point.activity.name!) (\(TimeHandler().secondsToLocalizedDuration(point.timeAvg)))"
             nodes.append(SankeyNode(name, color: point.activity.color))
-            links.append(SankeyLink(time, from: keyFrom, to: name))
+            links.append(SankeyLink(point.timeAvg, from: keyFrom, to: name))
         }
         let freeTimeKey = "Free Time (\(TimeHandler().secondsToLocalizedDuration(day - timeFrameData.timeSpendOnActivitiesAvg)))"
         if(filterData.showFreeTime){
@@ -77,14 +69,14 @@ struct SankyDiagramView: View {
                 .nodeOpacity(1)
                 .linkColorMode(.target)
                 .frame(height: 400)
-            NavigationLink("Learn more"){
+            /*NavigationLink("Learn more"){
                 if(data != nil){
                     DetailsDiagramView(data:  data!.dataPoints)
                 }else{
                     Text("Data error")
                 }
             
-            }
+            }*/
         }
            
                 .padding(15)

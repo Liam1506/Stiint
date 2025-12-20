@@ -74,17 +74,20 @@ public final class RunningManager {
         guard activityDTO == nil else { return false }
          
         
-        let oldActvityEndTime = await PersistenceManager.shared.activityLogActor.getActivtyLogDTO(activityLogId: previousActivityLogId!)?.endTime
-                
-        if oldActvityEndTime == nil { return false}
+        if let previLogId = await PersistenceManager.shared.activityLogActor.getPreviousActivtyLogID(activityLogId: currentActivityLogId!){
+            let oldActvityEndTime = await PersistenceManager.shared.activityLogActor.getActivtyLogDTO(activityLogId: previLogId)?.endTime
+            
+            if oldActvityEndTime == nil { return false}
 
-        let fiveMinutes: TimeInterval = 5 * 60
-        let now = Date()
+            let fiveMinutes: TimeInterval = 5 * 60
+            let now = Date()
 
-        return now.timeIntervalSince(oldActvityEndTime!) <= fiveMinutes
-            && now.timeIntervalSince(oldActvityEndTime!) >= 0
-    }
-    */
+            return now.timeIntervalSince(oldActvityEndTime!) <= fiveMinutes
+                && now.timeIntervalSince(oldActvityEndTime!) >= 0
+        }
+        return false
+    }*/
+    
     
     public func startActivity(activityId: UUID){
         print("START \(activityId)")

@@ -282,7 +282,7 @@ struct CreateActivityView: View {
                     selectedColor = activity.color
                     print(activity.color)
                     selectedIcon = activity.sfSymbolName ?? ""
-                    selectedDays = activity.weekdays
+                    selectedDays = activity.weekdays ?? []
                 }
             }.sheet(isPresented: $showDayPicker) {
                 DayPickerView(

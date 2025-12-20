@@ -13,7 +13,7 @@ import Foundation
 
 // Define the App Intent
 struct GetCurrentActivity: AppIntent {
-    static var title: LocalizedStringResource = "Get Current Activity"
+    static var title: LocalizedStringResource = "Get current activity"
     static var description = IntentDescription(
         "Retrieves the activity that is currently running. If no activity is active, this will return nil."
     )
