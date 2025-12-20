@@ -120,12 +120,12 @@ public final class RunningManager {
         
     }
     public func stopSpecificActivity(activityId: UUID) async{
+        
+        guard activityDTO?.id == activityId else { return }
 
-        if(currentActivityLogId == activityId){
-           
-              await stopActivity()
+        await stopActivity()
             
-        }
+        
         
     }
    
