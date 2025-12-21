@@ -13,6 +13,12 @@ public enum Weekday: Int, CaseIterable, Identifiable, Hashable, Codable {
 
     public var id: Int { rawValue }
     
+    static var today: Weekday {
+        let weekday = Calendar.current.component(.weekday, from: Date())
+        let mondayBasedIndex = (weekday + 5) % 7
+        return Weekday(rawValue: mondayBasedIndex)!
+    }
+    
     var title: String {
         switch self {
         case .monday: return "Monday"
@@ -36,3 +42,5 @@ public enum Weekday: Int, CaseIterable, Identifiable, Hashable, Codable {
            }
        }
 }
+
+

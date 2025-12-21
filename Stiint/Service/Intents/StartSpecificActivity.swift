@@ -21,8 +21,15 @@ struct StartSpecificActivity: LiveActivityIntent {
     }
     
     func perform() async throws -> some IntentResult {
-        await RunningManager.shared.startActivity(activityId: activity.id)
-            
+        
+        let weekdays = await PersistenceManager.shared.activityActor.getActivityById(from: activity.id)!.weekdays ?? []
+        
+        if await weekdays.contains(.today) {
+            await RunningManager.shared.startActivity(activityId: activity.id)
+        }
+
         return .result()
     }
 }
+
+

@@ -10,7 +10,10 @@
             {
               "appearance" : "dark",
               "value" : {
-                "automatic-gradient" : "display-p3:0.26877,0.53569,0.96783,1.00000"
+                "linear-gradient" : [
+                  "display-p3:0.79188,0.91844,1.00000,1.00000",
+                  "display-p3:0.48188,0.68444,0.96783,1.00000"
+                ]
               }
             }
           ],
