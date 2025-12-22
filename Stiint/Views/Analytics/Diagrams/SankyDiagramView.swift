@@ -82,7 +82,7 @@ struct SankyDiagramView: View {
                 .cornerRadius(12)
                 .onAppear(){
                     updateSancy()
-                }.onChange(of: filterData) { _, _ in
+                }.onChange(of: data.dataPoints) { _, _ in
                     updateSancy()
                 }
     }

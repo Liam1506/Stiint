@@ -21,7 +21,7 @@ class AnalyticsDataProvider{
     
 }
 
-class DataPoint: Identifiable {
+struct DataPoint: Identifiable, Equatable {
     let id: UUID;
     let activity: ActivityItem
     var timeSpend: Double
@@ -44,13 +44,9 @@ class DataPoint: Identifiable {
  
 
     }
-    
-    public func addTimeSpend(_ time: Double) {
-        timeSpend = timeSpend + time
-    }
 }
 
-class DataSeriesPoint: Identifiable {
+struct DataSeriesPoint: Identifiable, Equatable {
     let id: UUID;
     let activity: ActivityItem
     let date: Date
@@ -67,7 +63,7 @@ class DataSeriesPoint: Identifiable {
     }
 }
 
-class TimeFrameData{
+class TimeFrameData {
     var dataPoints: [DataPoint]
     var dataSeries: [DataSeriesPoint]
     let filterData: FilterData
@@ -137,7 +133,7 @@ class TimeFrameData{
         }
         
         
-        if let point = dataSeries.first(where: { point in
+        if var point = dataSeries.first(where: { point in
             point.date == dateToSave && point.activity == log.activity
         }) {
             // point found, do something with it
@@ -166,10 +162,10 @@ class TimeFrameData{
         
         guard endTime > startTime else { return }
         
-        if let point =  dataPoints.first(where: { DataPoint in
+        if var point =  dataPoints.first(where: { DataPoint in
             DataPoint.activity == activity
         }){
-            point.addTimeSpend(endTime.timeIntervalSince(startTime))
+            point .timeSpend += endTime.timeIntervalSince(startTime)
             
         } else {
             self.dataPoints.append(DataPoint(activity: activity, timeSpend: endTime.timeIntervalSince(startTime), filterData: filterData))

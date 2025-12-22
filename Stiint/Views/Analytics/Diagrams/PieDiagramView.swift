@@ -52,6 +52,9 @@ struct PieDiagramView: View {
          
             .onAppear {
                 updateSancy()
+            }.onChange(of: data.dataPoints) { _, _ in
+                
+                    updateSancy()
             }
         }     .padding(15)
             .frame(height: 500)

@@ -5,8 +5,6 @@
 //  Created by Wittig, Liam on 22.12.25.
 //
 
-import Foundation
-
 let DEV: Bool = true
 let PRIVCY_POLICY_LINK: String = "https://www.stiint.liamwittig.de/privacy"
 let TERMS_OF_SERVICE_LINK: String = "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
