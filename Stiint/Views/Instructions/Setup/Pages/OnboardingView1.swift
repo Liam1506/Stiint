@@ -59,10 +59,11 @@ struct OnboardingView1: View {
                         .foregroundColor(.secondary)
 
                     HStack(spacing: 4) {
-                        Link("Privacy Policy", destination: URL(string: "https://stiint.liamwittig.de/privacy.html")!)
+                        Link("Privacy Policy", destination: URL(string: PRIVCY_POLICY_LINK)!)
                         Text("and")
                             .foregroundColor(.secondary)
-                        Link("Terms of Service", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                        Link("Terms of Service", destination: URL(string: TERMS_OF_SERVICE_LINK)!)
+                        
                     }
                     .font(.footnote)
                 }

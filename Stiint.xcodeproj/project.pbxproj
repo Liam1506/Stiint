@@ -11,6 +11,8 @@
 		9AD8525B2EF2B348003CC0AE /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AD8525A2EF2B348003CC0AE /* WidgetKit.framework */; };
 		9AD8525D2EF2B348003CC0AE /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AD8525C2EF2B348003CC0AE /* SwiftUI.framework */; };
 		9AD852682EF2B349003CC0AE /* stiintWidgetExtensionExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9AD852582EF2B348003CC0AE /* stiintWidgetExtensionExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9AD852AC2EF92320003CC0AE /* AcknowList in Frameworks */ = {isa = PBXBuildFile; productRef = 9AD852AB2EF92320003CC0AE /* AcknowList */; };
+		9AD852AE2EF925B7003CC0AE /* Package.resolved in Resources */ = {isa = PBXBuildFile; fileRef = 9AD852AD2EF925B7003CC0AE /* Package.resolved */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +57,7 @@
 		9AD852582EF2B348003CC0AE /* stiintWidgetExtensionExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = stiintWidgetExtensionExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AD8525A2EF2B348003CC0AE /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = /System/Library/Frameworks/WidgetKit.framework; sourceTree = "<absolute>"; };
 		9AD8525C2EF2B348003CC0AE /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = /System/Library/Frameworks/SwiftUI.framework; sourceTree = "<absolute>"; };
+		9AD852AD2EF925B7003CC0AE /* Package.resolved */ = {isa = PBXFileReference; lastKnownFileType = text; name = Package.resolved; path = Stiint.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved; sourceTree = "<group>"; };
 		E920D85A2EE9ECE600491463 /* Stiint.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stiint.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E920D86B2EE9ECE700491463 /* StiintTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StiintTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E920D8752EE9ECE700491463 /* StiintUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StiintUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -130,6 +133,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9AB0B1DB2EEDFABB00AE9F5C /* Sankey in Frameworks */,
+				9AD852AC2EF92320003CC0AE /* AcknowList in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -168,6 +172,7 @@
 				9AD8525E2EF2B348003CC0AE /* stiintWidgetExtension */,
 				9AD852592EF2B348003CC0AE /* Frameworks */,
 				E920D85B2EE9ECE600491463 /* Products */,
+				9AD852AD2EF925B7003CC0AE /* Package.resolved */,
 			);
 			sourceTree = "<group>";
 		};
@@ -227,6 +232,7 @@
 			name = Stiint;
 			packageProductDependencies = (
 				9AB0B1DA2EEDFABB00AE9F5C /* Sankey */,
+				9AD852AB2EF92320003CC0AE /* AcknowList */,
 			);
 			productName = Stiint;
 			productReference = E920D85A2EE9ECE600491463 /* Stiint.app */;
@@ -315,6 +321,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				9AB0B1D92EEDFABB00AE9F5C /* XCRemoteSwiftPackageReference "Sankey" */,
+				9AD852AA2EF92320003CC0AE /* XCRemoteSwiftPackageReference "AcknowList" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E920D85B2EE9ECE600491463 /* Products */;
@@ -341,6 +348,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9AD852AE2EF925B7003CC0AE /* Package.resolved in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -832,6 +840,14 @@
 				minimumVersion = 2.0.0;
 			};
 		};
+		9AD852AA2EF92320003CC0AE /* XCRemoteSwiftPackageReference "AcknowList" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/vtourraine/AcknowList.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.4.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -839,6 +855,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9AB0B1D92EEDFABB00AE9F5C /* XCRemoteSwiftPackageReference "Sankey" */;
 			productName = Sankey;
+		};
+		9AD852AB2EF92320003CC0AE /* AcknowList */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9AD852AA2EF92320003CC0AE /* XCRemoteSwiftPackageReference "AcknowList" */;
+			productName = AcknowList;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

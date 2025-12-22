@@ -1,6 +1,15 @@
 {
-  "originHash" : "9543f0f70b816e96502cc5337ff7156d7bd78574c0e5d1f05660e998019beddf",
+  "originHash" : "edd9dc3d34e64ee43923e2ef1cf7f8a4a4098f7e9ad7e19329a48e19d50c097f",
   "pins" : [
+    {
+      "identity" : "acknowlist",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vtourraine/AcknowList.git",
+      "state" : {
+        "revision" : "2b8be7841af2eefa0e75640d0c1a2312a1ba75be",
+        "version" : "3.4.0"
+      }
+    },
     {
       "identity" : "sankey",
       "kind" : "remoteSourceControl",
