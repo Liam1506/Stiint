@@ -9,17 +9,15 @@ import Sankey
 import SwiftUI
 
 struct SankyDiagramView: View {
+    
+    let data: TimeFrameData
+    
     let filterData: FilterData
-    @State var data: TimeFrameData?
     
     private func updateSancy(){
-        Task{
-             data = await AnalyticsDataProvider().loadDataForTimeFrame(
-               filterData: filterData
-            )
-            sankeyData = calcSampleData(timeFrameData: data!)
+       
+            sankeyData = calcSampleData(timeFrameData: data)
         }
-    }
     
     
     private func calcSampleData(timeFrameData: TimeFrameData) -> SankeyData {

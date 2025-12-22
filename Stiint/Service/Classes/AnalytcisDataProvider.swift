@@ -6,17 +6,15 @@
 //
 
 import Foundation
+import SwiftUI
 
 class AnalyticsDataProvider{
 
     public func loadDataForTimeFrame(filterData: FilterData) async -> TimeFrameData {
         let logs = await PersistenceManager.shared.activityLogActor.getActivitiesForTimeFrame(filterData: filterData)
         
-        let dataFrame = TimeFrameData(filterData: filterData)
-        
-        for log in logs {
-            dataFrame.insertLog(log: log)
-        }
+        let dataFrame = TimeFrameData(filterData: filterData, logs: logs)
+    
         
         return dataFrame
     }
@@ -52,8 +50,26 @@ class DataPoint: Identifiable {
     }
 }
 
+class DataSeriesPoint: Identifiable {
+    let id: UUID;
+    let activity: ActivityItem
+    let date: Date
+    var timeSpend: Double
+    let color: Color
+
+    init(activity: ActivityItem, timeSpend: Double, date: Date) {
+        self.id = UUID()
+        self.activity = activity
+        self.timeSpend = timeSpend
+        self.date = date
+        self.color = activity.color
+
+    }
+}
+
 class TimeFrameData{
     var dataPoints: [DataPoint]
+    var dataSeries: [DataSeriesPoint]
     let filterData: FilterData
     
     
@@ -82,12 +98,57 @@ class TimeFrameData{
         return timeOverall / Double(numberOfDays)
     }
     
-    init(dataPoints: [DataPoint] = [], filterData: FilterData) {
-        self.dataPoints = dataPoints
+    init(filterData: FilterData, logs: [ActivityLog]) {
         self.filterData = filterData
+        self.dataSeries = []
+        self.dataPoints = []
+        
+        for log in logs {
+            self.insertLog(log: log)
+            self.insertSeries(log: log)
+        }
+    
+        
     }
     
-    public func insertLog(log: ActivityLog){
+    private func insertSeries(log: ActivityLog){
+       
+        guard let activity = log.activity else { return }
+        
+            let calendar = Calendar.current
+        
+        
+        let startTime = log.startTime!
+        var endTime = log.endTime ?? Date.now
+        
+        
+        
+        guard endTime > startTime else { return }
+        
+        
+        
+        var dateToSave = calendar.startOfDay(for: startTime)
+        if dateToSave < filterData.startDate {
+            dateToSave = calendar.startOfDay(for: filterData.startDate)
+        }
+        
+        if endTime > filterData.endDate {
+            endTime = filterData.endDate
+        }
+        
+        
+        if let point = dataSeries.first(where: { point in
+            point.date == dateToSave && point.activity == log.activity
+        }) {
+            // point found, do something with it
+            point.timeSpend += endTime.timeIntervalSince(startTime)
+        }else{
+            
+            self.dataSeries.append(DataSeriesPoint(activity: activity, timeSpend: endTime.timeIntervalSince(startTime), date: dateToSave))
+        }
+    }
+    
+    private func insertLog(log: ActivityLog){
         
         var startTime = log.startTime ?? filterData.startDate
         var endTime = log.endTime ?? filterData.endDate

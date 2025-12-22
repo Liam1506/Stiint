@@ -10,44 +10,32 @@ import Charts
 
 struct PieDiagramView: View {
     
-    
+    let data: TimeFrameData
     
     let filterData: FilterData
     
+    
     private func updateSancy(){
-        let calendar = Calendar.current
-        let now = Date()
 
-        // 1. Get the start of Today (00:00:00 this morning)
-        let startOfToday = calendar.startOfDay(for: now)
-
-        // 2. End Date: Subtract 1 second to get 23:59:59 of Yesterday
-        let endOfYesterday = startOfToday.addingTimeInterval(-1)
-        //let endOfToday = now
-        // 3. Start Date: Go back 7 days from TODAY's start
-        // This gives you the previous 7 full days (excluding today)
-        let startOfSevenDaysAgo = calendar.date(byAdding: .day, value: -7, to: startOfToday)!
-
-        // 4. Call your function
         Task{
-            let data = await AnalyticsDataProvider().loadDataForTimeFrame(
-                filterData: filterData
-            )
+ 
             
             let freeTimeActivity = ActivityItem(id: UUID(), name: "Free Time", color: .accentColor)
             pieChartData = data.dataPoints
-            if(filterData.showFreeTime){
                 
                 pieChartData.append(DataPoint(activity: freeTimeActivity, timeSpend: data.timeOverall - data.timeSpendOnActivities, filterData: filterData))
             }
         }
-    }
+    
 
 
     @State var pieChartData: [DataPoint] = []
     
     var body: some View {
         VStack(alignment: .leading){
+            Button("Update"){
+                updateSancy()
+            }
             Text("Avg. Time per Day")
                 .font(.headline)
             Chart(pieChartData, id: \.activity.id) { element in
@@ -63,8 +51,6 @@ struct PieDiagramView: View {
             .chartXAxis(.hidden)
          
             .onAppear {
-                updateSancy()
-            }.onChange(of: filterData) { _, _ in
                 updateSancy()
             }
         }     .padding(15)

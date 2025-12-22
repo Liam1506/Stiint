@@ -11,27 +11,9 @@ import Charts
 
 struct BarDiagramView: View {
     
-    let filterData: FilterData
-    
-    private func updateSancy(){
-        let calendar = Calendar.current
-        let now = Date()
-        
-        let startOfToday = calendar.startOfDay(for: now)
+    let data: TimeFrameData
+ 
 
-        
-        // 4. Call your function
-        Task{
-            let data = await AnalyticsDataProvider().loadDataForTimeFrame(
-                filterData: filterData            )
-            barChartData = data.dataPoints
-
-        }
-    }
-    
-    
-    @State var barChartData: [DataPoint] = []
-    
     var body: some View {
         VStack(alignment: .leading){
             Text("Avg. Time per Day")
@@ -40,9 +22,9 @@ struct BarDiagramView: View {
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .padding(.bottom, 10)
-            Chart(barChartData, id: \.activity.id) { element in
+            Chart(data.dataPoints, id: \.activity.id) { element in
                 BarMark(
-                    x: .value("Index", barChartData.firstIndex(where: { elem in
+                    x: .value("Index", data.dataPoints.firstIndex(where: { elem in
                         elem.activity.id == element.activity.id
                     }) ?? 0),
                     y: .value("Count", max(0, element.timeAvg)) // Prevent negative values
@@ -50,7 +32,7 @@ struct BarDiagramView: View {
                 .foregroundStyle(by: .value("Name", element.activity.name ?? "error"))
             }
             .chartForegroundStyleScale(
-                range: barChartData.map { $0.activity.color }
+                range: data.dataPoints.map { $0.activity.color }
             )
             .chartYAxis {
                 AxisMarks { value in
@@ -64,12 +46,7 @@ struct BarDiagramView: View {
                 }
             }
             .chartXAxis(.hidden)
-          
-            .onAppear {
-                updateSancy()
-            }.onChange(of: filterData) { _, _ in
-                updateSancy()
-            }
+     
         }  .padding(15)
             .frame(height: 500)
             .background(.regularMaterial)
