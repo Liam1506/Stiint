@@ -11,17 +11,27 @@ import SwiftData
 struct ContentView: View {
     
     
+    @AppStorage("pauseTracking") private var pauseTracking: Bool = false
+
     @State private var showAccessory = false
 
     @Environment(\.modelContext) private var modelContext
     var body: some View {
         TabView {
                   Tab("My Day", systemImage: "7.calendar") {
-                      HomeView()
+                      if(pauseTracking){
+                        TrackingPausedView()
+                      }else{
+                          HomeView()
+                      }
                   }
 
                   Tab("Timers", systemImage: "timer") {
-                      TimerView()
+                      if(pauseTracking){
+                          TrackingPausedView()
+                      }else{
+                          TimerView()
+                      }
                   }
 
 

@@ -21,6 +21,9 @@ struct StartSpecificActivity: LiveActivityIntent {
     }
     
     func perform() async throws -> some IntentResult {
+        if(UserDefaults.standard.bool(forKey: "pauseTracking")){
+            return .result()
+        }
         
         let weekdays = await PersistenceManager.shared.activityActor.getActivityById(from: activity.id)!.weekdays ?? []
         

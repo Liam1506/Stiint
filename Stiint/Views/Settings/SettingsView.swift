@@ -19,6 +19,8 @@ struct SettingsView: View {
     @Environment(\.requestReview) var requestReview
     
     @AppStorage("enableLiveActivities") private var liveActivitiesEnabled: Bool = false
+    
+    @AppStorage("pauseTracking") private var pauseTracking: Bool = false
 
     
     private var trackedDaysText: String {
@@ -59,6 +61,16 @@ struct SettingsView: View {
                          
                         
                     }*/
+                    Section{
+                        
+                        Toggle("Pause Tracking", isOn: $pauseTracking).onChange(of: pauseTracking) { oldValue, newValue in
+                            if (newValue == true){
+                                Task{
+                                    await RunningManager.shared.stopActivity()
+                                }
+                            }
+                        }
+                    }
                     
                     Section(header: Text("Help")){
                         Button("Tutorial"){
