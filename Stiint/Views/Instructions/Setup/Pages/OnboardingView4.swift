@@ -18,7 +18,7 @@ struct OnboardingView4: View {
                     .padding(.horizontal)
                 
                 // Steps
-                VStack(spacing: 20) {
+                VStack(alignment: .leading, spacing: 20) {
                     StepView(
                         number: 1,
                         title: "Open the Shortcut Automation Page",
