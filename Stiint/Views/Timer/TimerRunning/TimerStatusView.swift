@@ -22,11 +22,6 @@ struct TimerStatusView: View {
                     
             }
             .padding()
-        }else{
-            HStack{
-                Image(systemName: "beach.umbrella.fill")
-                Text("Freetime")
-            }
         }
     }
 }

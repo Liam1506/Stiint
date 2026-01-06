@@ -34,15 +34,9 @@ struct ContentView: View {
                 SettingsView()
             }
         }
-            .tabViewBottomAccessory() {
-                TimerStatusView()
-            }
-        
-       
-
-        
-   
-
+        .tabViewBottomAccessory(isEnabled: RunningManager.shared.activityDTO != nil, content: {
+            TimerStatusView()
+        })
     }
 
 

@@ -44,7 +44,6 @@ struct TimerRunningView: View {
                         Text("Stop")
                             .font(.title2.bold())
                             .frame(maxWidth: 130, minHeight: 60)
-                            .foregroundColor(.white)
                             .cornerRadius(40)
                             .padding(.horizontal)
                             .glassEffect()
