@@ -28,9 +28,11 @@ struct SelectActivity: View {
                         Circle()
                             .frame(width: 35, height: 35)
                             .foregroundStyle(activity.color)
+                            .shadow(color: activity.color.opacity(0.3), radius: 10, x: 0, y: 5)
                         
                             Image(systemName: activity.sfSymbolName ?? "xmark.circle")
                                 .font(.system(size: 16, weight: .bold))
+                                .foregroundColor(.white)
                   
                                 
                     }
