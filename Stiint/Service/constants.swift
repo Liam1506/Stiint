@@ -5,7 +5,7 @@
 //  Created by Wittig, Liam on 22.12.25.
 //
 
-let DEV: Bool = true
+let DEV: Bool = false
 // Flag to disable Sanky and other stuff
 
 

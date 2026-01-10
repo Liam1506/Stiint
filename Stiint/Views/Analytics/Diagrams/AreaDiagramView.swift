@@ -19,9 +19,9 @@ struct AreaDiagramView: View {
     
     var body: some View {
         VStack(alignment: .leading){
-            Text("Avg. Time per Day")
+            Text("Daily Time Spent")
                 .font(.headline)
-            Text("The diagram illustrates the average amount of time you spend each day over a given period.")
+            Text("Each point represents the total time spent on activities for that day over the selected period.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .padding(.bottom, 10)

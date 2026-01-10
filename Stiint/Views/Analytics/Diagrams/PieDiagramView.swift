@@ -33,16 +33,12 @@ struct PieDiagramView: View {
     
     var body: some View {
         VStack(alignment: .leading){
-            Button("Update"){
-                updateSancy()
-                for dataPoint in data.dataPoints {
-                    print(dataPoint.activity.name)
-                    
-                    print(dataPoint.timeSpend)
-                }
-            }
             Text("Avg. Time per Day")
                 .font(.headline)
+            Text("The diagram illustrates the average amount of time you spend each day over a given period as pie chart.")
+                      .font(.footnote)
+                      .foregroundStyle(.secondary)
+                      .padding(.bottom, 10)
             Chart(pieChartData, id: \.activity.id) { element in
                 SectorMark(
                     angle: .value("Count", element.timeSpend),
