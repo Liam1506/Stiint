@@ -114,14 +114,12 @@ public final class RunningManager {
 
             running = true
             
-            
-            
             await LiveActivityManager.shared.startLiveActivity(dto: activityDTO!)
-            
             
         }
         
     }
+    
     public func stopSpecificActivity(activityId: UUID) async{
         
         guard activityDTO?.id == activityId else { return }
