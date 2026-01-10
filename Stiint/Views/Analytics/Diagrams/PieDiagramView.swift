@@ -35,6 +35,11 @@ struct PieDiagramView: View {
         VStack(alignment: .leading){
             Button("Update"){
                 updateSancy()
+                for dataPoint in data.dataPoints {
+                    print(dataPoint.activity.name)
+                    
+                    print(dataPoint.timeSpend)
+                }
             }
             Text("Avg. Time per Day")
                 .font(.headline)

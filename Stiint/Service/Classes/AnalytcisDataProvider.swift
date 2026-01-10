@@ -133,11 +133,11 @@ class TimeFrameData {
         }
         
         
-        if var point = dataSeries.first(where: { point in
+        if var index = dataSeries.firstIndex(where: { point in
             point.date == dateToSave && point.activity == log.activity
         }) {
             // point found, do something with it
-            point.timeSpend += endTime.timeIntervalSince(startTime)
+            dataSeries[index].timeSpend += endTime.timeIntervalSince(startTime)
         }else{
             
             self.dataSeries.append(DataSeriesPoint(activity: activity, timeSpend: endTime.timeIntervalSince(startTime), date: dateToSave))
@@ -151,21 +151,25 @@ class TimeFrameData {
         
         
         guard let activity = log.activity else { return }
-        
-        // Clamp to filter range
+    
         if startTime < filterData.startDate {
             startTime = filterData.startDate
         }
         if endTime > filterData.endDate {
             endTime = filterData.endDate
+            
+            print("new end")
+            print(endTime)
         }
+        
         
         guard endTime > startTime else { return }
         
-        if var point =  dataPoints.first(where: { DataPoint in
+        if let index =  dataPoints.firstIndex(where: { DataPoint in
             DataPoint.activity == activity
         }){
-            point .timeSpend += endTime.timeIntervalSince(startTime)
+            dataPoints[index].timeSpend += endTime.timeIntervalSince(startTime)
+            
             
         } else {
             self.dataPoints.append(DataPoint(activity: activity, timeSpend: endTime.timeIntervalSince(startTime), filterData: filterData))
