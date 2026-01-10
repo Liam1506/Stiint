@@ -57,9 +57,14 @@ struct TimeLineActivitySegmentView: View {
                             .foregroundColor(.white)
                             
                         if(end-start > 59){
-                            
+                            if(log.endTime == nil){
+                                Text(log.startTime!, style: .timer)
+                                    .monospaced()
+                                    .foregroundColor(.white)
+                            }else{
                                 Text(timeDistance)
-                                .foregroundColor(.white)
+                                    .foregroundColor(.white)
+                            }
                            
                         }
                     }.padding(10)
