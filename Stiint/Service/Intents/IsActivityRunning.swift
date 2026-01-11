@@ -1,5 +1,5 @@
 //
-//  GetCurrentActivity.swift
+//  IsActivityRunning.swift
 //  Stiint
 //
 //  Created by Wittig, Liam on 20.12.25.
@@ -7,7 +7,6 @@
 
 import AppIntents
 import Foundation
-
 
 struct IsActivityRunning: AppIntent {
     static var title: LocalizedStringResource = "Is activity running?"
@@ -17,9 +16,8 @@ struct IsActivityRunning: AppIntent {
 
     @Parameter(title: "Activity")
     var activity: ActivityEntity
-    
+
     func perform() throws -> some IntentResult & ReturnsValue<Bool> {
-        
         guard RunningManager.shared.activityDTO?.id != nil else {
             return .result(value: false)
         }

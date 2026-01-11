@@ -12,28 +12,23 @@ import SwiftData
 import SwiftUI
 
 @Model
-public final class ActivityLog{
-    
-    
+public final class ActivityLog {
     public var id: UUID?
     public var startTime: Date?
     public var endTime: Date?
     public var activity: ActivityItem?
     public var previousActivityLogId: UUID?
-    
 
     public init(
         startTime: Date? = nil,
         activity: ActivityItem? = nil,
-        previousActivityLogId: UUID? = nil,
-        
-        
+        previousActivityLogId: UUID? = nil
+
     ) {
-        self.id = id ?? UUID()
+        id = id ?? UUID()
         self.startTime = startTime ?? Date.now
-        self.endTime = nil
+        endTime = nil
         self.activity = activity
         self.previousActivityLogId = previousActivityLogId
     }
-
 }

@@ -5,18 +5,17 @@
 //  Created by Liam Wittig on 07.12.25.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct HomeView: View {
-    
-    @State private var selectedDate: Date = Date.now
+    @State private var selectedDate: Date = .now
     @Query(sort: \ActivityLog.startTime) var logs: [ActivityLog]
-    
+
     var body: some View {
         NavigationView {
             TimeLineView(selectedDate: selectedDate)
- 
+
                 .navigationTitle(formattedDate)
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
@@ -26,8 +25,7 @@ struct HomeView: View {
                             Image(systemName: "calendar")
                         }
                         .disabled(Calendar.current.isDateInToday(selectedDate))
-                    
-                }
+                    }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
                             selectedDate = Calendar.current.date(byAdding: .day, value: -1, to: selectedDate) ?? selectedDate
@@ -35,7 +33,7 @@ struct HomeView: View {
                             Image(systemName: "chevron.left")
                         }
                     }
-                    
+
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
                             selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate) ?? selectedDate
@@ -44,12 +42,10 @@ struct HomeView: View {
                         }
                         .disabled(Calendar.current.isDateInToday(selectedDate))
                     }
-              
-           
                 }
         }
     }
-    
+
     private var formattedDate: String {
         if Calendar.current.isDateInToday(selectedDate) {
             return "Today"

@@ -5,16 +5,15 @@
 //  Created by Liam Wittig on 15.12.25.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 enum DateRangeFilter: String, CaseIterable, Identifiable {
-    
     case yesterday = "Yesterday"
     case last7Days = "Last 7 Days"
     case lastMonth = "Last Month"
     case custom = "Custom Range"
-    
+
     var id: String { rawValue }
 }
 
@@ -29,16 +28,16 @@ struct AnalyticsFilterView: View {
     @Query(filter: #Predicate<ActivityItem> { activity in
         activity.deleted == false || activity.deleted == nil
     }, sort: \ActivityItem.createdDate) private var activities: [ActivityItem]
-    
+
     @State private var selectedDateRange: DateRangeFilter = .last7Days
     @State private var showFreeTime: Bool = true
     @State private var customStartDate: Date = Date().addingTimeInterval(-7 * 24 * 60 * 60)
-    @State private var customEndDate: Date = Date()
+    @State private var customEndDate: Date = .init()
     @State private var selectedActivities: Set<UUID> = []
     @State private var showFilterSheet: Bool = false
-    
+
     let onFilterChange: (FilterData) -> Void
-    
+
     var body: some View {
         Button(action: { showFilterSheet = true }) {
             HStack {
@@ -47,10 +46,10 @@ struct AnalyticsFilterView: View {
                         .font(.subheadline)
                         .fontWeight(.medium)
                         .foregroundStyle(.primary)
-                    
+
                     HStack(spacing: 12) {
                         Label("\(selectedActivities.count) activities", systemImage: "chart.bar.fill")
-                        
+
                         if showFreeTime {
                             Label("Free time", systemImage: "clock.fill")
                         }
@@ -58,9 +57,9 @@ struct AnalyticsFilterView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 }
-                
+
                 Spacer()
-                
+
                 Image(systemName: "slider.horizontal.3")
                     .font(.title3)
                     .foregroundStyle(.primary)
@@ -87,12 +86,13 @@ struct AnalyticsFilterView: View {
             applyFilter()
         }
     }
-    
+
     // MARK: - Helper Functions
+
     private func initializeSelectedActivities() {
         selectedActivities = Set(activities.compactMap { $0.id })
     }
-    
+
     private func applyFilter() {
         let (start, end) = getDateRange()
         let filterData = FilterData(
@@ -103,29 +103,29 @@ struct AnalyticsFilterView: View {
         )
         onFilterChange(filterData)
     }
-    
+
     private func getDateRange() -> (start: Date, end: Date) {
         let calendar = Calendar.current
         let now = Date()
-        
+
         switch selectedDateRange {
         case .yesterday:
             let yesterday = calendar.date(byAdding: .day, value: -1, to: now)!
             let start = calendar.startOfDay(for: yesterday)
             let end = calendar.startOfDay(for: now)
             return (start, end)
-            
+
         case .last7Days:
             let sevenDaysAgo = calendar.date(byAdding: .day, value: -7, to: now)!
             let start = calendar.startOfDay(for: sevenDaysAgo)
             let end = calendar.startOfDay(for: now)
             return (start, end)
-       
+
         case .lastMonth:
             let startOfThisMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: now))!
             let startOfLastMonth = calendar.date(byAdding: .month, value: -1, to: startOfThisMonth)!
             return (startOfLastMonth, startOfThisMonth)
-            
+
         case .custom:
             let start = calendar.startOfDay(for: customStartDate)
             // For end date, you might want the END of the day instead of start
@@ -133,7 +133,7 @@ struct AnalyticsFilterView: View {
             return (start, end)
         }
     }
-    
+
     private func getDateRangeDescription() -> String {
         let (start, end) = getDateRange()
         let formatter = DateFormatter()
@@ -143,9 +143,10 @@ struct AnalyticsFilterView: View {
 }
 
 // MARK: - Filter Sheet
+
 struct FilterSheet: View {
     @Environment(\.dismiss) private var dismiss
-    
+
     @Binding var selectedDateRange: DateRangeFilter
     @Binding var showFreeTime: Bool
     @Binding var customStartDate: Date
@@ -153,7 +154,7 @@ struct FilterSheet: View {
     @Binding var selectedActivities: Set<UUID>
     let activities: [ActivityItem]
     let onApply: () -> Void
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -162,14 +163,14 @@ struct FilterSheet: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Date Range")
                             .font(.headline)
-                        
+
                         Picker("Date Range", selection: $selectedDateRange) {
                             ForEach(DateRangeFilter.allCases) { range in
                                 Text(range.rawValue).tag(range)
                             }
                         }
                         .pickerStyle(.segmented)
-                        
+
                         if selectedDateRange == .custom {
                             VStack(spacing: 12) {
                                 DatePicker("Start Date", selection: $customStartDate, displayedComponents: .date)
@@ -178,23 +179,23 @@ struct FilterSheet: View {
                             .padding(.top, 8)
                         }
                     }
-                    
+
                     Divider()
-                    
+
                     // Free Time Toggle
                     Toggle("Show Free Time", isOn: $showFreeTime)
                         .font(.headline)
-                    
+
                     Divider()
-                    
+
                     // Activity Selection
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
                             Text("Activities")
                                 .font(.headline)
-                            
+
                             Spacer()
-                            
+
                             Button(selectedActivities.count == activities.count ? "Deselect All" : "Select All") {
                                 if selectedActivities.count == activities.count {
                                     selectedActivities.removeAll()
@@ -204,7 +205,7 @@ struct FilterSheet: View {
                             }
                             .font(.caption)
                         }
-                        
+
                         if activities.isEmpty {
                             Text("No activities available")
                                 .font(.caption)
@@ -240,7 +241,7 @@ struct FilterSheet: View {
                         dismiss()
                     }
                 }
-                
+
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Apply") {
                         onApply()
@@ -254,11 +255,12 @@ struct FilterSheet: View {
 }
 
 // MARK: - Activity Filter Chip
+
 struct ActivityFilterChip: View {
     let activity: ActivityItem
     let isSelected: Bool
     let onTap: () -> Void
-    
+
     var body: some View {
         Button(action: onTap) {
             VStack(spacing: 4) {
@@ -269,7 +271,7 @@ struct ActivityFilterChip: View {
                     Image(systemName: "circle.fill")
                         .font(.title2)
                 }
-                
+
                 Text(activity.name ?? "Unknown")
                     .font(.caption)
                     .fontWeight(.medium)

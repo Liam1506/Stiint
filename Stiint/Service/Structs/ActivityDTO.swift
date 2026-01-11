@@ -4,9 +4,9 @@
 //
 //  Created by Liam Wittig on 07.12.25.
 //
+import ActivityKit
 import Foundation
 import SwiftUI
-import ActivityKit
 
 public struct ActivityDTO: Sendable {
     let id: UUID

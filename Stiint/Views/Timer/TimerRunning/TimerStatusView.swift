@@ -12,14 +12,13 @@ struct TimerStatusView: View {
         if let activity = RunningManager.shared.activityDTO {
             HStack {
                 Image(systemName: activity.icon)
-                
+
                 Text(activity.name)
-                
+
                 Spacer()
-                
+
                 Text(activity.startTime, style: .timer)
                     .font(.headline.monospaced())
-                    
             }
             .padding()
         }

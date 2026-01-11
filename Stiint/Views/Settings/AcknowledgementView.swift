@@ -1,12 +1,12 @@
 //
-//  AknwoledmentView.swift
+//  AcknowledgementView.swift
 //  Stiint
 //
 //  Created by Wittig, Liam on 22.12.25.
 //
 
-import SwiftUI
 import AcknowList
+import SwiftUI
 
 struct AcknowledgementsView: View {
     @Environment(\.dismiss) private var dismiss
@@ -24,8 +24,7 @@ struct AcknowledgementsView: View {
         }
     }
 }
+
 #Preview {
     AcknowledgementsView()
 }
-
-

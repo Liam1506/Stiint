@@ -9,17 +9,16 @@ import SwiftUI
 
 struct TimerView: View {
     var body: some View {
-        
         /*
          Two States:
          - Either to select an activty and start
          - The Timer itself, where you can stop the task
-         */            if(RunningManager.shared.running){
-                     TimerRunningView()
-                 }else{
-                     SelectActivity()
-                 }
-               
+         */ if RunningManager.shared.running
+        {
+            TimerRunningView()
+        } else {
+            SelectActivity()
+        }
     }
 }
 

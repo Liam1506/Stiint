@@ -5,8 +5,8 @@
 //  Created by Liam Wittig on 07.12.25.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct SelectActivity: View {
     @State private var isShowingCreateSheet = false
@@ -23,18 +23,15 @@ struct SelectActivity: View {
         NavigationView {
             List(activities) { activity in
                 HStack(spacing: 20) {
-                    ZStack{
-                        
+                    ZStack {
                         Circle()
                             .frame(width: 35, height: 35)
                             .foregroundStyle(activity.color)
                             .shadow(color: activity.color.opacity(0.3), radius: 10, x: 0, y: 5)
-                        
-                            Image(systemName: activity.sfSymbolName ?? "xmark.circle")
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(.white)
-                  
-                                
+
+                        Image(systemName: activity.sfSymbolName ?? "xmark.circle")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.white)
                     }
                     Text(activity.name!).fontWeight(.bold)
                     Spacer()
@@ -91,12 +88,9 @@ struct SelectActivity: View {
             } message: {
                 Text("This action cannot be undone.")
             }
-
-         
         }
     }
 }
-
 
 #Preview {
     SelectActivity()

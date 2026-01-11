@@ -12,30 +12,27 @@ struct TimerRunningView: View {
       Show the timer itself with teh actiovity.
      Singe button to end task -> Should change state other page should be shown
         */
-    init(){
-        //print(RunningManager.shared.currentActivityLogId!)
+    init() {
+        // print(RunningManager.shared.currentActivityLogId!)
     }
-    
+
     @State private var activityLog: ActivityLog?
-    
+
     var body: some View {
-        
-        if(RunningManager.shared.activityDTO == nil){
+        if RunningManager.shared.activityDTO == nil {
             Text("Awaiting activityDTO")
         }
-        
-        else if(RunningManager.shared.currentActivityLogId == nil){
+
+        else if RunningManager.shared.currentActivityLogId == nil {
             Text("Awaiting currentActivityLogId")
-        }else{
-            
+        } else {
             NavigationView {
-                VStack(spacing: 40){
-                    
+                VStack(spacing: 40) {
                     Text(RunningManager.shared.activityDTO!.startTime, style: .timer)
                         .font(.system(size: 80, weight: .light, design: .monospaced))
                         .frame(maxWidth: .infinity)
                         .multilineTextAlignment(.center)
-                    
+
                     Button(action: {
                         Task {
                             await RunningManager.shared.stopActivity()
@@ -48,14 +45,10 @@ struct TimerRunningView: View {
                             .padding(.horizontal)
                             .glassEffect()
                     }
-                    
+
                     .navigationTitle(RunningManager.shared.activityDTO!.name)
-                    
-                    
                 }
             }
-       
-            
         }
     }
 }

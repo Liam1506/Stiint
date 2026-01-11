@@ -5,17 +5,14 @@
 //  Created by Wittig, Liam on 15.12.25.
 //
 
-import SwiftUI
 import Charts
-
+import SwiftUI
 
 struct BarDiagramView: View {
-    
     let data: TimeFrameData
- 
 
     var body: some View {
-        VStack(alignment: .leading){
+        VStack(alignment: .leading) {
             Text("Avg. Time per Day")
                 .font(.headline)
             Text("The diagram illustrates the average amount of time you spend each day over a given period.")
@@ -46,12 +43,10 @@ struct BarDiagramView: View {
                 }
             }
             .chartXAxis(.hidden)
-     
-        }  .padding(15)
+
+        }.padding(15)
             .frame(height: 500)
             .background(.regularMaterial)
             .cornerRadius(12)
     }
 }
-
-

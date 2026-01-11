@@ -20,8 +20,6 @@ struct OnboardingView1: View {
                 .scaledToFit()
                 .frame(width: 120, height: 120)
                 .foregroundStyle(.blue.gradient)
-            
-            
 
             // Title
             Text("Start Tracking Your Time")
@@ -63,11 +61,10 @@ struct OnboardingView1: View {
                         Text("and")
                             .foregroundColor(.secondary)
                         Link("Terms of Service", destination: URL(string: TERMS_OF_SERVICE_LINK)!)
-                        
                     }
                     .font(.footnote)
                 }
-                
+
                 .frame(height: 50)
                 .multilineTextAlignment(.center)
             }

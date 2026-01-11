@@ -5,93 +5,82 @@
 //  Created by Wittig, Liam on 11.12.25.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 internal import Combine
 
 struct TimeLineView: View {
     @Query(sort: \ActivityLog.startTime) private var allLogs: [ActivityLog]
     let selectedDate: Date
     let calendar = Calendar.current
-    let hours: [Int] = Array(0...23)
-    
-    
+    let hours: [Int] = Array(0 ... 23)
+
     let totalHours: Int = 24
-    
+
     let currentHour: Int = Calendar.current.component(.hour, from: Date())
     @State private var currentTimeValue: Double = 0.0
 
     let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
-    
-        @State private var currentZoom = 0.0
-       @State private var totalZoom = 1000.0
-       
-       // Add minimum and maximum zoom constraints
-       private let minZoom: Double = 800.0
-       private let maxZoom: Double = 5000.0
 
-    
-    
+    @State private var currentZoom = 0.0
+    @State private var totalZoom = 1000.0
+
+    // Add minimum and maximum zoom constraints
+    private let minZoom: Double = 800.0
+    private let maxZoom: Double = 5000.0
+
     let lineHeight: CGFloat = 2
-
 
     var logs: [ActivityLog] {
         let startOfDay = calendar.startOfDay(for: selectedDate)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-        
-        
+
         return allLogs.filter { log in
             guard let startTime = log.startTime else { return false }
-            
-            if let endTime = log.endTime{
-                return  startTime >= startOfDay && startTime < endOfDay || log.endTime == nil  || endTime >= startOfDay && endTime < endOfDay
+
+            if let endTime = log.endTime {
+                return startTime >= startOfDay && startTime < endOfDay || log.endTime == nil || endTime >= startOfDay && endTime < endOfDay
             }
             return startTime >= startOfDay && startTime < endOfDay || log.endTime == nil
         }
     }
-    
-    func updateTime(){
+
+    func updateTime() {
         let now = Date()
         let hour = Calendar.current.component(.hour, from: now)
         let minute = Calendar.current.component(.minute, from: now)
         let second = Calendar.current.component(.second, from: now)
-        currentTimeValue = Double(hour) + Double(minute)/60 + Double(second)/3600
+        currentTimeValue = Double(hour) + Double(minute) / 60 + Double(second) / 3600
     }
-    
-    func calculateGeometryOfHouer(hour: Double, geometry: GeometryProxy)-> CGFloat{
-        return geometry.size.height / 24 * CGFloat(hour) + (geometry.size.height/24)/2
-    }
-    
 
-    
-    func getGeometry(date: Date?, geometry: GeometryProxy)-> CGFloat{
-        if date == nil { let timeVal = TimeHandler().getTimeValueForDate(date: Date.now, selectedDate: selectedDate);
-            return calculateGeometryOfHouer(hour: timeVal, geometry: geometry)}
-        
-            let startOfDay = calendar.startOfDay(for: selectedDate)
-        
+    func calculateGeometryOfHouer(hour: Double, geometry: GeometryProxy) -> CGFloat {
+        return geometry.size.height / 24 * CGFloat(hour) + (geometry.size.height / 24) / 2
+    }
+
+    func getGeometry(date: Date?, geometry: GeometryProxy) -> CGFloat {
+        if date == nil { let timeVal = TimeHandler().getTimeValueForDate(date: Date.now, selectedDate: selectedDate)
+            return calculateGeometryOfHouer(hour: timeVal, geometry: geometry)
+        }
+
+        let startOfDay = calendar.startOfDay(for: selectedDate)
+
         if date! <= startOfDay {
             return calculateGeometryOfHouer(hour: 0, geometry: geometry)
         }
-        
-        
-        
+
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-        
 
         if date! >= endOfDay {
             return calculateGeometryOfHouer(hour: Double(totalHours), geometry: geometry)
         }
-    
-    
+
         let timeVal = TimeHandler().getTimeValueForDate(date: date!, selectedDate: selectedDate)
         return calculateGeometryOfHouer(hour: timeVal, geometry: geometry)
     }
 
     var body: some View {
-        
         ScrollViewReader { proxy in
-            ScrollView{
+            ScrollView {
                 GeometryReader { geometry in
                     ZStack(alignment: .top) {
                         VStack(spacing: 0) {
@@ -102,43 +91,41 @@ struct TimeLineView: View {
                             }
                         }
                         ForEach(logs) { log in
-                            TimeLineActivitySegmentView(start: getGeometry(date: log.startTime, geometry: geometry), end: getGeometry(date: log.endTime, geometry: geometry), log: log).padding(.horizontal, 20).offset(x:12)
+                            TimeLineActivitySegmentView(start: getGeometry(date: log.startTime, geometry: geometry), end: getGeometry(date: log.endTime, geometry: geometry), log: log).padding(.horizontal, 20).offset(x: 12)
                         }
-                        
+
                         // Moving red line
-                        
-                        if(Calendar.current.isDateInToday(selectedDate)){
-                            
+
+                        if Calendar.current.isDateInToday(selectedDate) {
                             TimeLineCurrentTimeView(currentTimeValue: currentTimeValue, geometry: geometry)
                         }
                     }
                 }
                 .frame(height: currentZoom + totalZoom)
-        
-            } .onAppear {
+
+            }.onAppear {
                 updateTime()
                 // Scroll to the current hour
-                //let currentHour = Calendar.current.component(.hour, from: Date())
+                // let currentHour = Calendar.current.component(.hour, from: Date())
                 withAnimation {
                     proxy.scrollTo(currentHour, anchor: .center)
                 }
             }.onReceive(timer) { _ in
                 print("Update")
                 updateTime()
-         
+
             }.gesture(
                 MagnificationGesture()
                     .onChanged { value in
                         currentZoom = (value - 1) * 1000
                     }
-                    .onEnded { value in
+                    .onEnded { _ in
                         totalZoom += currentZoom
                         totalZoom = min(max(totalZoom, minZoom), maxZoom)
                         currentZoom = 0
                     }
             )
         }
-       
     }
 }
 

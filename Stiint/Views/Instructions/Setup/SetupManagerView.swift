@@ -15,13 +15,12 @@ struct SetupManagerView: View {
             AnyView(OnboardingView1(index: $index)),
             AnyView(OnboardingView2(index: $index)),
             AnyView(OnboardingView3(index: $index)),
-            AnyView(OnboardingView4(index: $index))
+            AnyView(OnboardingView4(index: $index)),
         ]
     }
 
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            
             TabView(selection: $index) {
                 ForEach(pages.indices, id: \.self) { i in
                     pages[i]
@@ -30,10 +29,10 @@ struct SetupManagerView: View {
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
-            
+
             // Skip button at top right
-            
-            if(index > 0){
+
+            if index > 0 {
                 Button(action: {
                     SetupManager.shared.completeSetup()
                 }) {
@@ -44,7 +43,6 @@ struct SetupManagerView: View {
         }
     }
 }
-
 
 protocol OnboardingPage: View {
     static var index: Int { get }

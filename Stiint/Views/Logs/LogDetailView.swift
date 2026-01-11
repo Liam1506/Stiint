@@ -1,28 +1,27 @@
 //
-//  logDetailView.swift
+//  LogDetailView.swift
 //  Stiint
 //
 //  Created by Wittig, Liam on 13.12.25.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct LogDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    
+
     @Bindable var log: ActivityLog
-    
+
     @Query private var activities: [ActivityItem]
-    
+
     @State private var showDeleteConfirmation = false
- 
-    
+
     private func maxStartTime() -> Date {
         return Date.now
     }
-    
+
     private func maxEndTime(for startTime: Date) -> Date {
         // If start time is today, max is now
         // If start time is in the past, max is end of that day or now, whichever is earlier
@@ -33,11 +32,9 @@ struct LogDetailView: View {
             return min(endOfStartDay, Date.now)
         }
     }
-    
+
     var body: some View {
-        
         NavigationStack {
-            
             Form {
                 Section("Activity") {
                     Picker("Activity", selection: $log.activity) {
@@ -48,57 +45,53 @@ struct LogDetailView: View {
                     }
                 }
                 /*
-                Section("Time") {
-              
-                     DatePicker("Start Time",
-                     selection: Binding(
-                     get: { log.startTime ?? Date.now },
-                     set: { newValue in
-                     log.startTime = newValue
-                     
-                     
-                     // Clear end time if it would create negative duration
-                     if let endTime = log.endTime, endTime <= newValue {
-                     log.endTime = nil
-                     }
-                     }
-                     ),
-                     in: ...Date.now,
-                     displayedComponents: [.hourAndMinute])
-                     
-                     
-                     
-                     
-                     if let endTime = log.endTime, let startTime = log.startTime {
-                     DatePicker("End Time",
-                     selection: Binding(
-                     get: { endTime },
-                     set: { newValue in
-                     
-                     if(newValue > startTime ){
-                     log.endTime = newValue
-                     }
-                     }
-                     ),
-                     in: startTime...maxEndTime(for: startTime),
-                     displayedComponents: [.hourAndMinute])
-                     }
-                     }
-                     */
-                    if let startTime = log.startTime, let endTime = log.endTime {
-                        Section("Duration") {
-                            let duration = endTime.timeIntervalSince(startTime)
-                            let hours = Int(duration) / 3600
-                            let minutes = Int(duration) % 3600 / 60
-                            
-                            if hours > 0 {
-                                Text("\(hours)h \(minutes)m")
-                            } else {
-                                Text("\(minutes)m")
-                            }
+                 Section("Time") {
+
+                      DatePicker("Start Time",
+                      selection: Binding(
+                      get: { log.startTime ?? Date.now },
+                      set: { newValue in
+                      log.startTime = newValue
+
+                      // Clear end time if it would create negative duration
+                      if let endTime = log.endTime, endTime <= newValue {
+                      log.endTime = nil
+                      }
+                      }
+                      ),
+                      in: ...Date.now,
+                      displayedComponents: [.hourAndMinute])
+
+                      if let endTime = log.endTime, let startTime = log.startTime {
+                      DatePicker("End Time",
+                      selection: Binding(
+                      get: { endTime },
+                      set: { newValue in
+
+                      if(newValue > startTime ){
+                      log.endTime = newValue
+                      }
+                      }
+                      ),
+                      in: startTime...maxEndTime(for: startTime),
+                      displayedComponents: [.hourAndMinute])
+                      }
+                      }
+                      */
+                if let startTime = log.startTime, let endTime = log.endTime {
+                    Section("Duration") {
+                        let duration = endTime.timeIntervalSince(startTime)
+                        let hours = Int(duration) / 3600
+                        let minutes = Int(duration) % 3600 / 60
+
+                        if hours > 0 {
+                            Text("\(hours)h \(minutes)m")
+                        } else {
+                            Text("\(minutes)m")
                         }
                     }
-                
+                }
+
                 Section {
                     Button(role: .destructive, action: {
                         showDeleteConfirmation = true
@@ -114,7 +107,6 @@ struct LogDetailView: View {
             .navigationTitle("Edit Log")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-           
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {
                         try? modelContext.save()
@@ -123,7 +115,7 @@ struct LogDetailView: View {
                 }
             }
             .alert("Delete Log", isPresented: $showDeleteConfirmation) {
-                Button("Cancel", role: .cancel) { }
+                Button("Cancel", role: .cancel) {}
                 Button("Delete", role: .destructive) {
                     modelContext.delete(log)
                     dismiss()

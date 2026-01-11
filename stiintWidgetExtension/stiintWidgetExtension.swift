@@ -5,14 +5,13 @@
 //  Created by Wittig, Liam on 17.12.25.
 //
 
-import WidgetKit
-import SwiftUI
 import ActivityKit
-
+import SwiftUI
+import WidgetKit
 
 struct stiintWidgetExtension: Widget {
     let kind: String = "stiintWidgetExtension"
-    
+
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: LiveActivityDTO.self) { context in
             // Lock screen / banner view
@@ -20,8 +19,7 @@ struct stiintWidgetExtension: Widget {
                 Image(systemName: context.attributes.icon)
                     .font(.system(size: 22, weight: .semibold))
                     .frame(width: 28, alignment: .center)
-                
-                .foregroundColor(Color(hex:  context.attributes.color))
+                    .foregroundColor(Color(hex: context.attributes.color))
 
                 VStack(alignment: .leading, spacing: 0) {
                     Text(context.attributes.name)
@@ -43,62 +41,44 @@ struct stiintWidgetExtension: Widget {
             DynamicIsland {
                 // Expanded regions
                 DynamicIslandExpandedRegion(.leading) {
-                    //Image(systemName: context.attributes.icon).foregroundStyle(Color(hex:  context.attributes.color))
-                
-                 
-                        VStack{
-                            Spacer()
-                            Image(systemName: context.attributes.icon)
-                                .font(.system(size: 30))
-                                .foregroundColor(Color(hex:  context.attributes.color))
-                                .multilineTextAlignment(.center)
-                            Spacer()
-                        }
-                        
-                  
-               
-                        
-                    
-                
+                    // Image(systemName: context.attributes.icon).foregroundStyle(Color(hex:  context.attributes.color))
+
+                    VStack {
+                        Spacer()
+                        Image(systemName: context.attributes.icon)
+                            .font(.system(size: 30))
+                            .foregroundColor(Color(hex: context.attributes.color))
+                            .multilineTextAlignment(.center)
+                        Spacer()
+                    }
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-
                     Text(context.attributes.startTime, style: .timer)
                         .font(.system(size: 100, weight: .light, design: .monospaced))
                         .lineLimit(1)
                         .minimumScaleFactor(0.01)
                         .frame(width: 100, height: 50, alignment: .center)
-                          
                 }
                 DynamicIslandExpandedRegion(.center) {
-                   
-                
-                        HStack(alignment: .bottom){
-                            
-                            Text(context.attributes.name)
-                                .minimumScaleFactor(0.01)
-                                .frame(width: 250, alignment: .leading)
-                                .font(.headline)
-                                .padding(.leading, 20)
-                            
-                            Spacer()
-                        
-                        
-                    
-                        }
-                
+                    HStack(alignment: .bottom) {
+                        Text(context.attributes.name)
+                            .minimumScaleFactor(0.01)
+                            .frame(width: 250, alignment: .leading)
+                            .font(.headline)
+                            .padding(.leading, 20)
+
+                        Spacer()
+                    }
                 }
             } compactLeading: {
-                
-                Image(systemName: context.attributes.icon).foregroundStyle(Color(hex:  context.attributes.color))
+                Image(systemName: context.attributes.icon).foregroundStyle(Color(hex: context.attributes.color))
                     .font(.system(size: 17))
             } compactTrailing: {
                 EmptyView()
             } minimal: {
-                Image(systemName: context.attributes.icon).foregroundStyle(Color(hex:  context.attributes.color))
+                Image(systemName: context.attributes.icon).foregroundStyle(Color(hex: context.attributes.color))
                     .font(.system(size: 17))
             }
         }
     }
 }
-

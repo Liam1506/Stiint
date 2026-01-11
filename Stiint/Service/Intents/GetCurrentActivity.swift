@@ -10,7 +10,6 @@ import Foundation
 
 // Define the result struct that will be returned by the intent
 
-
 // Define the App Intent
 struct GetCurrentActivity: AppIntent {
     static var title: LocalizedStringResource = "Get current activity"
@@ -18,16 +17,13 @@ struct GetCurrentActivity: AppIntent {
         "Retrieves the activity that is currently running. If no activity is active, this will return nil."
     )
 
-    
     func perform() throws -> some IntentResult & ReturnsValue<ActivityEntity?> {
-
-        if let activity = RunningManager.shared.activityDTO{
-            
+        if let activity = RunningManager.shared.activityDTO {
             let result = ActivityEntity(id: activity.id, name: activity.name, startDate: activity.startTime)
-            
+
             return .result(value: result)
         }
-        
+
         return .result(value: nil)
     }
 }

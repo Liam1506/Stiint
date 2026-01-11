@@ -18,7 +18,7 @@ public final class ActivityItem {
     public var sfSymbolName: String?
     public var deleted: Bool?
     public var weekdays: Set<Weekday>?
-    
+
     public init(
         id: UUID? = nil,
         createdDate: Date? = nil,
@@ -28,12 +28,11 @@ public final class ActivityItem {
         deleted: Bool? = nil,
         weekdays: Set<Weekday> = []
 
-        
     ) {
         self.id = id ?? UUID()
         self.createdDate = createdDate ?? Date.now
         self.name = name
-        self.colorHex = color?.toHex()
+        colorHex = color?.toHex()
         self.sfSymbolName = sfSymbolName
         self.deleted = deleted
         self.weekdays = weekdays
@@ -44,4 +43,3 @@ public final class ActivityItem {
         set { colorHex = newValue.toHex() }
     }
 }
-

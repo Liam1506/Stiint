@@ -8,37 +8,32 @@
 import SwiftUI
 
 struct AnalyticsView: View {
-    
     @State private var currentFilter: FilterData?
     @State private var timeFrameData: TimeFrameData?
-    
-    private func loadData(){
-        
-        if let filter = currentFilter{
-            Task{
+
+    private func loadData() {
+        if let filter = currentFilter {
+            Task {
                 timeFrameData = await AnalyticsDataProvider().loadDataForTimeFrame(
                     filterData: filter
                 )
-                
             }
         }
-
     }
-    
+
     var body: some View {
-        NavigationView{
-            
-            ScrollView{
+        NavigationView {
+            ScrollView {
                 AnalyticsFilterView { filterData in
-                          currentFilter = filterData
-                          print("Filter applied in AnalyticsView:")
-                          print("- Date Range: \(filterData.startDate) to \(filterData.endDate)")
-                          print("- Show Free Time: \(filterData.showFreeTime)")
-                          print("- Selected Activities: \(filterData.selectedActivityIds.count)")
-                      }
-                      .padding(.horizontal)
-                if let filter = currentFilter, let data = timeFrameData  {
-                    if(!DEV){
+                    currentFilter = filterData
+                    print("Filter applied in AnalyticsView:")
+                    print("- Date Range: \(filterData.startDate) to \(filterData.endDate)")
+                    print("- Show Free Time: \(filterData.showFreeTime)")
+                    print("- Selected Activities: \(filterData.selectedActivityIds.count)")
+                }
+                .padding(.horizontal)
+                if let filter = currentFilter, let data = timeFrameData {
+                    if !DEV {
                         // Takes etenerty to show in dev
                         SankyDiagramView(data: data, filterData: filter).padding()
                     }
@@ -46,34 +41,29 @@ struct AnalyticsView: View {
                     LineDiagramView(data: data).padding()
                     BarDiagramView(data: data).padding()
                     AreaDiagramView(data: data).padding()
-                }else{
+                } else {
                     VStack {
-                         Spacer()
-                         ProgressView()
+                        Spacer()
+                        ProgressView()
                         Text("Gathering data...").font(.footnote).foregroundStyle(.secondary)
-                         Spacer()
-                     }
+                        Spacer()
+                    }
                     .frame(height: 300)
                 }
-       
-                
-            }.onAppear(){
+
+            }.onAppear {
                 loadData()
             }.onChange(of: currentFilter) { _, _ in
                 loadData()
             }
             .refreshable {
-                
-                if let filter = currentFilter{
+                if let filter = currentFilter {
                     timeFrameData = await AnalyticsDataProvider().loadDataForTimeFrame(
                         filterData: filter
                     )
                 }
             }
             .navigationTitle("Insights")
-           
         }
-        
     }
 }
-
