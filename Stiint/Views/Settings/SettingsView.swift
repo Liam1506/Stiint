@@ -73,6 +73,11 @@ struct SettingsView: View {
                     }
                     
                     Section(header: Text("Help")){
+                       /* Button("Paywall"){
+                            SubscriptionManager.shared.showPaywall()
+                        }
+                        Text("Is PRO enabled? \(SubscriptionManager.shared.isPro ? "Yes" : "No")")
+                        */
                         Button("Tutorial"){
                             SetupManager.shared.resetSetup()
                         }

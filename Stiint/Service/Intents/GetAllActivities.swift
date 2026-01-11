@@ -14,9 +14,9 @@ import SwiftData
 
 // Define the App Intent
 struct GetAllActivities: AppIntent {
-    static var title: LocalizedStringResource = "Get all avaible Activities"
+    static var title: LocalizedStringResource = "Get all available Activities"
     static var description = IntentDescription(
-        "Get all avaible activites."
+        "Get all available activites."
     )
 
     
