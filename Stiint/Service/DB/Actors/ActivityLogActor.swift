@@ -25,8 +25,40 @@ public actor ActivityLogActor {
     }
     
     
+    public func insertActivityLog(activityId: UUID, startTime: Date, endTime: Date){
+        let fetchDescriptor = FetchDescriptor<ActivityItem>(
+               predicate: #Predicate { $0.id == activityId }
+           )
+           let activity = try? modelContext.fetch(fetchDescriptor).first
+        
+        
+        let activityLog = ActivityLog(startTime: startTime, endTime: endTime, activity: activity)
+        
+        modelContext.insert(activityLog)
+        try? modelContext.save()
+        
+        
+    }
+    
+    
     public func clearTimeFrame(startDate: Date, endDate: Date, logId: UUID) throws {
         let defaultDate = Date.distantPast
+        
+        // 0. Split logs that span the entire range
+        let logsToSplit = #Predicate<ActivityLog> { log in
+            (log.startTime ?? defaultDate) < startDate &&
+            (log.endTime ?? defaultDate) > endDate
+        }
+        let splitDescriptor = FetchDescriptor<ActivityLog>(predicate: logsToSplit)
+        let dataToSplit = try modelContext.fetch(splitDescriptor)
+        
+        for log in dataToSplit {
+            guard log.id != logId else { continue }
+            // Create the second part (after the cleared range)
+            insertActivityLog(activityId: log.activity!.id!, startTime: endDate, endTime: log.endTime ?? Date.now)
+            // Truncate the first part (before the cleared range)
+            log.endTime = startDate
+        }
         
         // 1. Delete logs completely within the range
         let logsToDelete = #Predicate<ActivityLog> { log in
@@ -41,10 +73,11 @@ public actor ActivityLogActor {
             delete(activityLog: log)
         }
         
-        // 2. Truncate logs that start before range and end within/after range
+        // 2. Truncate logs that start before range and end within range
         let logsStartingBefore = #Predicate<ActivityLog> { log in
             (log.startTime ?? defaultDate) < startDate &&
-            (log.endTime ?? defaultDate) > startDate
+            (log.endTime ?? defaultDate) > startDate &&
+            (log.endTime ?? defaultDate) <= endDate
         }
         let beforeDescriptor = FetchDescriptor<ActivityLog>(predicate: logsStartingBefore)
         let dataStartingBefore = try modelContext.fetch(beforeDescriptor)
@@ -56,6 +89,7 @@ public actor ActivityLogActor {
         
         // 3. Truncate logs that start within range and end after range
         let logsEndingAfter = #Predicate<ActivityLog> { log in
+            (log.startTime ?? defaultDate) >= startDate &&
             (log.startTime ?? defaultDate) < endDate &&
             (log.endTime ?? defaultDate) > endDate
         }

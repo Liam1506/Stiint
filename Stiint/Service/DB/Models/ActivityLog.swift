@@ -21,13 +21,14 @@ public final class ActivityLog {
 
     public init(
         startTime: Date? = nil,
+        endTime: Date? = nil,
         activity: ActivityItem? = nil,
         previousActivityLogId: UUID? = nil
 
     ) {
         id = id ?? UUID()
         self.startTime = startTime ?? Date.now
-        endTime = nil
+        self.endTime = endTime
         self.activity = activity
         self.previousActivityLogId = previousActivityLogId
     }
