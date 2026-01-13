@@ -19,13 +19,13 @@ struct HomeView: View {
                 .navigationTitle(formattedDate)
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
-                                       Button(action: {
-                                           selectedDate = Date.now
-                                       }) {
-                                           Image(systemName: "plus")
-                                       }
-                                   }
-                 
+                        Button(action: {
+                            selectedDate = Date.now
+                        }) {
+                            Image(systemName: "plus")
+                        }
+                    }
+                    
                     ToolbarItem(placement: .navigation) {
                         Button(action: {
                             selectedDate = Calendar.current.date(byAdding: .day, value: -1, to: selectedDate) ?? selectedDate
@@ -33,7 +33,7 @@ struct HomeView: View {
                             Image(systemName: "chevron.left")
                         }
                     }
-
+                    
                     ToolbarItem(placement: .navigation) {
                         Button(action: {
                             selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate) ?? selectedDate
@@ -42,14 +42,17 @@ struct HomeView: View {
                         }
                         .disabled(Calendar.current.isDateInToday(selectedDate))
                     }
-                    ToolbarItem(placement: .navigation) {
-                                         Button(action: {
-                                             selectedDate = Date.now
-                                         }) {
-                                             Image(systemName: "calendar")
-                                         }
-                                         .disabled(Calendar.current.isDateInToday(selectedDate))
-                                     }
+                    ToolbarItem(placement: .automatic) {
+                        Button(action: {
+                            selectedDate = Date.now
+                        }) {
+                            Image(systemName: "calendar")
+                        }
+                        .disabled(Calendar.current.isDateInToday(selectedDate))
+                    }
+           
+               
+                 
                 }
         }
     }
