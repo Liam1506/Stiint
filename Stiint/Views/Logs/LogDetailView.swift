@@ -18,30 +18,35 @@ struct LogDetailView: View {
 
     @State private var showDeleteConfirmation = false
 
-    private func maxStartTime() -> Date {
-        return Date.now
-    }
-
-    private func maxEndTime(for startTime: Date) -> Date {
-        // If start time is today, max is now
-        // If start time is in the past, max is end of that day or now, whichever is earlier
-        if Calendar.current.isDateInToday(startTime) {
-            return Date.now
-        } else {
-            let endOfStartDay = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: startTime) ?? startTime
-            return min(endOfStartDay, Date.now)
-        }
+    
+    @State private var startTime: Date
+    @State private var endTime: Date
+    
+    
+    @State private var activity: ActivityItem
+    
+    init(log: ActivityLog) {
+        self.log = log
+        self.activity = log.activity!
+        self.startTime = log.startTime!
+        self.endTime = log.endTime ?? Date.now
     }
 
     var body: some View {
         NavigationStack {
             Form {
                 Section("Activity") {
-                    Picker("Activity", selection: $log.activity) {
-                        Text("None").tag(nil as ActivityItem?)
+                    Picker("Activity", selection: $activity) {
                         ForEach(activities) { activity in
-                            Text(activity.name ?? "Unnamed").tag(activity as ActivityItem?)
+                            Text(activity.name ?? "Unnamed").tag(activity)
                         }
+                    }
+                }
+                
+                Section("Time"){
+                    DatePicker("Start Time", selection: $startTime, in: ...endTime, displayedComponents: .hourAndMinute)
+                    if(log.endTime != nil){
+                        DatePicker("End Time", selection: $endTime, in: startTime...Date.now, displayedComponents: .hourAndMinute)
                     }
                 }
                 /*
@@ -78,7 +83,6 @@ struct LogDetailView: View {
                       }
                       }
                       */
-                if let startTime = log.startTime, let endTime = log.endTime {
                     Section("Duration") {
                         let duration = endTime.timeIntervalSince(startTime)
                         let hours = Int(duration) / 3600
@@ -89,7 +93,7 @@ struct LogDetailView: View {
                         } else {
                             Text("\(minutes)m")
                         }
-                    }
+                    
                 }
 
                 Section {
@@ -109,6 +113,19 @@ struct LogDetailView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {
+                        
+                        guard endTime > startTime else {
+                            return
+                        }
+                        guard log.endTime != nil else {
+                            return
+                        }
+                        
+                        
+                        log.endTime = endTime
+                        log.startTime = startTime
+                        log.activity = activity
+                        
                         try? modelContext.save()
                         dismiss()
                     }
@@ -118,6 +135,7 @@ struct LogDetailView: View {
                 Button("Cancel", role: .cancel) {}
                 Button("Delete", role: .destructive) {
                     modelContext.delete(log)
+                    try? modelContext.save()
                     dismiss()
                 }
             } message: {

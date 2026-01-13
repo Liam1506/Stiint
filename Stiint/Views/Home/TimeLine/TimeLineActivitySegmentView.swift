@@ -61,8 +61,10 @@ struct TimeLineActivitySegmentView: View {
                 }
             }
             .onTapGesture {
+                guard log.endTime != nil else { return }
                 isShowingLogSheet.toggle()
             }.sheet(isPresented: $isShowingLogSheet) {
+        
                 LogDetailView(log: log)
             }
             .padding(.leading, 40)

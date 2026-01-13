@@ -33,7 +33,6 @@ struct AreaDiagramView: View {
                         .foregroundStyle(by: .value("Activity", point.activity.name!)) // separate line for each activity
                     }
                 }
-
                 .chartYScale(domain: 0 ... 24 * 60 * 60)
                 .chartYAxis {
                     AxisMarks(position: .leading) { value in
