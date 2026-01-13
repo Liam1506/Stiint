@@ -33,6 +33,14 @@ struct OnboardingView1: View {
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
 
+            if(BETA){
+                Text("Please note that this app is still in beta and under active development. Bugs may occur, and tracked data could be lost. If you encounter any issues or bugs, feedback would be greatly appreciated. Thank you very much for testing the app and supporting its development. Best regards, Liam")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                
+                    .padding(.horizontal)
+            }
+            
             Spacer()
 
             // Action + legal

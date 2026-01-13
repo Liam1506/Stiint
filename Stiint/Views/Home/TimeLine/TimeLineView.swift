@@ -105,13 +105,10 @@ struct TimeLineView: View {
 
             }.onAppear {
                 updateTime()
-                // Scroll to the current hour
-                // let currentHour = Calendar.current.component(.hour, from: Date())
                 withAnimation {
                     proxy.scrollTo(currentHour, anchor: .center)
                 }
             }.onReceive(timer) { _ in
-                print("Update")
                 updateTime()
 
             }.gesture(

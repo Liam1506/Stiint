@@ -38,7 +38,7 @@ struct OnboardingView4: View {
                         ],
                         buttonTitle: nil,
                         buttonAction: nil,
-                        imageName: "sleepSelect"
+                        imageName: "optionsToStop"
                     )
 
                     StepView(
@@ -61,7 +61,7 @@ struct OnboardingView4: View {
                         ],
                         buttonTitle: nil,
                         buttonAction: nil,
-                        imageName: "startAnActivityIntent"
+                        imageName: "stopActivityIntent"
                     )
 
                     Text("Now you know how to create and trigger automation. You can model your day in as much detail as you want. Further steps could include creating a work activity that automatically starts and stops when you arrive at and leave work.")
