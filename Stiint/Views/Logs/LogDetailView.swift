@@ -120,14 +120,18 @@ struct LogDetailView: View {
                         guard log.endTime != nil else {
                             return
                         }
-                        
-                        
-                        log.endTime = endTime
-                        log.startTime = startTime
-                        log.activity = activity
-                        
-                        try? modelContext.save()
-                        dismiss()
+                        Task{
+                            
+                            
+                            try? await PersistenceManager.shared.activityLogActor.clearTimeFrame(startDate: startTime, endDate: endTime, logId: log.id!)
+                            
+                            log.endTime = endTime
+                            log.startTime = startTime
+                            log.activity = activity
+                            
+                            try? modelContext.save()
+                            dismiss()
+                        }
                     }
                 }
             }

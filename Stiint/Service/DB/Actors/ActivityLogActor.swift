@@ -23,6 +23,52 @@ public actor ActivityLogActor {
         try? modelContext.save()
         return activityLog.id
     }
+    
+    
+    public func clearTimeFrame(startDate: Date, endDate: Date, logId: UUID) throws {
+        let defaultDate = Date.distantPast
+        
+        // 1. Delete logs completely within the range
+        let logsToDelete = #Predicate<ActivityLog> { log in
+            (log.startTime ?? defaultDate) >= startDate &&
+            (log.endTime ?? defaultDate) <= endDate
+        }
+        let deleteDescriptor = FetchDescriptor<ActivityLog>(predicate: logsToDelete)
+        let dataToDelete = try modelContext.fetch(deleteDescriptor)
+        
+        for log in dataToDelete {
+            guard log.id != logId else { continue }
+            delete(activityLog: log)
+        }
+        
+        // 2. Truncate logs that start before range and end within/after range
+        let logsStartingBefore = #Predicate<ActivityLog> { log in
+            (log.startTime ?? defaultDate) < startDate &&
+            (log.endTime ?? defaultDate) > startDate
+        }
+        let beforeDescriptor = FetchDescriptor<ActivityLog>(predicate: logsStartingBefore)
+        let dataStartingBefore = try modelContext.fetch(beforeDescriptor)
+        
+        for log in dataStartingBefore {
+            guard log.id != logId else { continue }
+            log.endTime = startDate
+        }
+        
+        // 3. Truncate logs that start within range and end after range
+        let logsEndingAfter = #Predicate<ActivityLog> { log in
+            (log.startTime ?? defaultDate) < endDate &&
+            (log.endTime ?? defaultDate) > endDate
+        }
+        let afterDescriptor = FetchDescriptor<ActivityLog>(predicate: logsEndingAfter)
+        let dataEndingAfter = try modelContext.fetch(afterDescriptor)
+        
+        for log in dataEndingAfter {
+            guard log.id != logId else { continue }
+            log.startTime = endDate
+        }
+        
+        try modelContext.save()
+    }
 
     public func getActivityLogsForTimeFrame(filterData: FilterData) -> [ActivityLog] {
         let defaultDate = Date.distantPast
