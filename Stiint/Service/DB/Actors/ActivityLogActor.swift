@@ -46,7 +46,7 @@ public actor ActivityLogActor {
         let defaultDateFuture = Date.distantFuture
         
         if let currentActivityStartDate{
-            guard endDate < currentActivityStartDate else { throw(ActivityLogActorErrors.cannotOverwriteRunningActivity) }
+            guard endDate <= currentActivityStartDate else { throw(ActivityLogActorErrors.cannotOverwriteRunningActivity) }
         }
         
         // 0. Split logs that span the entire range
@@ -59,24 +59,21 @@ public actor ActivityLogActor {
         
         for log in dataToSplit {
             guard log.id != logId else { continue }
-            print("1")
             guard log.endTime != nil else { throw(ActivityLogActorErrors.cannotOverwriteRunningActivity) }
-            // Create the second part (after the cleared range)
+
             insertActivityLog(activityId: log.activity!.id!, startTime: endDate, endTime: log.endTime ?? Date.now)
-            // Truncate the first part (before the cleared range)
             log.endTime = startDate
         }
         
         let logsToDelete = #Predicate<ActivityLog> { log in
             (log.startTime ?? defaultDate) >= startDate &&
-            (log.endTime ?? defaultDate) <= endDate
+            (log.endTime ?? defaultDateFuture) <= endDate
         }
         let deleteDescriptor = FetchDescriptor<ActivityLog>(predicate: logsToDelete)
         let dataToDelete = try modelContext.fetch(deleteDescriptor)
         
         for log in dataToDelete {
             guard log.id != logId else { continue }
-            print("2")
             guard log.endTime != nil else { throw(ActivityLogActorErrors.cannotOverwriteRunningActivity) }
             delete(activityLog: log)
         }
@@ -108,8 +105,8 @@ public actor ActivityLogActor {
         
         for log in dataEndingAfter {
             guard log.id != logId else { continue }
-            
             guard log.endTime != nil else { throw(ActivityLogActorErrors.cannotOverwriteRunningActivity) }
+            
             log.startTime = endDate
         }
         
