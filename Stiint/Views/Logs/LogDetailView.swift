@@ -23,6 +23,9 @@ struct LogDetailView: View {
     @State private var endTime: Date
     
     
+    @State private var maxEndtime: Date
+    
+    
     @State private var activity: ActivityItem
     
     init(log: ActivityLog) {
@@ -30,6 +33,12 @@ struct LogDetailView: View {
         self.activity = log.activity!
         self.startTime = log.startTime!
         self.endTime = log.endTime ?? Date.now
+        
+        if let time = RunningManager.shared.activityDTO?.startTime {
+            self.maxEndtime = time
+        }else{
+            self.maxEndtime = Date.now
+        }
     }
 
     var body: some View {
@@ -46,7 +55,7 @@ struct LogDetailView: View {
                 Section("Time"){
                     DatePicker("Start Time", selection: $startTime, in: ...endTime, displayedComponents: .hourAndMinute)
                     if(log.endTime != nil){
-                        DatePicker("End Time", selection: $endTime, in: startTime...Date.now, displayedComponents: .hourAndMinute)
+                        DatePicker("End Time", selection: $endTime, in: startTime...maxEndtime, displayedComponents: .hourAndMinute)
                     }
                 }
                 /*

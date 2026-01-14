@@ -16,6 +16,8 @@ struct CreateLogView: View {
     @State private var defaultDate: Date
     @State private var startTime: Date
     @State private var endTime: Date
+    @State private var maxEndtime: Date
+    
     
     @State private var activity: ActivityItem?
     
@@ -27,8 +29,12 @@ struct CreateLogView: View {
         self.defaultDate = defaultDate
         self.endTime = Date.now
         self.startTime = Date.now.addingTimeInterval(-3600)
- 
         
+        if let time = RunningManager.shared.activityDTO?.startTime {
+            self.maxEndtime = time
+        }else{
+            self.maxEndtime = Date.now
+        }
     }
     
     var body: some View {
@@ -61,7 +67,7 @@ struct CreateLogView: View {
                     DatePicker(
                         "End Time",
                         selection: $endTime,
-                        in: startTime...Date.now,
+                        in: startTime...maxEndtime,
                         displayedComponents: .hourAndMinute
                     )
                     
