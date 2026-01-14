@@ -53,58 +53,65 @@ struct LogDetailView: View {
                 }
                 
                 Section("Time"){
-                    DatePicker("Start Time", selection: $startTime, in: ...endTime, displayedComponents: .hourAndMinute)
+                    DatePicker(
+                        "Start Time",
+                        selection: $startTime,
+                        in: ...endTime,
+                        displayedComponents: .hourAndMinute
+                    )
                     if(log.endTime != nil){
-                        DatePicker("End Time", selection: $endTime, in: startTime...maxEndtime, displayedComponents: .hourAndMinute)
+                        DatePicker(
+                            "End Time",
+                            selection: $endTime,
+                            in: startTime...maxEndtime,
+                            displayedComponents: .hourAndMinute
+                        )
                     }
                 }
                 /*
                  Section("Time") {
 
-                      DatePicker("Start Time",
-                      selection: Binding(
-                      get: { log.startTime ?? Date.now },
-                      set: { newValue in
-                      log.startTime = newValue
+                 DatePicker("Start Time",
+                 selection: Binding(
+                 get: { log.startTime ?? Date.now },
+                 set: { newValue in
+                 log.startTime = newValue
 
-                      // Clear end time if it would create negative duration
-                      if let endTime = log.endTime, endTime <= newValue {
-                      log.endTime = nil
-                      }
-                      }
-                      ),
-                      in: ...Date.now,
-                      displayedComponents: [.hourAndMinute])
+                 // Clear end time if it would create negative duration
+                 if let endTime = log.endTime, endTime <= newValue {
+                 log.endTime = nil
+                 }
+                 }
+                 ),
+                 in: ...Date.now,
+                 displayedComponents: [.hourAndMinute])
 
-                      if let endTime = log.endTime, let startTime = log.startTime {
-                      DatePicker("End Time",
-                      selection: Binding(
-                      get: { endTime },
-                      set: { newValue in
+                 if let endTime = log.endTime, let startTime = log.startTime {
+                 DatePicker("End Time",
+                 selection: Binding(
+                 get: { endTime },
+                 set: { newValue in
 
-                      if(newValue > startTime ){
-                      log.endTime = newValue
-                      }
-                      }
-                      ),
-                      in: startTime...maxEndTime(for: startTime),
-                      displayedComponents: [.hourAndMinute])
-                      }
-                      }
-                      */
-                    Section("Duration") {
-                        let duration = endTime.timeIntervalSince(startTime)
-                        let hours = Int(duration) / 3600
-                        let minutes = Int(duration) % 3600 / 60
-
-                        if hours > 0 {
-                            Text("\(hours)h \(minutes)m")
-                        } else {
-                            Text("\(minutes)m")
-                        }
-                    
+                 if(newValue > startTime ){
+                 log.endTime = newValue
+                 }
+                 }
+                 ),
+                 in: startTime...maxEndTime(for: startTime),
+                 displayedComponents: [.hourAndMinute])
+                 }
+                 }
+                 */
+                Section("Duration") {
+                    let duration = Duration.seconds(
+                        endTime.timeIntervalSince(startTime)
+                    )
+                    Text(
+                        duration,
+                        format: .units(allowed: [.hours, .minutes])
+                    )
                 }
-
+                
                 Section {
                     Button(role: .destructive, action: {
                         showDeleteConfirmation = true
@@ -133,7 +140,13 @@ struct LogDetailView: View {
                             
                             do {
                                 let startCurrentActivity = RunningManager.shared.activityDTO?.startTime
-                                try await PersistenceManager.shared.activityLogActor.clearTimeFrame(startDate: startTime, endDate: endTime, logId: log.id!, currentActivityStartDate: startCurrentActivity)
+                                try await PersistenceManager.shared.activityLogActor
+                                    .clearTimeFrame(
+                                        startDate: startTime,
+                                        endDate: endTime,
+                                        logId: log.id!,
+                                        currentActivityStartDate: startCurrentActivity
+                                    )
                                 
                                 log.endTime = endTime
                                 log.startTime = startTime
@@ -157,7 +170,9 @@ struct LogDetailView: View {
                     dismiss()
                 }
             } message: {
-                Text("Are you sure you want to delete this log? This action cannot be undone.")
+                Text(
+                    "Are you sure you want to delete this log? This action cannot be undone."
+                )
             }
         }
     }

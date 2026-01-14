@@ -25,20 +25,75 @@ struct CreateLogView: View {
     
     @Query private var activities: [ActivityItem]
     
+    
+    let calendar = Calendar.current
+   
+    
     init(defaultDate: Date){
         self.defaultDate = defaultDate
-
-        if let time = RunningManager.shared.activityDTO?.startTime {
-            self.maxEndtime = time
-            self.endTime = time
-            self.startTime = time.addingTimeInterval(-3600)
-        }else{
-            self.maxEndtime = Date.now
-            self.endTime = Date.now
-            self.startTime = Date.now.addingTimeInterval(-3600)
+        let endOfDate = calendar.date(
+            byAdding: .day,
+            value: 1,
+            to: calendar.startOfDay(for: defaultDate)
+        )!
+        
+        
+        
+        if endOfDate < Date.now{
+            maxEndtime = endOfDate
+            endTime = endOfDate.addingTimeInterval(-3600 * 10)
+            startTime = endOfDate.addingTimeInterval(-3600 * 11)
+            return
         }
         
+
+        if let time = RunningManager.shared.activityDTO?.startTime {
+            maxEndtime = time
+            endTime = time
+            startTime = time.addingTimeInterval(-3600)
+            return
+            
+        }
+        maxEndtime = Date.now
+        endTime = Date.now
+        startTime = Date.now.addingTimeInterval(-3600)
         
+    }
+    
+    func calcBounds(){
+
+        let endOfDate = calendar.date(
+            byAdding: .day,
+            value: 1,
+            to: calendar.startOfDay(for: defaultDate)
+        )!
+        
+        
+        
+        if endOfDate < Date.now{
+            
+            maxEndtime = endOfDate
+            endTime = endOfDate.addingTimeInterval(-3600 * 10)
+            startTime = endOfDate.addingTimeInterval(-3600 * 11)
+            return
+        }
+        
+
+        if let time = RunningManager.shared.activityDTO?.startTime {
+          
+            maxEndtime = time
+    
+            endTime = time
+            startTime = time.addingTimeInterval(-3600)
+            
+            
+        }else{
+            maxEndtime = Date.now
+            
+            endTime = Date.now
+            startTime = Date.now.addingTimeInterval(-3600)
+        }
+
     }
     
     var body: some View {
@@ -60,7 +115,9 @@ struct CreateLogView: View {
                         selection: $defaultDate,
                         in: ...Date.now,
                         displayedComponents: .date
-                    )
+                    ) .onChange(of: defaultDate) { old, newValue in
+                        calcBounds()
+                    }
                     DatePicker(
                         "Start Time",
                         selection: $startTime,
@@ -75,6 +132,15 @@ struct CreateLogView: View {
                         displayedComponents: .hourAndMinute
                     )
                     
+                }
+                Section("Duration") {
+                    let duration = Duration.seconds(
+                        endTime.timeIntervalSince(startTime)
+                    )
+                    Text(
+                        duration,
+                        format: .units(allowed: [.hours, .minutes])
+                    )
                 }
             }.onAppear(){
                 activity = activities.first
