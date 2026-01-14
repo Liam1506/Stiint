@@ -122,15 +122,19 @@ struct LogDetailView: View {
                         }
                         Task{
                             
-                            
-                            try? await PersistenceManager.shared.activityLogActor.clearTimeFrame(startDate: startTime, endDate: endTime, logId: log.id!)
-                            
-                            log.endTime = endTime
-                            log.startTime = startTime
-                            log.activity = activity
-                            
-                            try? modelContext.save()
-                            dismiss()
+                            do {
+                                try await PersistenceManager.shared.activityLogActor.clearTimeFrame(startDate: startTime, endDate: endTime, logId: log.id!)
+                                
+                                log.endTime = endTime
+                                log.startTime = startTime
+                                log.activity = activity
+                                
+                                try modelContext.save()
+                                dismiss()
+                            } catch{
+                                    
+                                print("Error saving: \(error)")
+                            }
                         }
                     }
                 }

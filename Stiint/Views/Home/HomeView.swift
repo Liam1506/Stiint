@@ -10,17 +10,19 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var selectedDate: Date = .now
+    @State private var createNewLog: Bool = false
+    
     @Query(sort: \ActivityLog.startTime) var logs: [ActivityLog]
 
     var body: some View {
         NavigationView {
             TimeLineView(selectedDate: selectedDate)
-
+            
                 .navigationTitle(formattedDate)
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
                         Button(action: {
-                            selectedDate = Date.now
+                            createNewLog.toggle()
                         }) {
                             Image(systemName: "plus")
                         }
@@ -50,9 +52,10 @@ struct HomeView: View {
                         }
                         .disabled(Calendar.current.isDateInToday(selectedDate))
                     }
-           
-               
-                 
+                    
+                }.sheet(isPresented: $createNewLog){
+                    CreateLogView(defaultDate: selectedDate)
+                    
                 }
         }
     }

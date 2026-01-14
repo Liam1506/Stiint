@@ -54,6 +54,8 @@ public actor ActivityLogActor {
         
         for log in dataToSplit {
             guard log.id != logId else { continue }
+            print("1")
+            guard log.endTime != nil else { throw(ActivityLogActorErrors.cannotOverwriteRunningActivity) }
             // Create the second part (after the cleared range)
             insertActivityLog(activityId: log.activity!.id!, startTime: endDate, endTime: log.endTime ?? Date.now)
             // Truncate the first part (before the cleared range)
@@ -61,6 +63,9 @@ public actor ActivityLogActor {
         }
         
         // 1. Delete logs completely within the range
+        
+        let now = Date.now
+        
         let logsToDelete = #Predicate<ActivityLog> { log in
             (log.startTime ?? defaultDate) >= startDate &&
             (log.endTime ?? defaultDate) <= endDate
@@ -70,6 +75,8 @@ public actor ActivityLogActor {
         
         for log in dataToDelete {
             guard log.id != logId else { continue }
+            print("2")
+            guard log.endTime != nil else { throw(ActivityLogActorErrors.cannotOverwriteRunningActivity) }
             delete(activityLog: log)
         }
         
@@ -84,6 +91,8 @@ public actor ActivityLogActor {
         
         for log in dataStartingBefore {
             guard log.id != logId else { continue }
+            print("3")
+            guard log.endTime != nil else { throw(ActivityLogActorErrors.cannotOverwriteRunningActivity) }
             log.endTime = startDate
         }
         
@@ -98,6 +107,8 @@ public actor ActivityLogActor {
         
         for log in dataEndingAfter {
             guard log.id != logId else { continue }
+            
+            guard log.endTime != nil else { throw(ActivityLogActorErrors.cannotOverwriteRunningActivity) }
             log.startTime = endDate
         }
         
@@ -229,3 +240,6 @@ public actor ActivityLogActor {
         try? modelContext.save()
     }
 }
+
+
+
