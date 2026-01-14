@@ -126,6 +126,7 @@ public final class RunningManager {
 
         LiveActivityManager.shared.stopLiveActivity()
     }
+    
 }
 
 public extension RunningManager {

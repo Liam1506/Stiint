@@ -132,7 +132,8 @@ struct LogDetailView: View {
                         Task{
                             
                             do {
-                                try await PersistenceManager.shared.activityLogActor.clearTimeFrame(startDate: startTime, endDate: endTime, logId: log.id!)
+                                let startCurrentActivity = RunningManager.shared.activityDTO?.startTime
+                                try await PersistenceManager.shared.activityLogActor.clearTimeFrame(startDate: startTime, endDate: endTime, logId: log.id!, currentActivityStartDate: startCurrentActivity)
                                 
                                 log.endTime = endTime
                                 log.startTime = startTime

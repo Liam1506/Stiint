@@ -27,14 +27,18 @@ struct CreateLogView: View {
     
     init(defaultDate: Date){
         self.defaultDate = defaultDate
-        self.endTime = Date.now
-        self.startTime = Date.now.addingTimeInterval(-3600)
-        
+
         if let time = RunningManager.shared.activityDTO?.startTime {
             self.maxEndtime = time
+            self.endTime = time
+            self.startTime = time.addingTimeInterval(-3600)
         }else{
             self.maxEndtime = Date.now
+            self.endTime = Date.now
+            self.startTime = Date.now.addingTimeInterval(-3600)
         }
+        
+        
     }
     
     var body: some View {
@@ -96,11 +100,14 @@ struct CreateLogView: View {
                                         
                                         do {
                                             
+                                            let startCurrentActivity = RunningManager.shared.activityDTO?.startTime
                                             try await PersistenceManager.shared.activityLogActor
                                                 .clearTimeFrame(
                                                     startDate: startTime,
                                                     endDate: endTime,
-                                                    logId: UUID()
+                                                    logId: UUID(),
+                                                    currentActivityStartDate: startCurrentActivity
+                                                    
                                                 )
                                             
                                             await PersistenceManager.shared.activityLogActor

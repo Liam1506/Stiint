@@ -41,8 +41,13 @@ public actor ActivityLogActor {
     }
     
     
-    public func clearTimeFrame(startDate: Date, endDate: Date, logId: UUID) throws {
+    public func clearTimeFrame(startDate: Date, endDate: Date, logId: UUID, currentActivityStartDate: Date? = nil) throws {
         let defaultDate = Date.distantPast
+        let defaultDateFuture = Date.distantFuture
+        
+        if let currentActivityStartDate{
+            guard endDate < currentActivityStartDate else { throw(ActivityLogActorErrors.cannotOverwriteRunningActivity) }
+        }
         
         // 0. Split logs that span the entire range
         let logsToSplit = #Predicate<ActivityLog> { log in
@@ -61,10 +66,6 @@ public actor ActivityLogActor {
             // Truncate the first part (before the cleared range)
             log.endTime = startDate
         }
-        
-        // 1. Delete logs completely within the range
-        
-        let now = Date.now
         
         let logsToDelete = #Predicate<ActivityLog> { log in
             (log.startTime ?? defaultDate) >= startDate &&

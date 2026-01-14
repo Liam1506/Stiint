@@ -116,7 +116,7 @@ class TimeFrameData {
             endTime = filterData.endDate
         }
 
-        if var index = dataSeries.firstIndex(where: { point in
+        if let index = dataSeries.firstIndex(where: { point in
             point.date == dateToSave && point.activity == log.activity
         }) {
             // point found, do something with it
