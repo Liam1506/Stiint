@@ -26,10 +26,12 @@ struct CreateLogView: View {
     @Query private var activities: [ActivityItem]
     
     
-    let calendar = Calendar.current
    
     
     init(defaultDate: Date){
+        
+        let calendar = Calendar.current
+        
         self.defaultDate = defaultDate
         let endOfDate = calendar.date(
             byAdding: .day,
@@ -48,6 +50,10 @@ struct CreateLogView: View {
         
 
         if let time = RunningManager.shared.activityDTO?.startTime {
+            
+            if(time > calendar.startOfDay(for: Date.now)){
+                self.defaultDate = time
+            }
             maxEndtime = time
             endTime = time
             startTime = time.addingTimeInterval(-3600)
@@ -62,6 +68,8 @@ struct CreateLogView: View {
     
     func calcBounds(){
 
+        let calendar = Calendar.current
+        
         let endOfDate = calendar.date(
             byAdding: .day,
             value: 1,
@@ -80,7 +88,9 @@ struct CreateLogView: View {
         
 
         if let time = RunningManager.shared.activityDTO?.startTime {
-          
+            if(time > calendar.startOfDay(for: Date.now)){
+                defaultDate = time
+            }
             maxEndtime = time
     
             endTime = time
@@ -113,7 +123,7 @@ struct CreateLogView: View {
                     DatePicker(
                         "Date",
                         selection: $defaultDate,
-                        in: ...Date.now,
+                        in: ...maxEndtime,
                         displayedComponents: .date
                     ) .onChange(of: defaultDate) { old, newValue in
                         calcBounds()

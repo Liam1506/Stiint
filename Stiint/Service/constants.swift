@@ -6,7 +6,7 @@
 //
 
 let BETA: Bool = true
-let DEV: Bool = true
+let DEV: Bool = false
 let PAYWALL: Bool = false
 
 let PRIVCY_POLICY_LINK: String = "https://www.stiint.liamwittig.de/privacy"

@@ -50,43 +50,47 @@ struct TimeLineView: View {
         let hour = Calendar.current.component(.hour, from: now)
         let minute = Calendar.current.component(.minute, from: now)
         let second = Calendar.current.component(.second, from: now)
-        currentTimeValue = Double(hour) + Double(minute) / 60 + Double(second) / 3600
+        currentTimeValue = Double(hour) + Double(minute) / 60 + Double(
+            second
+        ) / 3600
     }
 
     func calculateGeometryOfHouer(hour: Double, geometry: GeometryProxy) -> CGFloat {
-        return geometry.size.height / 24 * CGFloat(hour) + (geometry.size.height / 24) / 2
+        return geometry.size.height / 24 * CGFloat(hour) + (
+            geometry.size.height / 24
+        ) / 2
     }
 
     /*func getGeometry(date: Date?, geometry: GeometryProxy) -> CGFloat {
         
-        let startOfDay = calendar.startOfDay(for: selectedDate)
+     let startOfDay = calendar.startOfDay(for: selectedDate)
 
         
-        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+     let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
         
-        if date == nil {
+     if date == nil {
             
-            if(Date.now < endOfDay){
-                let timeVal = TimeHandler().getTimeValueForDate(date: Date.now, selectedDate: selectedDate)
-                return calculateGeometryOfHouer(hour: timeVal, geometry: geometry)
-            }
+     if(Date.now < endOfDay){
+     let timeVal = TimeHandler().getTimeValueForDate(date: Date.now, selectedDate: selectedDate)
+     return calculateGeometryOfHouer(hour: timeVal, geometry: geometry)
+     }
             
-            let timeVal = TimeHandler().getTimeValueForDate(date: endOfDay, selectedDate: selectedDate)
-            return calculateGeometryOfHouer(hour: timeVal, geometry: geometry)
-        }
+     let timeVal = TimeHandler().getTimeValueForDate(date: endOfDay, selectedDate: selectedDate)
+     return calculateGeometryOfHouer(hour: timeVal, geometry: geometry)
+     }
 
-        if date! <= startOfDay {
-            return calculateGeometryOfHouer(hour: 0, geometry: geometry)
-        }
+     if date! <= startOfDay {
+     return calculateGeometryOfHouer(hour: 0, geometry: geometry)
+     }
 
 
-        if date! >= endOfDay {
-            return calculateGeometryOfHouer(hour: Double(totalHours), geometry: geometry)
-        }
+     if date! >= endOfDay {
+     return calculateGeometryOfHouer(hour: Double(totalHours), geometry: geometry)
+     }
 
-        let timeVal = TimeHandler().getTimeValueForDate(date: date!, selectedDate: selectedDate)
-        return calculateGeometryOfHouer(hour: timeVal, geometry: geometry)
-    }*/
+     let timeVal = TimeHandler().getTimeValueForDate(date: date!, selectedDate: selectedDate)
+     return calculateGeometryOfHouer(hour: timeVal, geometry: geometry)
+     }*/
     
     func getGeometry(date: Date?, geometry: GeometryProxy) -> CGFloat {
         let startOfDay = calendar.startOfDay(for: selectedDate)
@@ -106,10 +110,16 @@ struct TimeLineView: View {
             return calculateGeometryOfHouer(hour: 0, geometry: geometry)
         }
         if targetDate >= endOfDay {
-            return calculateGeometryOfHouer(hour: Double(totalHours), geometry: geometry)
+            return calculateGeometryOfHouer(
+                hour: Double(totalHours),
+                geometry: geometry
+            )
         }
         
-        let timeVal = TimeHandler().getTimeValueForDate(date: targetDate, selectedDate: selectedDate)
+        let timeVal = TimeHandler().getTimeValueForDate(
+            date: targetDate,
+            selectedDate: selectedDate
+        )
         return calculateGeometryOfHouer(hour: timeVal, geometry: geometry)
     }
 
@@ -120,19 +130,37 @@ struct TimeLineView: View {
                     ZStack(alignment: .top) {
                         VStack(spacing: 0) {
                             ForEach(hours, id: \.self) { hour in
-                                TimeLineSegmentView(hour: hour, height: geometry.size.height / 24)
-                                    .padding(.leading, 20)
-                                    .id(hour)
+                                TimeLineSegmentView(
+                                    hour: hour,
+                                    height: geometry.size.height / 24
+                                )
+                                .padding(.leading, 20)
+                                .id(hour)
                             }
                         }
                         ForEach(logs) { log in
-                            TimeLineActivitySegmentView(start: getGeometry(date: log.startTime, geometry: geometry), end: getGeometry(date: log.endTime, geometry: geometry), log: log).padding(.horizontal, 20).offset(x: 12)
+                            TimeLineActivitySegmentView(
+                                start: getGeometry(
+                                    date: log.startTime,
+                                    geometry: geometry
+                                ),
+                                end: getGeometry(
+                                    date: log.endTime,
+                                    geometry: geometry
+                                ),
+                                log: log
+                            )
+                            .padding(.horizontal, 20)
+                            .offset(x: 12)
                         }
 
                         // Moving red line
 
                         if Calendar.current.isDateInToday(selectedDate) {
-                            TimeLineCurrentTimeView(currentTimeValue: currentTimeValue, geometry: geometry)
+                            TimeLineCurrentTimeView(
+                                currentTimeValue: currentTimeValue,
+                                geometry: geometry
+                            )
                         }
                     }
                 }
