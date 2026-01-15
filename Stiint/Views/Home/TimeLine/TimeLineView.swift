@@ -57,24 +57,59 @@ struct TimeLineView: View {
         return geometry.size.height / 24 * CGFloat(hour) + (geometry.size.height / 24) / 2
     }
 
-    func getGeometry(date: Date?, geometry: GeometryProxy) -> CGFloat {
-        if date == nil { let timeVal = TimeHandler().getTimeValueForDate(date: Date.now, selectedDate: selectedDate)
+    /*func getGeometry(date: Date?, geometry: GeometryProxy) -> CGFloat {
+        
+        let startOfDay = calendar.startOfDay(for: selectedDate)
+
+        
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        
+        if date == nil {
+            
+            if(Date.now < endOfDay){
+                let timeVal = TimeHandler().getTimeValueForDate(date: Date.now, selectedDate: selectedDate)
+                return calculateGeometryOfHouer(hour: timeVal, geometry: geometry)
+            }
+            
+            let timeVal = TimeHandler().getTimeValueForDate(date: endOfDay, selectedDate: selectedDate)
             return calculateGeometryOfHouer(hour: timeVal, geometry: geometry)
         }
-
-        let startOfDay = calendar.startOfDay(for: selectedDate)
 
         if date! <= startOfDay {
             return calculateGeometryOfHouer(hour: 0, geometry: geometry)
         }
 
-        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
 
         if date! >= endOfDay {
             return calculateGeometryOfHouer(hour: Double(totalHours), geometry: geometry)
         }
 
         let timeVal = TimeHandler().getTimeValueForDate(date: date!, selectedDate: selectedDate)
+        return calculateGeometryOfHouer(hour: timeVal, geometry: geometry)
+    }*/
+    
+    func getGeometry(date: Date?, geometry: GeometryProxy) -> CGFloat {
+        let startOfDay = calendar.startOfDay(for: selectedDate)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        
+        // Determine target date
+        let targetDate: Date
+        if let date = date {
+            targetDate = date
+        } else {
+            // Use current time, but clamp to endOfDay if we're past the selected day
+            targetDate = min(Date.now, endOfDay)
+        }
+        
+        // Clamp to day boundaries
+        if targetDate <= startOfDay {
+            return calculateGeometryOfHouer(hour: 0, geometry: geometry)
+        }
+        if targetDate >= endOfDay {
+            return calculateGeometryOfHouer(hour: Double(totalHours), geometry: geometry)
+        }
+        
+        let timeVal = TimeHandler().getTimeValueForDate(date: targetDate, selectedDate: selectedDate)
         return calculateGeometryOfHouer(hour: timeVal, geometry: geometry)
     }
 
