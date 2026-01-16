@@ -58,6 +58,8 @@ struct stiintWidgetExtension: Widget {
                         .lineLimit(1)
                         .minimumScaleFactor(0.01)
                         .frame(width: 100, height: 50, alignment: .center)
+                    
+                        .frame(maxHeight: .infinity, alignment: .center)
                 }
                 DynamicIslandExpandedRegion(.center) {
                     HStack(alignment: .bottom) {

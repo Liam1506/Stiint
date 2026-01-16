@@ -61,37 +61,6 @@ struct TimeLineView: View {
         ) / 2
     }
 
-    /*func getGeometry(date: Date?, geometry: GeometryProxy) -> CGFloat {
-        
-     let startOfDay = calendar.startOfDay(for: selectedDate)
-
-        
-     let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-        
-     if date == nil {
-            
-     if(Date.now < endOfDay){
-     let timeVal = TimeHandler().getTimeValueForDate(date: Date.now, selectedDate: selectedDate)
-     return calculateGeometryOfHouer(hour: timeVal, geometry: geometry)
-     }
-            
-     let timeVal = TimeHandler().getTimeValueForDate(date: endOfDay, selectedDate: selectedDate)
-     return calculateGeometryOfHouer(hour: timeVal, geometry: geometry)
-     }
-
-     if date! <= startOfDay {
-     return calculateGeometryOfHouer(hour: 0, geometry: geometry)
-     }
-
-
-     if date! >= endOfDay {
-     return calculateGeometryOfHouer(hour: Double(totalHours), geometry: geometry)
-     }
-
-     let timeVal = TimeHandler().getTimeValueForDate(date: date!, selectedDate: selectedDate)
-     return calculateGeometryOfHouer(hour: timeVal, geometry: geometry)
-     }*/
-    
     func getGeometry(date: Date?, geometry: GeometryProxy) -> CGFloat {
         let startOfDay = calendar.startOfDay(for: selectedDate)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
@@ -174,17 +143,7 @@ struct TimeLineView: View {
             }.onReceive(timer) { _ in
                 updateTime()
 
-            }.gesture(
-                MagnificationGesture()
-                    .onChanged { value in
-                        currentZoom = (value - 1) * 1000
-                    }
-                    .onEnded { _ in
-                        totalZoom += currentZoom
-                        totalZoom = min(max(totalZoom, minZoom), maxZoom)
-                        currentZoom = 0
-                    }
-            )
+            }
         }
     }
 }
