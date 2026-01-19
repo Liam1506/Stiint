@@ -14,9 +14,10 @@ struct AnalyticsView: View {
     private func loadData() {
         if let filter = currentFilter {
             Task {
-                timeFrameData = await AnalyticsDataProvider().loadDataForTimeFrame(
-                    filterData: filter
-                )
+                timeFrameData = await AnalyticsDataProvider()
+                    .loadDataForTimeFrame(
+                        filterData: filter
+                    )
             }
         }
     }
@@ -27,25 +28,44 @@ struct AnalyticsView: View {
                 AnalyticsFilterView { filterData in
                     currentFilter = filterData
                     print("Filter applied in AnalyticsView:")
-                    print("- Date Range: \(filterData.startDate) to \(filterData.endDate)")
+                    print(
+                        "- Date Range: \(filterData.startDate) to \(filterData.endDate)"
+                    )
                     print("- Show Free Time: \(filterData.showFreeTime)")
-                    print("- Selected Activities: \(filterData.selectedActivityIds.count)")
+                    print(
+                        "- Selected Activities: \(filterData.selectedActivityIds.count)"
+                    )
                 }
                 .padding(.horizontal)
                 if let filter = currentFilter, let data = timeFrameData {
-                    if !DEV {
-                        // Takes etenerty to show in dev
-                        SankyDiagramView(data: data, filterData: filter).padding()
+                   
+                    SankyDiagramView(data: data, filterData: filter).padding()
+                  
+                    PaywallGate(isPremium: SubscriptionManager.shared.isPro) {
+                        SubscriptionManager.shared.showPaywall()
+                    } content: {
+                        PieDiagramView(data: data, filterData: filter).padding()
                     }
-                    PieDiagramView(data: data, filterData: filter).padding()
+                    PaywallGate(isPremium: SubscriptionManager.shared.isPro) {
+                        SubscriptionManager.shared.showPaywall()
+                    } content: {
+                        BarDiagramView(data: data).padding()
+                    }
                     LineDiagramView(data: data).padding()
-                    BarDiagramView(data: data).padding()
-                    AreaDiagramView(data: data).padding()
+                
+                    PaywallGate(isPremium: SubscriptionManager.shared.isPro) {
+                        SubscriptionManager.shared.showPaywall()
+                    } content: {
+                        AreaDiagramView(data: data).padding()
+                    }
+                    
                 } else {
                     VStack {
                         Spacer()
                         ProgressView()
-                        Text("Gathering data...").font(.footnote).foregroundStyle(.secondary)
+                        Text("Gathering data...")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
                         Spacer()
                     }
                     .frame(height: 300)
@@ -58,9 +78,10 @@ struct AnalyticsView: View {
             }
             .refreshable {
                 if let filter = currentFilter {
-                    timeFrameData = await AnalyticsDataProvider().loadDataForTimeFrame(
-                        filterData: filter
-                    )
+                    timeFrameData = await AnalyticsDataProvider()
+                        .loadDataForTimeFrame(
+                            filterData: filter
+                        )
                 }
             }
             .navigationTitle("Insights")

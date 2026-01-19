@@ -16,7 +16,7 @@ struct PaywallMarketingView: View {
             BenefitRow(
                 icon: "infinity",
                 title: "Unlimited Activities",
-                description: "Track every aspect of your life without limits. Log as many custom categories and sessions as you need.",
+                description: "Track every aspect of your life without limits. Log as many custom categories as you need.",
                 avaible: true
             )
 

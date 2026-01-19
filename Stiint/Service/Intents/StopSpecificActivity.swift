@@ -7,7 +7,7 @@
 import AppIntents
 import Foundation
 
-struct StopSpecificActivity: AppIntent {
+struct StopSpecificActivity: LiveActivityIntent {
     static var title: LocalizedStringResource = "Stop a specific activity"
 
     static var description: LocalizedStringResource = "Stops the selected activity. Any other running activity will remain unaffected."

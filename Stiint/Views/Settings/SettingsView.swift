@@ -72,21 +72,12 @@ struct SettingsView: View {
                 }
 
                 Section(header: Text("Help")) {
-                    
-                    if (PAYWALL){
-                        
-                    
-                    Button("Paywall"){
-                        SubscriptionManager.shared.showPaywall()
-                    }
-                    Text("Is PRO enabled? \(SubscriptionManager.shared.isPro ? "Yes" : "No")")
-                    
                     Button("Restore purchases") {
                         Task{
                             try await AppStore.sync()
                         }
                     }
-                }
+                
                     Button("Tutorial") {
                         SetupManager.shared.resetSetup()
                     }
