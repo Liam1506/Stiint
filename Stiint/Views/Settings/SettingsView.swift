@@ -13,13 +13,16 @@ struct SettingsView: View {
     @State private var showDayPicker = false
     @State private var showInstructions = false
 
+    @State private var showingManageSubscriptions = false
     @State private var showAcknowledgement = false
 
     @State private var csvURL: URL?
 
     @Environment(\.requestReview) var requestReview
 
-    @AppStorage("enableLiveActivities") private var liveActivitiesEnabled: Bool = false
+    @AppStorage(
+        "enableLiveActivities"
+    ) private var liveActivitiesEnabled: Bool = false
 
     @AppStorage("pauseTracking") private var pauseTracking: Bool = false
 
@@ -60,23 +63,41 @@ struct SettingsView: View {
                  // This modifier presents the InstructionView as a sheet
 
                  } */
-
-                Section {
-                    Toggle("Pause Tracking", isOn: $pauseTracking).onChange(of: pauseTracking) { _, newValue in
-                        if newValue == true {
-                            Task {
-                                await RunningManager.shared.stopActivity()
+                if(!SubscriptionManager.shared.isPro){
+                    Section {
+                        Button {
+                            SubscriptionManager.shared.showPaywall()
+                        } label: {
+                            HStack {
+                                Text("Get Stiint")
+                                
+                                    Text(" Plus ")     .overlay(
+                                        RoundedRectangle(cornerRadius: 6)
+                                            .stroke(Color.blue, lineWidth: 1.5)
+                                    )
+                                    .font(.headline)
+                                
+                                
+                          
                             }
                         }
                     }
+
+                }
+                
+                Section {
+                    Toggle("Pause Tracking", isOn: $pauseTracking)
+                        .onChange(of: pauseTracking) { _, newValue in
+                            if newValue == true {
+                                Task {
+                                    await RunningManager.shared.stopActivity()
+                                }
+                            }
+                        }
                 }
 
                 Section(header: Text("Help")) {
-                    Button("Restore purchases") {
-                        Task{
-                            try await AppStore.sync()
-                        }
-                    }
+                    
                 
                     Button("Tutorial") {
                         SetupManager.shared.resetSetup()
@@ -84,14 +105,21 @@ struct SettingsView: View {
                     Button("How to create an Automation") {
                         showInstructions = true
                     }
-                    Link("Further Support", destination: URL(string: HELP_LINK)!)
+                    Link(
+                        "Further Support",
+                        destination: URL(string: HELP_LINK)!
+                    )
                 }
+                
+                
+                
 
                 Section(header: Text("Data Export")) {
                     Button("Export my activities") {
                         Task {
                             do {
-                                csvURL = try await CsvHandler().exportDataAsCsv()
+                                csvURL = try await CsvHandler()
+                                    .exportDataAsCsv()
                             } catch {
                                 //                errorMessage = error.localizedDescription
                             }
@@ -109,13 +137,30 @@ struct SettingsView: View {
                         }
                     }
                 }
-
+                
                 Section(header: Text("Info")) {
                     Button("Review the app") {
                         requestReview()
                     }
-                    Link("Terms of Service", destination: URL(string: TERMS_OF_SERVICE_LINK)!)
-                    Link("Privacy Policy", destination: URL(string: PRIVCY_POLICY_LINK)!)
+                    if(SubscriptionManager.shared.isPro){
+                        Button("Manage Subscriptions") {
+                            showingManageSubscriptions.toggle()
+                        }
+                    }else{
+                        Button("Restore purchases") {
+                            Task{
+                                try await AppStore.sync()
+                            }
+                        }
+                    }
+                    Link(
+                        "Terms of Service",
+                        destination: URL(string: TERMS_OF_SERVICE_LINK)!
+                    )
+                    Link(
+                        "Privacy Policy",
+                        destination: URL(string: PRIVCY_POLICY_LINK)!
+                    )
 
                     Button("Acknowledgements") {
                         showAcknowledgement.toggle()
@@ -134,6 +179,10 @@ struct SettingsView: View {
         .sheet(isPresented: $showAcknowledgement) {
             AcknowledgementsView()
         }
+        .manageSubscriptionsSheet(
+            isPresented: $showingManageSubscriptions,
+            subscriptionGroupID: PLUS_GROUP_ID
+        )
     }
 }
 
