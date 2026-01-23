@@ -1,0 +1,1 @@
+When an activity where this is enabled starts, the location is saved from the iPhone, and when the activity ends, the location is also saved.
