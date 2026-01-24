@@ -40,29 +40,20 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             Form {
-                /* Section(header: Text("Tracked days")) {
-                 HStack{
-                 VStack(alignment: .leading){
-                 Text("Untracked days:")
-                 Text(trackedDaysText).font(.subheadline)
-                 .foregroundStyle(.secondary)
-                 }
-                 Spacer()
-                 }
-
-                 .contentShape(Rectangle())
-                 .onTapGesture {
-
-                 showDayPicker.toggle()
-                 }
-                 VStack {
-                 Button("How to create an Automation") {
-                 showInstructions = true
-                 }
-                 }
-                 // This modifier presents the InstructionView as a sheet
-
-                 } */
+               /* Button("Request Location"){
+                    LocationManager().requestAuthorization()
+                }
+                
+                Button("Get Location"){
+                    Task{
+                        let location = try? await LocationManager().getCurrentLocation()
+                        print(location)
+                    }
+                   //
+                }
+                if(LocationManager().locationAvailable){
+                    Text("Avaible")
+                }*/
                 if(!SubscriptionManager.shared.isPro){
                     Section {
                         Button {

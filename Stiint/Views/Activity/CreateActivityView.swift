@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct CreateActivityView: View {
     // MARK: - State Variables
@@ -16,8 +17,11 @@ struct CreateActivityView: View {
     @State private var selectedIcon: String = "book.fill"
     @State private var showDayPicker = false
     @State private var showAlert = false
+    @State private var storeLocation = false
 
     let activityToEdit: ActivityItem?
+    
+    let locationProvider: LocationProvider = LocationProvider()
 
     init(activityToEdit: ActivityItem? = nil) {
         self.activityToEdit = activityToEdit
@@ -34,7 +38,15 @@ struct CreateActivityView: View {
             .joined(separator: ", ")
     }
 
-    @State private var selectedDays: Set<Weekday> = [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]
+    @State private var selectedDays: Set<Weekday> = [
+        .monday,
+        .tuesday,
+        .wednesday,
+        .thursday,
+        .friday,
+        .saturday,
+        .sunday
+    ]
 
     // Data Sources
     let colors: [Color] = [
@@ -109,7 +121,15 @@ struct CreateActivityView: View {
 
     func saveEditedActivity() {
         Task {
-            await PersistenceManager.shared.activityActor.editActivityById(activityId: activityToEdit!.id!, newName: activityName, newColor: selectedColor, newIcon: selectedIcon, weekdays: selectedDays)
+            await PersistenceManager.shared.activityActor
+                .editActivityById(
+                    activityId: activityToEdit!.id!,
+                    newName: activityName,
+                    newColor: selectedColor,
+                    newIcon: selectedIcon,
+                    weekdays: selectedDays,
+                    storeLocation: storeLocation
+                )
 
             dismiss()
         }
@@ -131,7 +151,12 @@ struct CreateActivityView: View {
                                 Circle()
                                     .fill(selectedColor)
                                     .frame(width: 90, height: 90)
-                                    .shadow(color: selectedColor.opacity(0.5), radius: 10, x: 0, y: 5)
+                                    .shadow(
+                                        color: selectedColor.opacity(0.5),
+                                        radius: 10,
+                                        x: 0,
+                                        y: 5
+                                    )
 
                                 Image(systemName: selectedIcon)
                                     .font(.system(size: 40, weight: .bold))
@@ -149,7 +174,9 @@ struct CreateActivityView: View {
                                 .padding(.horizontal)
                         }
                         .padding(.bottom, 20)
-                        .background(Color(uiColor: .secondarySystemGroupedBackground))
+                        .background(
+                            Color(uiColor: .secondarySystemGroupedBackground)
+                        )
                         .cornerRadius(12)
                         .padding(.horizontal)
 
@@ -184,9 +211,15 @@ struct CreateActivityView: View {
                                             .fill(color)
                                             .frame(width: 42, height: 42)
 
-                                        if selectedColor.toHex() == color.toHex() {
+                                        if selectedColor
+                                            .toHex() == color
+                                            .toHex() {
                                             Circle()
-                                                .stroke(Color(uiColor: .label).opacity(0.6), lineWidth: 3)
+                                                .stroke(
+                                                    Color(uiColor: .label)
+                                                        .opacity(0.6),
+                                                    lineWidth: 3
+                                                )
                                         }
                                     }
                                     .onTapGesture {
@@ -202,23 +235,65 @@ struct CreateActivityView: View {
                         .background(.regularMaterial)
                         .cornerRadius(12)
                         .padding(.horizontal)
-
+                        
+                        VStack{
+                                
+                            Toggle(isOn: $storeLocation) {
+                                Text("Store location")
+                            }.disabled(
+                                locationProvider.authorizationStatus == .denied
+                            )
+                                 
+                                
+                            if(
+                                locationProvider.authorizationStatus == .denied || locationProvider.authorizationStatus == .restricted
+                            ){
+                                Link(
+                                    "Go to Settings",
+                                    destination: URL(
+                                        string: UIApplication.openSettingsURLString
+                                    )!
+                                )
+                            }
+                        }
+                        .onChange(of: storeLocation) { oldValue, newValue in
+                            locationProvider.requestAuthorization()
+                        }
+                        
+                    
+                        .padding()
+                        .background(.regularMaterial)
+                        .cornerRadius(12)
+                        .padding(.horizontal)
                         // 5. Icon Picker Grid
                         VStack {
                             LazyVGrid(columns: columns, spacing: 15) {
                                 ForEach(icons, id: \.self) { icon in
                                     ZStack {
                                         Circle()
-                                            .fill(Color(uiColor: .tertiarySystemFill))
+                                            .fill(
+                                                Color(
+                                                    uiColor: .tertiarySystemFill
+                                                )
+                                            )
                                             .frame(width: 48, height: 48)
 
                                         Image(systemName: icon)
-                                            .font(.system(size: 18, weight: .semibold))
+                                            .font(
+                                                .system(
+                                                    size: 18,
+                                                    weight: .semibold
+                                                )
+                                            )
                                             .foregroundColor(.primary)
 
                                         if selectedIcon == icon {
                                             Circle()
-                                                .stroke(Color(uiColor: .label).opacity(0.6), lineWidth: 3)
+                                                .stroke(
+                                                    Color(uiColor: .label)
+                                                        .opacity(0.6),
+                                                    lineWidth: 3
+                                                )
                                         }
                                     }
                                     .onTapGesture {
@@ -238,7 +313,9 @@ struct CreateActivityView: View {
                     .padding(.top)
                 }
             }
-            .navigationTitle(activityToEdit == nil ? "New Activity" : "Edit Activity")
+            .navigationTitle(
+                activityToEdit == nil ? "New Activity" : "Edit Activity"
+            )
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -251,7 +328,14 @@ struct CreateActivityView: View {
 
                         } else {
                             Task {
-                                await PersistenceManager.shared.activityActor.addActivity(name: activityName, color: selectedColor, icon: selectedIcon, weekdays: selectedDays)
+                                await PersistenceManager.shared.activityActor
+                                    .addActivity(
+                                        name: activityName,
+                                        color: selectedColor,
+                                        icon: selectedIcon,
+                                        weekdays: selectedDays,
+                                        storeLocation: storeLocation
+                                    )
                                 showAlert.toggle()
                             }
                         }
@@ -267,6 +351,7 @@ struct CreateActivityView: View {
                     print(activity.color)
                     selectedIcon = activity.sfSymbolName ?? ""
                     selectedDays = activity.weekdays ?? []
+                    storeLocation = activity.storeLocation ?? false
                 }
             }.sheet(isPresented: $showDayPicker) {
                 DayPickerView(

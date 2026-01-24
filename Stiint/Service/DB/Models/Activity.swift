@@ -18,6 +18,7 @@ public final class ActivityItem {
     public var sfSymbolName: String?
     public var deleted: Bool?
     public var weekdays: Set<Weekday>?
+    public var storeLocation: Bool?
 
     public init(
         id: UUID? = nil,
@@ -26,7 +27,8 @@ public final class ActivityItem {
         color: Color? = nil,
         sfSymbolName: String? = nil,
         deleted: Bool? = nil,
-        weekdays: Set<Weekday> = []
+        weekdays: Set<Weekday> = [],
+        storeLocation: Bool? = nil
 
     ) {
         self.id = id ?? UUID()
@@ -36,6 +38,7 @@ public final class ActivityItem {
         self.sfSymbolName = sfSymbolName
         self.deleted = deleted
         self.weekdays = weekdays
+        self.storeLocation = storeLocation
     }
 
     public var color: Color {

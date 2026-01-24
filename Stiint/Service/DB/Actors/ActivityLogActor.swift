@@ -7,18 +7,24 @@
 
 import Foundation
 import SwiftData
+import CoreLocation
 
 @ModelActor
 public actor ActivityLogActor {
-    public func startActivity(activityId: UUID, previousAcvitiyLogId: UUID? = nil) -> UUID? {
+    public func startActivity(activityId: UUID, previousAcvitiyLogId: UUID? = nil) async -> UUID? {
         let fetchDescriptor = FetchDescriptor<ActivityItem>(
             predicate: #Predicate { $0.id == activityId }
         )
         let activity = try? modelContext.fetch(fetchDescriptor).first
+        
+        var startLocation: CLLocation? = nil
+        
+        if(activity?.storeLocation == true){
+            startLocation = try? await LocationProvider().getCurrentLocation()
+        }
 
-        let activityLog = ActivityLog(activity: activity, previousActivityLogId: previousAcvitiyLogId)
+        let activityLog = ActivityLog(activity: activity, previousActivityLogId: previousAcvitiyLogId, startLocation: startLocation)
 
-        print("activityLog \(activityLog)")
         modelContext.insert(activityLog)
         try? modelContext.save()
         return activityLog.id
@@ -207,9 +213,17 @@ public actor ActivityLogActor {
         return now.timeIntervalSince(date) <= seconds
     }
 
-    public func stopActivity(activityLogId: UUID) {
+    public func stopActivity(activityLogId: UUID) async {
         let activityLog = getActivityLogById(from: activityLogId)
         activityLog!.endTime = Date.now
+        
+        if(activityLog?.activity?.storeLocation == true){
+            let endLocation = try? await LocationProvider().getCurrentLocation()
+            activityLog?.endLatitude = endLocation?.coordinate.latitude
+            activityLog?.endLongitude = endLocation?.coordinate.longitude
+        }
+          
+
         try? modelContext.save()
     }
 

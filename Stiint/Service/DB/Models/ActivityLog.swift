@@ -6,10 +6,9 @@
 //
 
 import Foundation
-
-import Foundation
 import SwiftData
 import SwiftUI
+import CoreLocation
 
 @Model
 public final class ActivityLog {
@@ -18,12 +17,20 @@ public final class ActivityLog {
     public var endTime: Date?
     public var activity: ActivityItem?
     public var previousActivityLogId: UUID?
-
+    
+    public var startLatitude: Double?
+    public var startLongitude: Double?
+    public var endLatitude: Double?
+    public var endLongitude: Double?
+    
+    
     public init(
         startTime: Date? = nil,
         endTime: Date? = nil,
         activity: ActivityItem? = nil,
-        previousActivityLogId: UUID? = nil
+        previousActivityLogId: UUID? = nil,
+        startLocation: CLLocation? = nil,
+        endLocation: CLLocation? = nil,
 
     ) {
         id = id ?? UUID()
@@ -31,5 +38,11 @@ public final class ActivityLog {
         self.endTime = endTime
         self.activity = activity
         self.previousActivityLogId = previousActivityLogId
+
+        
+        self.startLatitude = startLocation?.coordinate.latitude
+             self.startLongitude = startLocation?.coordinate.longitude
+             self.endLatitude = endLocation?.coordinate.latitude
+             self.endLongitude = endLocation?.coordinate.longitude
     }
 }

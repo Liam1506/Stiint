@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import MapKit
 
 struct LogDetailView: View {
     @Environment(\.modelContext) private var modelContext
@@ -112,6 +113,61 @@ struct LogDetailView: View {
                     )
                 }
                 
+                
+                if let startLatitude = log.startLatitude, let startLongitude = log.startLongitude, let endLatitude = log.endLatitude, let endLongitude = log.endLongitude {
+                    
+                   
+                    Section("Location") {
+                        Text(
+                            LocationHandler()
+                                .formatDistance(
+                                    startLat: startLatitude,
+                                    startLon: startLongitude,
+                                    endLat: endLatitude,
+                                    endLon: endLongitude
+                                )
+                        )
+                    }
+                    Map {
+                                
+                        Marker(
+                            "Start location",
+                            coordinate: CLLocationCoordinate2D(
+                                latitude: startLatitude,
+                                longitude: startLongitude
+                            )
+                        )
+                        .tint(.orange)
+                            
+                            
+                                
+                        Marker(
+                            "End location",
+                            coordinate: CLLocationCoordinate2D(
+                                latitude: endLatitude,
+                                longitude: endLongitude
+                            )
+                        )
+                        .tint(.blue)
+                        MapPolyline(
+                            coordinates: [
+                                CLLocationCoordinate2D(
+                                    latitude: startLatitude,
+                                    longitude: startLongitude
+                                ),
+                                CLLocationCoordinate2D(latitude: endLatitude, longitude: endLongitude)
+                            ]
+                        )
+                        .stroke(.blue, lineWidth: 3)
+                    }
+                    
+                
+                    .listRowInsets(EdgeInsets())
+                        
+                        
+                    .frame(height: 400)
+                    
+                }
                 Section {
                     Button(role: .destructive, action: {
                         showDeleteConfirmation = true

@@ -81,8 +81,7 @@ public final class RunningManager {
 
     public func startActivity(activityId: UUID) {
         print("START \(activityId)")
-        if activityDTO?.id == activityId {
-            print("Activity already running")
+        guard activityDTO?.id != activityId else {
             return
         }
 

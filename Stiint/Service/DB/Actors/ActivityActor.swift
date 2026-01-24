@@ -11,16 +11,16 @@ import SwiftUI
 
 @ModelActor
 public actor ActivityActor {
-    public func addActivity(name: String, color: Color = .blue, icon: String? = nil, weekdays: Set<Weekday> = []) {
+    public func addActivity(name: String, color: Color = .blue, icon: String? = nil, weekdays: Set<Weekday> = [], storeLocation: Bool = false) {
         if getActivityByName(from: name) != nil {
             return
         }
-        let activity = ActivityItem(name: name, color: color, sfSymbolName: icon, weekdays: weekdays)
+        let activity = ActivityItem(name: name, color: color, sfSymbolName: icon, weekdays: weekdays, storeLocation: storeLocation)
         modelContext.insert(activity)
         try? modelContext.save()
     }
 
-    public func editActivityById(activityId: UUID, newName: String? = nil, newColor: Color? = nil, newIcon: String? = nil, weekdays: Set<Weekday> = []) {
+    public func editActivityById(activityId: UUID, newName: String? = nil, newColor: Color? = nil, newIcon: String? = nil, weekdays: Set<Weekday> = [], storeLocation: Bool = false) {
         let fetchDescriptor = FetchDescriptor<ActivityItem>(
             predicate: #Predicate { $0.id == activityId }
         )
@@ -30,6 +30,7 @@ public actor ActivityActor {
         activity?.color = newColor ?? activity!.color
         activity?.sfSymbolName = newIcon
         activity?.weekdays = weekdays
+        activity?.storeLocation = storeLocation
 
         try? modelContext.save()
     }
