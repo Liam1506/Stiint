@@ -11,7 +11,7 @@ final class CsvHandler {
     func exportDataAsCsv(logs: [ActivityLog]) async throws -> URL {
   
 
-        let headers = ["Activity", "Start Date", "End Date", "Duration"]
+        let headers = ["Activity", "Start Date", "End Date", "Duration", "Start Latitude", "Start Longitude", "End Latitude", "End Longitude"]
         var csvFile = headers.joined(separator: ",") + "\n"
 
         let dateFormatter = ISO8601DateFormatter()
@@ -31,6 +31,10 @@ final class CsvHandler {
                 escape(dateFormatter.string(from: startTime)),
                 escape(dateFormatter.string(from: endTime)),
                 String(duration),
+                escape(log.startLatitude),
+                escape(log.startLongitude),
+                escape(log.endLatitude),
+                escape(log.endLongitude),
             ]
 
             csvFile += row.joined(separator: ",") + "\n"
@@ -41,11 +45,13 @@ final class CsvHandler {
 
     // MARK: - Helpers
 
-    private func escape(_ value: String) -> String {
-        let escaped = value.replacingOccurrences(of: "\"", with: "\"\"")
+    private func escape(_ value: Any?) -> String {
+        guard let value else { return "\"\"" }  // empty CSV cell
+        let escaped = String(describing: value)
+            .replacingOccurrences(of: "\"", with: "\"\"")
         return "\"\(escaped)\""
     }
-
+    
     private func save(_ csv: String) throws -> URL {
         let fileName = "activity_logs.csv"
 

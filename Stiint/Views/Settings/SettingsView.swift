@@ -17,7 +17,7 @@ struct SettingsView: View {
     @State private var showingManageSubscriptions = false
     @State private var showAcknowledgement = false
 
-    @Query(sort: \ActivityLog.startTime) private var logs: [ActivityLog]
+    @Query(sort: \ActivityLog.startTime, order: .reverse) private var logs: [ActivityLog]
 
     @Environment(\.requestReview) var requestReview
 

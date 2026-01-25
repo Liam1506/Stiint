@@ -11,13 +11,26 @@ struct RawDataView: View {
 
     let dateFormatter = ISO8601DateFormatter()
     let logs: [ActivityLog]
+    
+    @State private var serachTerm: String = ""
+    
+    var searchedLog: [ActivityLog] {
+        guard serachTerm != "" else { return logs }
+        return logs.filter { log in
+            log.activity?.name?.lowercased().contains(serachTerm.lowercased()) ?? false
+        }
+    }
 
     @State private var csvURL: URL?
+    
     @State private var selectedLog: ActivityLog?
 
     var body: some View {
-
-        List(logs) { log in
+        if(searchedLog.isEmpty){
+            
+            ContentUnavailableView("No logs found", systemImage: "questionmark.app")
+        }
+        List(searchedLog) { log in
             if let endTime = log.endTime,
                let startTime = log.startTime {
 
@@ -36,12 +49,25 @@ struct RawDataView: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
                         Spacer()
-                        Text("-")
-                            .foregroundStyle(.secondary)
-                        Spacer()
                         Text(dateFormatter.string(from: endTime))
                             .font(.caption)
                             .foregroundStyle(.secondary)
+                    }
+                    
+                    if let startLat = log.startLatitude, let startLon = log.startLongitude, let endLat = log.endLatitude, let endLon = log.endLongitude {
+                        
+                        
+                        HStack {
+                                // Start coordinates
+                                Text("\(startLat, specifier: "%.4f")° \(startLat >= 0 ? "N" : "S"), \(startLon, specifier: "%.4f")° \(startLon >= 0 ? "E" : "W")")
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                                                   Spacer()
+                                // End coordinates
+                                Text("\(endLat, specifier: "%.4f")° \(endLat >= 0 ? "N" : "S"), \(endLon, specifier: "%.4f")° \(endLon >= 0 ? "E" : "W")")
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                            }
                     }
                 }
                 .contentShape(Rectangle())
@@ -49,7 +75,7 @@ struct RawDataView: View {
                     selectedLog = log
                 }
             }
-        }
+        }.searchable(text: $serachTerm)
         .sheet(item: $selectedLog) { log in
             NavigationStack {
                 LogDetailView(log: log)
