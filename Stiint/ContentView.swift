@@ -15,9 +15,15 @@ struct ContentView: View {
     @State private var showAccessory = false
 
     @Environment(\.modelContext) private var modelContext
+    
+    var todayCalendarIcon: String {
+        let day = Calendar.current.component(.day, from: Date())
+        return "\(day).calendar"
+    }
+    
     var body: some View {
         TabView {
-            Tab("My Day", systemImage: "7.calendar") {
+            Tab("My Day", systemImage: todayCalendarIcon) {
                 if pauseTracking {
                     TrackingPausedView()
                 } else {
