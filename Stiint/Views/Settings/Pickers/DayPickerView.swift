@@ -12,14 +12,11 @@ struct DayPickerView: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        NavigationView {
-            VStack {
-                Text("This activity can only be triggered on selected days. On other days, it won’t start automatically when triggered, but you can still start or stop it manually.")
-                    .font(.subheadline)
-                    .padding()
-                    .foregroundStyle(.secondary)
-
-                List {
+        NavigationStack { // Updated from NavigationView (deprecated)
+            List {
+                // Moving the text inside the List as a Section header
+                // ensures it scrolls naturally and shares the background.
+                Section {
                     ForEach(Weekday.allCases) { day in
                         HStack {
                             Text(day.title)
@@ -34,13 +31,20 @@ struct DayPickerView: View {
                             toggle(day)
                         }
                     }
+                } header: {
+                    Text("This activity can only be triggered on selected days. On other days, it won’t start automatically when triggered, but you can still start or stop it manually.")
+                        .listRowInsets(EdgeInsets(top: 10, leading: 0, bottom: 20, trailing: 20)) // Align with title
+                        .textCase(nil) // Keeps the casing as written
                 }
-                .navigationTitle("Triggable days")
-                .toolbar {
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button("Done") {
-                            dismiss()
-                        }
+            }
+            .navigationTitle("Triggable days ")
+            // This is the magic line that fixes the "background bug"
+            .scrollContentBackground(.hidden)
+            .background(Color(.systemGroupedBackground))
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        dismiss()
                     }
                 }
             }
