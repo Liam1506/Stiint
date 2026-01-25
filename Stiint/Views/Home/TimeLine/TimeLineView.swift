@@ -95,6 +95,8 @@ struct TimeLineView: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
+                Spacer()
+                    .frame(height: 110)
                 GeometryReader { geometry in
                     ZStack(alignment: .top) {
                         VStack(spacing: 0) {
@@ -135,11 +137,18 @@ struct TimeLineView: View {
                 }
                 .frame(height: currentZoom + totalZoom)
 
+                Spacer()
+                    .frame(height: 110)
             }.onAppear {
                 updateTime()
-                withAnimation {
-                    proxy.scrollTo(currentHour, anchor: .center)
+                if(selectedDate > calendar.startOfDay(for: Date.now)){
+                    withAnimation {
+                        proxy.scrollTo(currentHour, anchor: .center)
+                    }
+                }else{
+                    proxy.scrollTo(12, anchor: .center)
                 }
+                
             }.onReceive(timer) { _ in
                 updateTime()
 
