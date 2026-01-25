@@ -39,6 +39,7 @@ struct DaySelectionSheet: View {
                         DispatchQueue.main.async { dismiss() }
                     }
                     .tint(.blue)
+                    .disabled(date > calendar.startOfDay(for: today))
                 }
 
                 ToolbarItem(placement: .confirmationAction) {

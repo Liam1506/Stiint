@@ -70,7 +70,9 @@ struct HomeView: View {
                     }
                 }
                 ToolbarItem(placement: .navigation) {
-                    Button { activeSheet = .selectDate } label: {
+                    Button {
+                        date = dateFor(offset: dayOffset)
+                        activeSheet = .selectDate } label: {
                         Text(formattedDate(for: dateFor(offset: dayOffset)))
                     }}
             }
