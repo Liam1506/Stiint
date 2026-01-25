@@ -35,16 +35,16 @@ struct RawDataView: View {
                         Text(dateFormatter.string(from: startTime))
                             .font(.caption)
                             .foregroundStyle(.secondary)
-
+                        Spacer()
                         Text("-")
                             .foregroundStyle(.secondary)
-
+                        Spacer()
                         Text(dateFormatter.string(from: endTime))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                 }
-                .contentShape(Rectangle()) // makes full row tappable
+                .contentShape(Rectangle())
                 .onTapGesture {
                     selectedLog = log
                 }

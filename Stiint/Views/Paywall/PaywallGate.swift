@@ -34,9 +34,9 @@ struct PaywallGate<Content: View>: View {
                     Text("Stiint Plus")
                         .font(.title2)
                         .fontWeight(.semibold)
-
+                    
                     Button(action: action) {
-                        Text("Try for free")
+                        Text("Try It Free")
                             .font(.headline)
                             .padding(12)
                             .glassEffect()
@@ -48,7 +48,8 @@ struct PaywallGate<Content: View>: View {
                             )
                     }
                 }
-                .padding()            }
+                .padding()
+            }
         }
     }
 }
