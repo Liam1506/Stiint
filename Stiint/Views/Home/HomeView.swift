@@ -33,9 +33,7 @@ struct HomeView: View {
         else if calendar.isDateInYesterday(date) { return "Yesterday" }
         else if calendar.isDateInTomorrow(date) { return "Tomorrow" }
         else {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "MMM d, yyyy"
-            return formatter.string(from: date)
+            return date.formatted(.dateTime.month(.abbreviated).day().year())
         }
     }
     
@@ -88,11 +86,8 @@ struct HomeView: View {
                 DaySelectionSheet(date: $date, dayRange: dayRange)
                     .presentationDetents([.medium])
                     .onChange(of: date) { _, newDate in
-                        // When user picks a date, we jump the scroll position
-                        
-                        withAnimation(.spring()) {
                             dayOffset = offsetFor(date: newDate)
-                        }
+                        
                     }
             }
         }
