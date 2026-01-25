@@ -8,55 +8,62 @@
 import SwiftUI
 
 struct RawDataView: View {
-    
+
     let dateFormatter = ISO8601DateFormatter()
     let logs: [ActivityLog]
+
     @State private var csvURL: URL?
-    
-  
-    
+    @State private var selectedLog: ActivityLog?
+
     var body: some View {
-        
+
         List(logs) { log in
-                
-            if let endTime = log.endTime, let startTime = log.startTime {
-                    
-                    
+            if let endTime = log.endTime,
+               let startTime = log.startTime {
+
                 VStack(alignment: .leading) {
-                    HStack{
-                            
+
+                    HStack {
                         Text(log.activity?.name ?? "No name")
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            
+
                         Text("\(endTime.timeIntervalSince(startTime))s")
                             .font(.footnote)
-                            
                     }
-                    HStack(){
-                            
+
+                    HStack {
                         Text(dateFormatter.string(from: startTime))
                             .font(.caption)
                             .foregroundStyle(.secondary)
+
                         Text("-")
-                            
                             .foregroundStyle(.secondary)
-                            
+
                         Text(dateFormatter.string(from: endTime))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
-                }}
-        }.onAppear(){
-            Task{
-                        
+                }
+                .contentShape(Rectangle()) // makes full row tappable
+                .onTapGesture {
+                    selectedLog = log
+                }
+            }
+        }
+        .sheet(item: $selectedLog) { log in
+            NavigationStack {
+                LogDetailView(log: log)
+            }
+        }
+        .onAppear {
+            Task {
                 csvURL = try? await CsvHandler()
                     .exportDataAsCsv(logs: logs)
             }
         }
         .navigationTitle("Raw Data")
-        .toolbar{
-            ToolbarItem{
-                    
+        .toolbar {
+            ToolbarItem {
                 if let csvURL = csvURL {
                     ShareLink(
                         item: csvURL,
@@ -65,14 +72,10 @@ struct RawDataView: View {
                             image: Image(systemName: "tablecells")
                         )
                     )
-                }else{
+                } else {
                     ProgressView()
                 }
-                         
             }
-         
-            
-            
         }
     }
 }
