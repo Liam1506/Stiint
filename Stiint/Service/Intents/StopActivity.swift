@@ -8,7 +8,7 @@
 import AppIntents
 import Foundation
 
-struct StopActivity: LiveActivityIntent {
+struct StopActivity: AppIntent {
     static var title: LocalizedStringResource = "Stop the current activity"
 
     // Optional description of the intent
@@ -18,10 +18,8 @@ struct StopActivity: LiveActivityIntent {
         // Use the selected activity
         // QuickActionHandler.shared.performAction(selected: activity.id)
 
-        Task {
-            await
-                RunningManager.shared.stopActivity()
-        }
+        await RunningManager.shared.stopActivity()
+        
 
         return .result()
     }

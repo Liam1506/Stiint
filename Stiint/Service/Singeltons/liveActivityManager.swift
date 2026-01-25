@@ -25,21 +25,39 @@ public final class LiveActivityManager: Sendable {
 
     public func startLiveActivity(dto: ActivityDTO) async {
         await setup()
-        let liveDto = LiveActivityDTO(id: dto.id, name: dto.name, startTime: dto.startTime, icon: dto.icon, color: dto.color.toHex()!)
+        let liveDto = LiveActivityDTO(
+            id: dto.id,
+            name: dto.name,
+            startTime: dto.startTime,
+            icon: dto.icon,
+            color: dto.color.toHex()!
+        )
         let state = LiveActivityDTO.Status(isActive: true)
         do {
-            activity = try Activity<LiveActivityDTO>.request(attributes: liveDto, content: .init(state: state, staleDate: nil), pushType: nil)
+            activity = try Activity<LiveActivityDTO>
+                .request(
+                    attributes: liveDto,
+                    content: .init(state: state, staleDate: nil),
+                    pushType: nil
+                )
         } catch {
             print("FAILED to start activity: \(error.localizedDescription)")
         }
     }
 
-    public func stopLiveActivity() {
+    public func stopLiveActivity() async {
         let state = LiveActivityDTO.Status(isActive: false)
-
-        Task {
-            await activity?.end(.init(state: state, staleDate: nil), dismissalPolicy: .immediate)
+        if activity == nil {
+            await setup()
+            return
         }
+        
+        await activity?
+            .end(
+                .init(state: state, staleDate: nil),
+                dismissalPolicy: .immediate
+            )
+        
     }
 }
 

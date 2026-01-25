@@ -123,7 +123,7 @@ public final class RunningManager {
         activityDTO = nil
         running = false
 
-        LiveActivityManager.shared.stopLiveActivity()
+        await LiveActivityManager.shared.stopLiveActivity()
     }
     
 }
