@@ -11,7 +11,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var subscriptionManager = SubscriptionManager.shared
     @AppStorage("pauseTracking") private var pauseTracking: Bool = false
-
+ 
     @State private var showAccessory = false
 
     @Environment(\.modelContext) private var modelContext

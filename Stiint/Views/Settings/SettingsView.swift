@@ -7,6 +7,7 @@
 
 import StoreKit
 import SwiftUI
+import SwiftData
 
 struct SettingsView: View {
     @State private var selectedDays: Set<Weekday> = []
@@ -16,7 +17,7 @@ struct SettingsView: View {
     @State private var showingManageSubscriptions = false
     @State private var showAcknowledgement = false
 
-    @State private var csvURL: URL?
+    @Query(sort: \ActivityLog.startTime) private var logs: [ActivityLog]
 
     @Environment(\.requestReview) var requestReview
 
@@ -106,26 +107,9 @@ struct SettingsView: View {
                 
 
                 Section(header: Text("Data Export")) {
-                    Button("Export my activities") {
-                        Task {
-                            do {
-                                csvURL = try await CsvHandler()
-                                    .exportDataAsCsv()
-                            } catch {
-                                //                errorMessage = error.localizedDescription
-                            }
-                        }
-                    }
-                    if let csvURL = csvURL {
-                        ShareLink(
-                            item: csvURL,
-                            preview: SharePreview(
-                                "Data Export",
-                                image: Image(systemName: "tablecells")
-                            )
-                        ) {
-                            Text("Save CSV")
-                        }
+                    
+                    NavigationLink("Export") {
+                        RawDataView(logs: logs)
                     }
                 }
                 

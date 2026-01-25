@@ -8,10 +8,8 @@
 import Foundation
 
 final class CsvHandler {
-    func exportDataAsCsv() async throws -> URL {
-        let logs = await PersistenceManager.shared
-            .activityLogActor
-            .getAllActivityLogs()
+    func exportDataAsCsv(logs: [ActivityLog]) async throws -> URL {
+  
 
         let headers = ["Activity", "Start Date", "End Date", "Duration"]
         var csvFile = headers.joined(separator: ",") + "\n"
