@@ -13,16 +13,17 @@ struct StiintApp: App {
     var body: some Scene {
         WindowGroup {
             if SetupManager.shared.isSetupComplete {
-                ContentView().onAppear(){
-                    
-                         _ = RunningManager.shared
-                    
-                }
+                ContentView()
+                    .onAppear(){
+                        Task{
+                            await RunningManager.shared.ensureReady()
+                        }
+                    }
+                 
             } else {
                 SetupManagerView()
             }
         }
-        
         .modelContainer(PersistenceManager.shared.modelContainer)
     }
 }

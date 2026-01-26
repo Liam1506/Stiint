@@ -18,22 +18,17 @@ public actor RunningManager {
     
     
     private var setupComplete = false;
-    
-    init(){
-        Task {
-            await setup()
-        }
-    }
 
-    private func killDeadActvities() async{x
+    private func killDeadActvities() async{
         try? await PersistenceManager.shared.activityLogActor
             .killDeadActvities(knwonRunningid: currentActivityLogId)
         
     }
     
-    private func ensureReady() async {
+    public func ensureReady() async {
         await setup()
     }
+    
     
     private func setup() async {
             // If setup is already running, await its completion
