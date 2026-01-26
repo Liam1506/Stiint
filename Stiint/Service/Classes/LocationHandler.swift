@@ -6,8 +6,18 @@
 //
 
 import CoreLocation
+import SwiftUI
 
-class LocationHandler {
+
+@Observable
+public final class LocationHandler {
+    
+    private let locationManager = CLLocationManager()
+
+       public var authorizationStatus: CLAuthorizationStatus {
+           locationManager.authorizationStatus
+       }
+    
     func formatDistance(
          startLat: Double, startLon: Double,
          endLat: Double, endLon: Double
@@ -25,4 +35,18 @@ class LocationHandler {
             return String(format: "%.2f km", distanceInKm)
         }
     }
+    func requestAuthorization() {
+            switch authorizationStatus {
+            case .denied, .restricted:
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(url)
+                }
+            case .notDetermined:
+                locationManager.requestWhenInUseAuthorization()
+            default:
+                return
+            }
+           
+            
+        }
 }

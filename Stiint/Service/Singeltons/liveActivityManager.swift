@@ -11,20 +11,31 @@ import SwiftData
 
 public final class LiveActivityManager: Sendable {
     private var activity: Activity<LiveActivityDTO>?
-
-    init() {}
-    func setup() async {
-        for activity in Activity<LiveActivityDTO>.activities {
+    
+        
+    init(){
+        Task{
+         await setup()
+        }
+    }
+    private func setup() async {
+        
+        let runningActvities = Activity<LiveActivityDTO>.activities
+        
+        print("Recoverd: \(runningActvities.count)")
+        for activity in runningActvities {
             print("ID: \(activity.id)")
+            if(activity.id == DtoManager.shared.activityDTO?.id.uuidString){
+                continue
+            }
             await activity.end(nil, dismissalPolicy: .immediate)
         }
 
         activity = nil
-        print("Recoverd: \(Activity<LiveActivityDTO>.activities)")
     }
 
     public func startLiveActivity(dto: ActivityDTO) async {
-        await setup()
+        
         let liveDto = LiveActivityDTO(
             id: dto.id,
             name: dto.name,
@@ -46,19 +57,19 @@ public final class LiveActivityManager: Sendable {
     }
 
     public func stopLiveActivity() async {
-        let state = LiveActivityDTO.Status(isActive: false)
-        if activity == nil {
-            await setup()
-            return
-        }
-        
-        await activity?
-            .end(
+            guard let currentActivity = activity else {
+                print("No active activity to stop")
+                return
+            }
+            
+            let state = LiveActivityDTO.Status(isActive: false)
+            await currentActivity.end(
                 .init(state: state, staleDate: nil),
                 dismissalPolicy: .immediate
             )
-        
-    }
+            activity = nil
+            await setup()
+        }
 }
 
 public extension LiveActivityManager {

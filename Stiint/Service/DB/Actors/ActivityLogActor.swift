@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import CoreLocation
+import os
 
 @ModelActor
 public actor ActivityLogActor {
@@ -20,7 +21,7 @@ public actor ActivityLogActor {
         var startLocation: CLLocation? = nil
         
         if(activity?.storeLocation == true){
-            startLocation = try? await LocationProvider().getCurrentLocation()
+            startLocation = try? await LocationProvider.shared.getCurrentLocation()
         }
 
         let activityLog = ActivityLog(activity: activity, previousActivityLogId: previousAcvitiyLogId, startLocation: startLocation)
@@ -45,7 +46,7 @@ public actor ActivityLogActor {
         
         
     }
-    
+
     
     // This function should never do anything, but gurantees data integrity
     public func killDeadActvities(knwonRunningid: UUID?) throws {
@@ -65,10 +66,9 @@ public actor ActivityLogActor {
             print("Deleting: \(String(describing: log.activity?.name))")
             print("WARNING: This should not happen")
             delete(activityLog: log)
+            
         }
         
-        
-        print("Found \(logs.count) dead activities (This should allways be 0)")
         
     }
     
@@ -244,7 +244,7 @@ public actor ActivityLogActor {
         activityLog!.endTime = Date.now
         
         if(activityLog?.activity?.storeLocation == true){
-            let endLocation = try? await LocationProvider().getCurrentLocation()
+            let endLocation = try? await LocationProvider.shared.getCurrentLocation()
             activityLog?.endLatitude = endLocation?.coordinate.latitude
             activityLog?.endLongitude = endLocation?.coordinate.longitude
         }

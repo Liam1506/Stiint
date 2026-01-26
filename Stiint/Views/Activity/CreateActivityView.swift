@@ -21,7 +21,7 @@ struct CreateActivityView: View {
 
     let activityToEdit: ActivityItem?
     
-    let locationProvider: LocationProvider = LocationProvider()
+    let locationHandler = LocationHandler()
 
     init(activityToEdit: ActivityItem? = nil) {
         self.activityToEdit = activityToEdit
@@ -241,12 +241,12 @@ struct CreateActivityView: View {
                             Toggle(isOn: $storeLocation) {
                                 Text("Store location")
                             }.disabled(
-                                locationProvider.authorizationStatus == .denied
+                                locationHandler.authorizationStatus == .denied
                             )
                                  
                                 
                             if(
-                                locationProvider.authorizationStatus == .denied || locationProvider.authorizationStatus == .restricted
+                                locationHandler.authorizationStatus == .denied || locationHandler.authorizationStatus == .restricted
                             ){
                                 Link(
                                     "Go to Settings",
@@ -257,7 +257,8 @@ struct CreateActivityView: View {
                             }
                         }
                         .onChange(of: storeLocation) { oldValue, newValue in
-                            locationProvider.requestAuthorization()
+                            
+                            locationHandler.requestAuthorization()
                         }
                         
                     
