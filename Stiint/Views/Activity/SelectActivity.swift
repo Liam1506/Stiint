@@ -38,7 +38,10 @@ struct SelectActivity: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    RunningManager.shared.startActivity(activityId: activity.id!)
+                    Task{
+                        
+                        await RunningManager.shared.startActivity(activityId: activity.id!)
+                    }
                 }
                 .contextMenu {
                     Button {

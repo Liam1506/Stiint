@@ -47,7 +47,7 @@ struct ContentView: View {
                 SettingsView()
             }
         }
-        .tabViewBottomAccessory(isEnabled: RunningManager.shared.activityDTO != nil, content: {
+        .tabViewBottomAccessory(isEnabled: DtoManager.shared.activityDTO != nil, content: {
             TimerStatusView()
         })
             .sheet(isPresented: $subscriptionManager.displayPaywall) {

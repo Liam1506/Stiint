@@ -18,10 +18,10 @@ struct IsActivityRunning: AppIntent {
     var activity: ActivityEntity
 
     func perform() throws -> some IntentResult & ReturnsValue<Bool> {
-        guard RunningManager.shared.activityDTO?.id != nil else {
+        guard DtoManager.shared.activityDTO?.id != nil else {
             return .result(value: false)
         }
 
-        return .result(value: RunningManager.shared.activityDTO?.id == activity.id)
+        return .result(value: DtoManager.shared.activityDTO?.id == activity.id)
     }
 }

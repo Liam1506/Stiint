@@ -19,16 +19,13 @@ struct TimerRunningView: View {
     @State private var activityLog: ActivityLog?
 
     var body: some View {
-        if RunningManager.shared.activityDTO == nil {
+        if DtoManager.shared.activityDTO == nil {
             Text("Awaiting activityDTO")
         }
-
-        else if RunningManager.shared.currentActivityLogId == nil {
-            Text("Awaiting currentActivityLogId")
-        } else {
+ else {
             NavigationView {
                 VStack(spacing: 40) {
-                    Text(RunningManager.shared.activityDTO!.startTime, style: .timer)
+                    Text(DtoManager.shared.activityDTO!.startTime, style: .timer)
                         .font(.system(size: 80, weight: .light, design: .monospaced))
                         .frame(maxWidth: .infinity)
                         .multilineTextAlignment(.center)
@@ -46,7 +43,7 @@ struct TimerRunningView: View {
                             .glassEffect()
                     }
 
-                    .navigationTitle(RunningManager.shared.activityDTO!.name)
+                    .navigationTitle(DtoManager.shared.activityDTO!.name)
                 }
             }
         }

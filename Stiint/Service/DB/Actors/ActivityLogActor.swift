@@ -47,6 +47,32 @@ public actor ActivityLogActor {
     }
     
     
+    // This function should never do anything, but gurantees data integrity
+    public func killDeadActvities(knwonRunningid: UUID?) throws {
+        
+        var idToTest = knwonRunningid
+        if knwonRunningid == nil {
+            idToTest = UUID()
+        }
+        let logsToDelete = #Predicate<ActivityLog> { log in
+            log.endTime == nil && log.id != idToTest
+            
+           }
+        
+        let descriptor = FetchDescriptor<ActivityLog>(predicate: logsToDelete)
+        let logs = try modelContext.fetch(descriptor)
+        for log in logs {
+            print("Deleting: \(String(describing: log.activity?.name))")
+            print("WARNING: This should not happen")
+            delete(activityLog: log)
+        }
+        
+        
+        print("Found \(logs.count) dead activities (This should allways be 0)")
+        
+    }
+    
+    
     public func clearTimeFrame(startDate: Date, endDate: Date, logId: UUID, currentActivityStartDate: Date? = nil) throws {
         let defaultDate = Date.distantPast
         let defaultDateFuture = Date.distantFuture
