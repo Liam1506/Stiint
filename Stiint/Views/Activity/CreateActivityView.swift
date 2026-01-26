@@ -231,6 +231,7 @@ struct CreateActivityView: View {
                             }
                             .padding()
                         }
+                        .sensoryFeedback(.selection, trigger: selectedColor)
 
                         .background(.regularMaterial)
                         .cornerRadius(12)
@@ -302,6 +303,7 @@ struct CreateActivityView: View {
                                     }.frame(width: 52, height: 52)
                                 }
                             }
+                            .sensoryFeedback(.selection, trigger: selectedIcon)
                             .padding()
                         }
                         .background(.regularMaterial)
