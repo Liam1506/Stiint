@@ -32,7 +32,7 @@ struct TimeLineView: View {
     let lineHeight: CGFloat = 2
     
     init(selectedDate: Date) {
-        print("LOADING for \(selectedDate)")
+        print("loading data for \(selectedDate)")
         self.selectedDate = selectedDate
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: selectedDate)
