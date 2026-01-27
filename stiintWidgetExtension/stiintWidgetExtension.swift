@@ -65,9 +65,9 @@ struct stiintWidgetExtension: Widget {
                     }.frame(width: 200, height: 60)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    
-                    VStack(alignment: .trailing){
+                    VStack {
                         Spacer()
+
                         Text(context.attributes.startTime, style: .timer)
                             .font(
                                 .system(
@@ -77,10 +77,16 @@ struct stiintWidgetExtension: Widget {
                                 )
                             )
                             .lineLimit(1)
-                            .minimumScaleFactor(0.01)
-                            .frame(width: 100, height: 50, alignment: .center)
+                            .minimumScaleFactor(0.1)
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .fixedSize(horizontal: false, vertical: true)
+
                         Spacer()
-                    }.frame(height: 60)
+                    }
+                    .frame(height: 60)
+                
+
                      
                     /*
                      Text(context.attributes.startTime, style: .timer)
