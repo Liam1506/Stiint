@@ -31,7 +31,9 @@ struct AnalyticsFilterView: View {
 
     @State private var selectedDateRange: DateRangeFilter = .last7Days
     @State private var showFreeTime: Bool = true
-    @State private var customStartDate: Date = Date().addingTimeInterval(-7 * 24 * 60 * 60)
+    @State private var customStartDate: Date = Date().addingTimeInterval(
+        -7 * 24 * 60 * 60
+    )
     @State private var customEndDate: Date = .init()
     @State private var selectedActivities: Set<UUID> = []
     @State private var showFilterSheet: Bool = false
@@ -48,7 +50,10 @@ struct AnalyticsFilterView: View {
                         .foregroundStyle(.primary)
 
                     HStack(spacing: 12) {
-                        Label("\(selectedActivities.count) activities", systemImage: "chart.bar.fill")
+                        Label(
+                            "\(selectedActivities.count) activities",
+                            systemImage: "chart.bar.fill"
+                        )
 
                         if showFreeTime {
                             Label("Free time", systemImage: "clock.fill")
@@ -116,14 +121,24 @@ struct AnalyticsFilterView: View {
             return (start, end)
 
         case .last7Days:
-            let sevenDaysAgo = calendar.date(byAdding: .day, value: -7, to: now)!
+            let sevenDaysAgo = calendar.date(
+                byAdding: .day,
+                value: -7,
+                to: now
+            )!
             let start = calendar.startOfDay(for: sevenDaysAgo)
             let end = calendar.startOfDay(for: now)
             return (start, end)
 
         case .lastMonth:
-            let startOfThisMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: now))!
-            let startOfLastMonth = calendar.date(byAdding: .month, value: -1, to: startOfThisMonth)!
+            let startOfThisMonth = calendar.date(
+                from: calendar.dateComponents([.year, .month], from: now)
+            )!
+            let startOfLastMonth = calendar.date(
+                byAdding: .month,
+                value: -1,
+                to: startOfThisMonth
+            )!
             return (startOfLastMonth, startOfThisMonth)
 
         case .custom:
@@ -168,15 +183,27 @@ struct FilterSheet: View {
                             ForEach(DateRangeFilter.allCases) { range in
                                 Text(range.rawValue).tag(range)
                             }
+                            
+                            
                         }
+                        .sensoryFeedback(.selection, trigger: selectedDateRange)
                         .pickerStyle(.segmented)
 
                         if selectedDateRange == .custom {
                             VStack(spacing: 12) {
-                                DatePicker("Start Date", selection: $customStartDate, displayedComponents: .date)
-                                DatePicker("End Date", selection: $customEndDate, displayedComponents: .date)
+                                DatePicker(
+                                    "Start Date",
+                                    selection: $customStartDate,
+                                    displayedComponents: .date
+                                )
+                                DatePicker(
+                                    "End Date",
+                                    selection: $customEndDate,
+                                    displayedComponents: .date
+                                )
                             }
                             .padding(.top, 8)
+                            
                         }
                     }
 
@@ -196,11 +223,15 @@ struct FilterSheet: View {
 
                             Spacer()
 
-                            Button(selectedActivities.count == activities.count ? "Deselect All" : "Select All") {
+                            Button(
+                                selectedActivities.count == activities.count ? "Deselect All" : "Select All"
+                            ) {
                                 if selectedActivities.count == activities.count {
                                     selectedActivities.removeAll()
                                 } else {
-                                    selectedActivities = Set(activities.compactMap { $0.id })
+                                    selectedActivities = Set(
+                                        activities.compactMap { $0.id
+                                        })
                                 }
                             }
                             .font(.caption)
@@ -212,22 +243,33 @@ struct FilterSheet: View {
                                 .foregroundStyle(.secondary)
                                 .padding(.vertical, 8)
                         } else {
-                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 12) {
+                            LazyVGrid(
+                                columns: [GridItem(.adaptive(minimum: 100))],
+                                spacing: 12
+                            ) {
                                 ForEach(activities) { activity in
                                     if let activityId = activity.id {
                                         ActivityFilterChip(
                                             activity: activity,
-                                            isSelected: selectedActivities.contains(activityId)
+                                            isSelected: selectedActivities
+                                                .contains(activityId)
                                         ) {
-                                            if selectedActivities.contains(activityId) {
-                                                selectedActivities.remove(activityId)
+                                            if selectedActivities
+                                                .contains(activityId) {
+                                                selectedActivities
+                                                    .remove(activityId)
                                             } else {
-                                                selectedActivities.insert(activityId)
+                                                selectedActivities
+                                                    .insert(activityId)
                                             }
                                         }
                                     }
                                 }
                             }
+                            .sensoryFeedback(
+                                .selection,
+                                trigger: selectedActivities
+                            )
                         }
                     }
                 }
@@ -279,11 +321,18 @@ struct ActivityFilterChip: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)
-            .background(isSelected ? activity.color.opacity(0.2) : Color.gray.opacity(0.1))
+            .background(
+                isSelected ? activity.color
+                    .opacity(0.2) : Color.gray
+                    .opacity(0.1)
+            )
             .foregroundStyle(isSelected ? activity.color : .secondary)
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(isSelected ? activity.color : Color.clear, lineWidth: 2)
+                    .stroke(
+                        isSelected ? activity.color : Color.clear,
+                        lineWidth: 2
+                    )
             )
             .cornerRadius(12)
         }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TimerStatusView: View {
     var body: some View {
-        if let activity = RunningManager.shared.activityDTO {
+        if let activity = DtoManager.shared.activityDTO {
             HStack {
                 Image(systemName: activity.icon)
 

@@ -49,7 +49,7 @@ struct CreateLogView: View {
         }
         
 
-        if let time = RunningManager.shared.activityDTO?.startTime {
+        if let time = DtoManager.shared.activityDTO?.startTime {
             
             if(time > calendar.startOfDay(for: Date.now)){
                 self.defaultDate = time
@@ -87,7 +87,7 @@ struct CreateLogView: View {
         }
         
 
-        if let time = RunningManager.shared.activityDTO?.startTime {
+        if let time = DtoManager.shared.activityDTO?.startTime {
             if(time > calendar.startOfDay(for: Date.now)){
                 defaultDate = time
             }
@@ -176,7 +176,7 @@ struct CreateLogView: View {
                                         
                                         do {
                                             
-                                            let startCurrentActivity = RunningManager.shared.activityDTO?.startTime
+                                            let startCurrentActivity = DtoManager.shared.activityDTO?.startTime
                                             try await PersistenceManager.shared.activityLogActor
                                                 .clearTimeFrame(
                                                     startDate: startTime,

@@ -14,6 +14,12 @@ struct StiintApp: App {
         WindowGroup {
             if SetupManager.shared.isSetupComplete {
                 ContentView()
+                    .onAppear(){
+                        Task{
+                            await RunningManager.shared.ensureReady()
+                        }
+                    }
+                 
             } else {
                 SetupManagerView()
             }

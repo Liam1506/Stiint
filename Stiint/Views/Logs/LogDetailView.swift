@@ -35,7 +35,7 @@ struct LogDetailView: View {
         self.startTime = log.startTime!
         self.endTime = log.endTime ?? Date.now
         
-        if let time = RunningManager.shared.activityDTO?.startTime {
+        if let time = DtoManager.shared.activityDTO?.startTime {
             self.maxEndtime = time
         }else{
             self.maxEndtime = Date.now
@@ -195,7 +195,7 @@ struct LogDetailView: View {
                         Task{
                             
                             do {
-                                let startCurrentActivity = RunningManager.shared.activityDTO?.startTime
+                                let startCurrentActivity = DtoManager.shared.activityDTO?.startTime
                                 try await PersistenceManager.shared.activityLogActor
                                     .clearTimeFrame(
                                         startDate: startTime,

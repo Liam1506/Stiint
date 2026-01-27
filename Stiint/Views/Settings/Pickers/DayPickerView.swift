@@ -30,6 +30,7 @@ struct DayPickerView: View {
                         .onTapGesture {
                             toggle(day)
                         }
+                        
                     }
                 } header: {
                     Text("This activity can only be triggered on selected days. On other days, it won’t start automatically when triggered, but you can still start or stop it manually.")
@@ -37,6 +38,8 @@ struct DayPickerView: View {
                         .textCase(nil) // Keeps the casing as written
                 }
             }
+            
+            .sensoryFeedback(.selection, trigger: selectedDays)
             .navigationTitle("Triggable days ")
             // This is the magic line that fixes the "background bug"
             .scrollContentBackground(.hidden)

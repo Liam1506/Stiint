@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import CoreLocation
+import os
 
 @ModelActor
 public actor ActivityLogActor {
@@ -20,7 +21,7 @@ public actor ActivityLogActor {
         var startLocation: CLLocation? = nil
         
         if(activity?.storeLocation == true){
-            startLocation = try? await LocationProvider().getCurrentLocation()
+            startLocation = try? await LocationProvider.shared.getCurrentLocation()
         }
 
         let activityLog = ActivityLog(activity: activity, previousActivityLogId: previousAcvitiyLogId, startLocation: startLocation)
@@ -42,6 +43,31 @@ public actor ActivityLogActor {
         
         modelContext.insert(activityLog)
         try? modelContext.save()
+    }
+
+    
+    // This function should never do anything, but gurantees data integrity
+    public func killDeadActvities(knwonRunningid: UUID?) throws {
+        
+        var idToTest = knwonRunningid
+        if knwonRunningid == nil {
+            idToTest = UUID()
+        }
+        let logsToDelete = #Predicate<ActivityLog> { log in
+            log.endTime == nil && log.id != idToTest
+            
+           }
+        
+        let descriptor = FetchDescriptor<ActivityLog>(predicate: logsToDelete)
+        let logs = try modelContext.fetch(descriptor)
+        for log in logs {
+            print("Deleting: \(String(describing: log.activity?.name))")
+            print("WARNING: This should not happen")
+            delete(activityLog: log)
+            
+        }
+        
+        
     }
     
     
@@ -216,7 +242,7 @@ public actor ActivityLogActor {
         activityLog!.endTime = Date.now
         
         if(activityLog?.activity?.storeLocation == true){
-            let endLocation = try? await LocationProvider().getCurrentLocation()
+            let endLocation = try? await LocationProvider.shared.getCurrentLocation()
             activityLog?.endLatitude = endLocation?.coordinate.latitude
             activityLog?.endLongitude = endLocation?.coordinate.longitude
         }

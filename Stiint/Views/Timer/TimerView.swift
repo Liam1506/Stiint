@@ -13,12 +13,13 @@ struct TimerView: View {
          Two States:
          - Either to select an activty and start
          - The Timer itself, where you can stop the task
-         */ if RunningManager.shared.running
+         */ if DtoManager.shared.activityDTO == nil
         {
-            TimerRunningView()
-        } else {
-            SelectActivity()
-        }
+             SelectActivity()
+           
+         } else {
+             TimerRunningView()
+         }
     }
 }
 

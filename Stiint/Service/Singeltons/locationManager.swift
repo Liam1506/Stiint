@@ -9,10 +9,10 @@ import CoreLocation
 import Observation
 import SwiftUI
 
-@Observable
-public final class LocationProvider {
+public actor LocationProvider {
 
     private let locationManager = CLLocationManager()
+    
 
     public var authorizationStatus: CLAuthorizationStatus {
         locationManager.authorizationStatus
@@ -27,21 +27,6 @@ public final class LocationProvider {
         }
     }
 
-    func requestAuthorization() {
-        switch authorizationStatus {
-        case .denied, .restricted:
-            if let url = URL(string: UIApplication.openSettingsURLString) {
-                UIApplication.shared.open(url)
-            }
-        case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-        default:
-            return
-        }
-       
-        
-    }
-
     func getCurrentLocation() async throws -> CLLocation {
         guard locationAvailable else {
             throw LocationError.notAuthorized
@@ -49,6 +34,7 @@ public final class LocationProvider {
 
         for try await update in CLLocationUpdate.liveUpdates() {
             if let location = update.location {
+                print(location)
                 return location
             }
         }
@@ -56,6 +42,11 @@ public final class LocationProvider {
         throw LocationError.noLocation
     }
 }
+
+public extension LocationProvider {
+    static let shared = LocationProvider()
+}
+
 
 enum LocationError: Error {
     case notAuthorized
