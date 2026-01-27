@@ -16,64 +16,58 @@ public actor RunningManager {
     
     private var setupTask: Task<Void, Never>?
     
-    
-    private var setupComplete = false;
-
     private func killDeadActvities() async{
         try? await PersistenceManager.shared.activityLogActor
             .killDeadActvities(knwonRunningid: currentActivityLogId)
         
     }
     
+    
+    // Load active activity
     public func ensureReady() async {
-        await setup()
+        currentActivityLogId = await ActivityLogPreferences.getActivityLogId()
+        if let id = currentActivityLogId {
+            await DtoManager.shared
+                .setActivityDTO(
+                    await PersistenceManager.shared.activityLogActor
+                        .getActivtyLogDTO(activityLogId: id)
+                )
+            
+            guard await DtoManager.shared.activityDTO != nil else {
+                currentActivityLogId = nil
+                await ActivityLogPreferences.removeActivityLogId()
+                return
+            }
+        }
     }
     
     
-    private func setup() async {
-            // If setup is already running, await its completion
-            if let existing = setupTask {
-                await existing.value
+    // Load active activity
+    public func setup() async {
+          
+        currentActivityLogId = await ActivityLogPreferences.getActivityLogId()
+                
+        await killDeadActvities()
+                
+        if let id = currentActivityLogId {
+            await DtoManager.shared
+                .setActivityDTO(
+                    await PersistenceManager.shared.activityLogActor
+                        .getActivtyLogDTO(activityLogId: id)
+                )
+
+            guard await DtoManager.shared.activityDTO != nil else {
+                currentActivityLogId = nil
+                await ActivityLogPreferences.removeActivityLogId()
                 return
             }
             
-            // If already complete, return immediately
-            guard !setupComplete else { return }
-            
-            // Create and store the setup task
-            let task = Task {
-                currentActivityLogId = await ActivityLogPreferences.getActivityLogId()
-                
-                await killDeadActvities()
-                
-                if let id = currentActivityLogId {
-                    await DtoManager.shared
-                        .setActivityDTO(
-                            await PersistenceManager.shared.activityLogActor
-                                .getActivtyLogDTO(activityLogId: id)
-                        )
-
-                    guard await DtoManager.shared.activityDTO != nil else {
-                        currentActivityLogId = nil
-                        await ActivityLogPreferences.removeActivityLogId()
-                        setupComplete = true
-                        return
-                    }
-                    
-                    await LiveActivityManager.shared
-                        .startLiveActivity(dto: await DtoManager.shared.activityDTO!)
+            // Stats live activity
+            await LiveActivityManager.shared
+                .startLiveActivity(dto: await DtoManager.shared.activityDTO!)
                         
-                } else {
-                    print("No running activity found")
-                }
-                
-                setupComplete = true
-            }
-            
-            setupTask = task
-            await task.value
-            setupTask = nil // Clear the task once complete
         }
+    }
 
 
     public func stopSpecificAndStartPreviousActivity(activityId: UUID) async {
@@ -121,7 +115,6 @@ public actor RunningManager {
 
     public func startActivity(activityId: UUID) async {
         await ensureReady()
-        print("START \(activityId)")
         
         let dto = await DtoManager.shared.activityDTO
         guard dto?.id != activityId else {

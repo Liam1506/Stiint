@@ -16,7 +16,7 @@ struct StiintApp: App {
                 ContentView()
                     .onAppear(){
                         Task{
-                            await RunningManager.shared.ensureReady()
+                            await RunningManager.shared.setup()
                         }
                     }
                  

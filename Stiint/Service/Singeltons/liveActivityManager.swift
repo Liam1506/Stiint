@@ -12,12 +12,6 @@ import SwiftData
 public final class LiveActivityManager: Sendable {
     private var activity: Activity<LiveActivityDTO>?
     
-        
-    init(){
-        Task{
-         await setup()
-        }
-    }
     private func setup() async {
         
         let runningActvities = Activity<LiveActivityDTO>.activities
@@ -35,7 +29,11 @@ public final class LiveActivityManager: Sendable {
     }
 
     public func startLiveActivity(dto: ActivityDTO) async {
-        
+        await setup()
+        if let activity = activity {
+            await activity.end(nil, dismissalPolicy: .immediate)
+        }
+        activity = nil
         let liveDto = LiveActivityDTO(
             id: dto.id,
             name: dto.name,
