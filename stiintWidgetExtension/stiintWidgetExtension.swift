@@ -53,6 +53,18 @@ struct stiintWidgetExtension: Widget {
                     }
                 }
                 DynamicIslandExpandedRegion(.trailing) {
+                    
+                     VStack(alignment: .trailing){
+                         Spacer()
+                         Text(context.attributes.startTime, style: .timer)
+                             .font(.system(size: 100, weight: .light, design: .monospaced))
+                             .lineLimit(1)
+                             .minimumScaleFactor(0.01)
+                             .frame(width: 100, height: 50, alignment: .center)
+                         Spacer()
+                     }
+                     
+                    /*
                     Text(context.attributes.startTime, style: .timer)
                         .font(.system(size: 100, weight: .light, design: .monospaced))
                         .lineLimit(1)
@@ -60,17 +72,21 @@ struct stiintWidgetExtension: Widget {
                         .frame(width: 100, height: 50, alignment: .center)
                     
                         .frame(maxHeight: .infinity, alignment: .center)
+                 */
                 }
                 DynamicIslandExpandedRegion(.center) {
                     HStack(alignment: .bottom) {
                         Text(context.attributes.name)
-                            .minimumScaleFactor(0.01)
-                            .frame(width: 250, alignment: .leading)
                             .font(.headline)
+                            .lineLimit(1)                   // single line
+                            .truncationMode(.tail)          // end with "..."
+                            .frame(width: 250, alignment: .leading)
+                            .minimumScaleFactor(0.01)       // scales down if needed
                             .padding(.leading, 20)
 
                         Spacer()
                     }
+                    .frame(width: 250)
                 }
             } compactLeading: {
                 Image(systemName: context.attributes.icon).foregroundStyle(Color(hex: context.attributes.color))

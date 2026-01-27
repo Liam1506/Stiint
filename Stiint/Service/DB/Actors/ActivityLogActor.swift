@@ -42,8 +42,6 @@ public actor ActivityLogActor {
         
         modelContext.insert(activityLog)
         try? modelContext.save()
-        
-        
     }
     
     
@@ -51,7 +49,7 @@ public actor ActivityLogActor {
         let defaultDate = Date.distantPast
         let defaultDateFuture = Date.distantFuture
         
-        if let currentActivityStartDate{
+        if let currentActivityStartDate { //INFO: Should never be triggered
             guard endDate <= currentActivityStartDate else { throw(ActivityLogActorErrors.cannotOverwriteRunningActivity) }
         }
         

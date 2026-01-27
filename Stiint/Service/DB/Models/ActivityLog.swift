@@ -13,8 +13,10 @@ import CoreLocation
 @Model
 public final class ActivityLog {
     public var id: UUID?
+    
     public var startTime: Date?
     public var endTime: Date?
+    
     public var activity: ActivityItem?
     public var previousActivityLogId: UUID?
     
@@ -34,15 +36,16 @@ public final class ActivityLog {
 
     ) {
         id = id ?? UUID()
+        
         self.startTime = startTime ?? Date.now
         self.endTime = endTime
+        
         self.activity = activity
         self.previousActivityLogId = previousActivityLogId
 
-        
         self.startLatitude = startLocation?.coordinate.latitude
-             self.startLongitude = startLocation?.coordinate.longitude
-             self.endLatitude = endLocation?.coordinate.latitude
-             self.endLongitude = endLocation?.coordinate.longitude
+        self.startLongitude = startLocation?.coordinate.longitude
+        self.endLatitude = endLocation?.coordinate.latitude
+        self.endLongitude = endLocation?.coordinate.longitude
     }
 }

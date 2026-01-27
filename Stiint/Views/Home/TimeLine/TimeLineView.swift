@@ -10,7 +10,7 @@ import SwiftUI
 internal import Combine
 
 struct TimeLineView: View {
-    @Query(sort: \ActivityLog.startTime) private var allLogs: [ActivityLog]
+    @Query private var filteredLogs: [ActivityLog]
     let selectedDate: Date
     let calendar = Calendar.current
     let hours: [Int] = Array(0 ... 23)
@@ -30,19 +30,31 @@ struct TimeLineView: View {
     private let maxZoom: Double = 5000.0
 
     let lineHeight: CGFloat = 2
-
-    var logs: [ActivityLog] {
+    
+    init(selectedDate: Date) {
+        print("LOADING for \(selectedDate)")
+        self.selectedDate = selectedDate
+        let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: selectedDate)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        
+        let distantFuture = Date.distantFuture
+        
+        let distantPast = Date.distantPast
 
-        return allLogs.filter { log in
-            guard let startTime = log.startTime else { return false }
+        let predicate = #Predicate<ActivityLog> { log in
+            // Condition 1: Log ends during the selected day
+            return (log.endTime ?? distantFuture) > startOfDay && (log.endTime ?? distantFuture) < endOfDay ||
+            
+            // Condition 2: Log starts during the selected day
+            (log.startTime ?? distantPast) > startOfDay &&  (log.startTime ?? distantPast) < endOfDay ||
+            
+            // Condition 3: Log spans across the entire day (starts before, ends after)
+            (log.startTime ?? distantPast) < startOfDay && (log.endTime ?? distantFuture) > endOfDay
 
-            if let endTime = log.endTime {
-                return startTime >= startOfDay && startTime < endOfDay || log.endTime == nil || endTime >= startOfDay && endTime < endOfDay
-            }
-            return startTime >= startOfDay && startTime < endOfDay || log.endTime == nil
         }
+
+        _filteredLogs = Query(filter: predicate, sort: \.startTime)
     }
 
     func updateTime() {
@@ -109,7 +121,7 @@ struct TimeLineView: View {
                                 .id(hour)
                             }
                         }
-                        ForEach(logs) { log in
+                        ForEach(filteredLogs) { log in
                             TimeLineActivitySegmentView(
                                 start: getGeometry(
                                     date: log.startTime,
