@@ -57,6 +57,7 @@ public final class LiveActivityManager: Sendable {
     public func stopLiveActivity() async {
             guard let currentActivity = activity else {
                 print("No active activity to stop")
+                await setup()
                 return
             }
             
