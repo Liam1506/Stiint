@@ -22,7 +22,7 @@ struct DaySelectionSheet: View {
                 DatePicker(
                     "Start Date",
                     selection: $date,
-                    in: calendar.date(byAdding: .day, value: dayRange+1, to: today)! ... today,
+                    in: calendar.date(byAdding: .day, value: dayRange, to: today)! ... today,
                     displayedComponents: [.date]
                 )
                 .datePickerStyle(.graphical)

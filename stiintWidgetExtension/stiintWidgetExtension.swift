@@ -73,6 +73,7 @@ struct stiintWidgetExtension: Widget {
                                 .system(
                                     size: 100,
                                     weight: .light,
+                                
                                     design: .monospaced
                                 )
                             )

@@ -16,7 +16,12 @@ struct TimeLineActivitySegmentView: View {
 
     let timeDistance: String
 
-    init(start: CGFloat, end: CGFloat, log: ActivityLog, isShowingLogSheet: Bool = false) {
+    init(
+        start: CGFloat,
+        end: CGFloat,
+        log: ActivityLog,
+        isShowingLogSheet: Bool = false
+    ) {
         self.start = start
         self.end = end
         self.log = log
@@ -35,14 +40,24 @@ struct TimeLineActivitySegmentView: View {
             ZStack(alignment: .topLeading) {
                 Rectangle()
                     .frame(height: end - start)
-                    .foregroundColor(log.activity?.color ?? .blue).cornerRadius(10)
-                    .shadow(color: (log.activity?.color ?? .blue).opacity(0.3), radius: 10, x: 0, y: 5)
+                    .foregroundColor(log.activity?.color ?? .blue)
+                    //.opacity(0.95)
+                    .cornerRadius(10)
+                    .shadow(
+                        color: (log.activity?.color ?? .blue).opacity(0.3),
+                        radius: 10,
+                        x: 0,
+                        y: 5
+                    )
                 if end - start > 39 {
                     VStack(alignment: .leading) {
                         HStack {
-                            Image(systemName: log.activity?.sfSymbolName ?? "questionmark.circle.dashed")
+                            Image(
+                                systemName: log.activity?.sfSymbolName ?? "questionmark.circle.dashed"
+                            )
 
                             Text(log.activity?.name ?? "no name")
+                                .lineLimit(1)
 
                         }.font(.headline)
                             .foregroundColor(.white)
@@ -74,5 +89,17 @@ struct TimeLineActivitySegmentView: View {
 }
 
 #Preview {
-    TimeLineActivitySegmentView(start: 0, end: 60, log: ActivityLog(startTime: Date.now, activity: ActivityItem(id: UUID(), createdDate: Date.now, name: "test", color: .pink)))
+    TimeLineActivitySegmentView(
+        start: 0,
+        end: 60,
+        log: ActivityLog(
+            startTime: Date.now,
+            activity: ActivityItem(
+                id: UUID(),
+                createdDate: Date.now,
+                name: "test",
+                color: .pink
+            )
+        )
+    )
 }
