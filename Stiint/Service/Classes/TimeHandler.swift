@@ -23,13 +23,26 @@ class TimeHandler {
         comps.minute = 0
 
         let calendar = Calendar.current
-        let date = calendar.date(from: comps)!
+        guard let date = calendar.date(from: comps) else { return "" }
 
         let formatter = DateFormatter()
         formatter.locale = Locale.current
-        formatter.timeStyle = .short // uses the country’s own style
 
-        return formatter.string(from: date)
+        // Determine if the locale uses 12-hour format
+        let formatString = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: Locale.current)!
+        let is12Hour = formatString.contains("a")
+
+        if is12Hour {
+            if hour == 12 {
+                return "Noon" // 12 PM → Noon
+            } else {
+                formatter.dateFormat = "h a"
+                return formatter.string(from: date)
+            }
+        } else {
+            formatter.dateFormat = "HH:mm"
+            return formatter.string(from: date)
+        }
     }
 
     func getTimeValueForDate(date: Date, selectedDate: Date) -> Double {
