@@ -11,7 +11,6 @@ Stiint is an iOS time-tracking app built around iOS Shortcuts automations. Defin
   <img src="docs/images/Pasted 28-10-2026 at 14.53.53.png" width="19%" />
   <img src="docs/images/Pasted 28-10-2026 at 14.53.17.png" width="19%" />
   <img src="docs/images/Pasted 28-10-2026 at 14.53.10.png" width="19%" />
-  <img src="docs/images/Pasted 28-10-2026 at 14.53.44.png" width="19%" />
 </p>
 
 ## How It Works
