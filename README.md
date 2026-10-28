@@ -1,87 +1,86 @@
-# Stiint
+# Stiint — Know Your Time
 
-## Concept
+Stiint is an iOS time-tracking app built around iOS Shortcuts automations. Define activities, wire them up to Shortcuts triggers once, and Stiint records your day automatically — no manual input required. Review your timeline and analyze how you spend your time across any date range.
 
-Stiint is a hands-off time-tracking iOS app designed to give users detailed insights into how they spend their time. It combines location-based tracking with activity tracking, allowing both automated and user-triggered entries.
+[Download on the App Store](https://apps.apple.com/de/app/stiint-know-your-time/id6756229335)
 
-The app is structured around **two main concepts**:
+## Screenshots
 
-### 1. Locations
+<p float="left">
+  <img src="docs/images/Pasted 28-10-2026 at 14.52.26.png" width="19%" />
+  <img src="docs/images/Pasted 28-10-2026 at 14.53.53.png" width="19%" />
+  <img src="docs/images/Pasted 28-10-2026 at 14.53.17.png" width="19%" />
+  <img src="docs/images/Pasted 28-10-2026 at 14.53.10.png" width="19%" />
+  <img src="docs/images/Pasted 28-10-2026 at 14.53.44.png" width="19%" />
+</p>
 
-- Users define a **standard set of locations** (up to 20), such as Home, Work, or Gym.
-- Geofencing is used for these locations to provide **precise, automated timeline entries**.
-- All other locations are tracked **dynamically**: if the user stops traveling and no standard location is active for more than 10 minutes, the app retrieves the current location and its type using the Apple Maps API.
-- Locations can serve as triggers for activities, but this is optional.
+## How It Works
 
-### 2. Activities
+1. **Create activities** — define activities like Sleep, University, Learning, or Gym, each with a color and SF Symbol icon.
+2. **Automate with Shortcuts** — use iOS Shortcuts to start and stop activities automatically. Triggers can be alarms, location arrival, app opens, time of day, or anything else Shortcuts supports.
+3. **Review your timeline** — the home screen shows a scrollable calendar-style timeline. Swipe between days going back up to 2000 days.
+4. **Analyze trends** — the Insights screen visualizes your data with Sankey, pie, bar, line, and area charts across a custom date range.
 
-- Activities mostly trigger via **iOS Shortcuts**, allowing users to start an activity based on app usage, time of day, or other events.
-- Example: Opening Instagram can trigger the activity “Wasted Time.”
-- Activities can be **bound to a location**, but this is optional.
-- Users can also manually start activities if needed.
+## App Intents (Shortcuts Actions)
 
-### Home Screen Timeline
+Stiint exposes the following actions to iOS Shortcuts and Automations:
 
-- The home screen shows a **calendar-style timeline** composed of **blocks representing locations**.
-- **Activities are nested inside each location block**, showing what the user did while at that location.
-- If a location is visited but no activity is triggered, the block simply shows the location.
-- This design allows a **clear visual mapping** of both location and activity throughout the day.
+| Action | Description |
+|---|---|
+| Start an activity | Starts a specific activity. Respects weekday filters and tracking pause state. |
+| Stop a specific activity | Stops a specific activity; other running activities are unaffected. |
+| Stop activity and resume previous | Stops the current activity and resumes the one it interrupted, if available. |
+| Get current activity | Returns the currently running activity, or nil if none is active. |
+| Get all activities | Returns a list of all activities. |
+| Is activity running | Returns whether a specific activity is currently active. |
+| Stop activity | Stops whatever activity is currently running. |
+| Export as CSV | Exports all activity logs as a CSV file. |
 
-## Key Features
+## Features
 
-- Geofenced and dynamic location tracking.
-- Shortcut-driven activity tracking for minimal user intervention.
-- Activities optionally linked to locations.
-- Calendar-style timeline with location blocks and nested activities.
-- Predefined locations limited to 20 for battery efficiency.
-- Automatic location type inference for non-standard locations via Apple Maps API.
+- **Shortcuts-driven** — all core tracking happens via App Intents; no background polling.
+- **Weekday filters** — activities can be restricted to specific days of the week.
+- **Location logging** — optionally records GPS coordinates at activity start and end.
+- **Live Activity** — shows the current activity and elapsed time in the Dynamic Island and on the lock screen.
+- **Swipeable timeline** — horizontal paging between days with lazy rendering for performance.
+- **Analytics** — Sankey, pie, bar, line, and area diagrams with activity and date range filters.
+- **CSV export** — full activity log export via Shortcuts.
+- **Fully on-device** — all data stored locally with SwiftData; nothing sent externally.
+- **Pro subscription** — pie, bar, and area charts are gated behind a StoreKit subscription.
 
-## Privacy
+## Usage
 
-- All tracking is **on-device** and fully private.
-- No data is shared externally unless the user chooses to export it.
+### 1. Create an activity
 
-## Tech Stack
+Open Stiint, tap **+** on the Start Activity screen, and give the activity a name, color, and icon. Optionally restrict it to specific weekdays.
 
-- **SwiftUI** for the interface.
-- **CoreLocation** for geofencing and dynamic location updates.
-- **MapKit / Apple Maps API** for location type inference.
-- **Shortcuts & Intents** for activity triggers.
-- **Core Data / SwiftData** for storing timelines and activities.
+### 2. Set up a Shortcuts automation
 
-### Flow diagrams (Sankey diagrams)
+Open the **Shortcuts** app → **Automation** → **+** → **Create Personal Automation**. Choose a trigger:
 
-A flow-style diagram should be available for days, weeks, etc., showing how time moves between activities.
+| Trigger | Example |
+|---|---|
+| App opened | Start "Work" when Slack opens |
+| App closed | Stop "Social" when Instagram closes |
+| Arrive at location | Start "Gym" when you arrive at the gym |
+| Leave location | Stop "Work" when you leave the office |
+| Alarm stopped | Start "University" when your alarm fires |
+| Time of day | Start "Sleep" at 10:30 PM |
 
-### Pie Chart
+Add a Stiint action (e.g. **Start an activity** or **Stop current activity**), set it to **Run Immediately**, and tap **Done**.
 
-Shows the distribution of time across activities.
+### 3. Review your timeline
 
-### Line Graphs
+The home screen shows a scrollable daily timeline. Swipe left/right to move between days or tap the date to jump to a specific day.
 
-Illustrate changes in metrics over time and highlight trends.
+### 4. Analyze your time
 
-## LLM (Foundation model integration)
+Go to **Insights**, pick a date range and activities, and explore the Sankey flow diagram, pie chart, bar chart, line graph, and area chart.
 
-The model should interpret parts of the metrics. Each day, an insight could be generated, with output such as: “It looks like you’re studying less than usual lately.”
+## Building from Source
 
-## Design
+Clone the repo and open `Stiint.xcodeproj` in Xcode. The paywall is MIT-licensed along with the rest of the code — you are free to remove or bypass it. The subscription check lives in `SubscriptionManager.shared.isPro` (`Stiint/Service/Singeltons/subscriptionManager.swift`); the paywall gate wraps charts in `AnalyticsView` and settings in `SettingsView`.
 
-The design language should feel minimalistic and native, similar to apps such as Tiimo or Finanzguru.
+## License
 
-## Live Activities
-
-A live activity can appear on the lock screen showing the current task, if the user enables it.
-
-## Spotify Wrapped Feature
-
-Users can share their yearly overview in a Spotify-Wrapped-style format to increase engagement and reach.
-
-## Useful links:
-
-- https://github.com/maxhumber/Sankey
-- https://github.com/alessiorubicini/SFSymbolsPickerForSwiftUI
-- https://www.youtube.com/watch?v=nKHrsrmA4lM (TimeLineView)
-- https://www.reddit.com/r/iosapps/comments/1n2cq3d/it_took_us_9_month_to_get_our_app_here/
-  cd
-- https://www.hackingwithswift.com/quick-start/swiftui/how-to-provide-relative-sizes-using-geometryreader
+MIT © 2026 Liam Wittig. See [LICENSE](LICENSE).
